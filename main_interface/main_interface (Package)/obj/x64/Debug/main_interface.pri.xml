@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PriInfo>
+	<ResourceMap name="main_interface" version="1.0" primary="true">
+		<Qualifiers/>
+		<ResourceMapSubtree name="Files">
+			<NamedResource name="About.xbf" uri="ms-resource://main_interface/Files/About.xbf">
+				<Candidate type="Path">
+					<Value>About.xbf</Value>
+				</Candidate>
+			</NamedResource>
+			<NamedResource name="Account.xbf" uri="ms-resource://main_interface/Files/Account.xbf">
+				<Candidate type="Path">
+					<Value>Account.xbf</Value>
+				</Candidate>
+			</NamedResource>
+			<NamedResource name="App.xbf" uri="ms-resource://main_interface/Files/App.xbf">
+				<Candidate type="Path">
+					<Value>App.xbf</Value>
+				</Candidate>
+			</NamedResource>
+			<NamedResource name="General.xbf" uri="ms-resource://main_interface/Files/General.xbf">
+				<Candidate type="Path">
+					<Value>General.xbf</Value>
+				</Candidate>
+			</NamedResource>
+			<NamedResource name="MainWindow.xbf" uri="ms-resource://main_interface/Files/MainWindow.xbf">
+				<Candidate type="Path">
+					<Value>MainWindow.xbf</Value>
+				</Candidate>
+			</NamedResource>
+			<NamedResource name="MySplashScreen.xbf" uri="ms-resource://main_interface/Files/MySplashScreen.xbf">
+				<Candidate type="Path">
+					<Value>MySplashScreen.xbf</Value>
+				</Candidate>
+			</NamedResource>
+		</ResourceMapSubtree>
+	</ResourceMap>
+</PriInfo>
