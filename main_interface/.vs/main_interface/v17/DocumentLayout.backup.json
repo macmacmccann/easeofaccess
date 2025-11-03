@@ -74,8 +74,7 @@
               "RelativeToolTip": "main_interface\\MySplashScreen.xaml.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAABgAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-10T20:53:35.902Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-10T20:53:35.902Z"
             },
             {
               "$type": "Document",
@@ -87,8 +86,7 @@
               "RelativeToolTip": "main_interface\\MySplashScreen.xaml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-10-10T20:53:02.035Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-10T20:53:02.035Z"
             },
             {
               "$type": "Document",
@@ -113,8 +111,7 @@
               "RelativeToolTip": "main_interface\\App.xaml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-10-10T16:47:16.998Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-10T16:47:16.998Z"
             },
             {
               "$type": "Document",
@@ -150,8 +147,7 @@
               "RelativeToolTip": "main_interface\\main_interface.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-10-09T15:24:46.97Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-09T15:24:46.97Z"
             },
             {
               "$type": "Document",
@@ -199,8 +195,7 @@
               "RelativeToolTip": "main_interface\\MainWindow.xaml.cs",
               "ViewState": "AgIAABwAAAAAAAAAAAAgwC4AAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-09T14:06:26.077Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-09T14:06:26.077Z"
             },
             {
               "$type": "Document",
@@ -212,8 +207,7 @@
               "RelativeToolTip": "main_interface\\MainWindow.xaml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-10-09T14:05:48.025Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-09T14:05:48.025Z"
             }
           ]
         }
