@@ -14,12 +14,19 @@
         <TextBlock x:Name="GreetingText" Text="HelloWorld" FontSize="28" Margin="0,0,0,20"/>
         <Button Content="Click Me" Click="Button_Click"/>
 
+        <Button Content="Test Overlay"
+        Click="TestOverlay_Click"/>
+
+
         <NavigationView PaneTitle="Navigation" x:Name="NavigationView" IsBackButtonVisible="Collapsed" IsBackEnabled="False" PaneDisplayMode="Left" IsPaneOpen="True" >
             
         <NavigationView.MenuItems>
-            <NavigationViewItem Content="General" Icon="Setting" Tag="general"/>
-            <NavigationViewItem Content="Account" Icon="TouchPointer" Tag="account"/>
-                <NavigationViewItem Content="About" Icon="Help" Tag="about"/>
+            <NavigationViewItem Content="General" Icon="Setting" Tag="General"/>
+            <NavigationViewItem Content="Account" Icon="TouchPointer" Tag="Account"/>
+             <NavigationViewItem Content="About" Icon="Help" Tag="About"/>
+                <NavigationViewItem Content="Register" Icon="Help" Tag="RegisterPage"/>
+                <NavigationViewItem Content="Login" Icon="Help" Tag="LoginPage"/>
+
 
             </NavigationView.MenuItems>
         <Frame x:Name="ContentFrame"/>

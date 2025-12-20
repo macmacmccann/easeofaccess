@@ -23,6 +23,11 @@
 					<Value>General.xbf</Value>
 				</Candidate>
 			</NamedResource>
+			<NamedResource name="LoginPage.xbf" uri="ms-resource://main_interface/Files/LoginPage.xbf">
+				<Candidate type="Path">
+					<Value>LoginPage.xbf</Value>
+				</Candidate>
+			</NamedResource>
 			<NamedResource name="MainWindow.xbf" uri="ms-resource://main_interface/Files/MainWindow.xbf">
 				<Candidate type="Path">
 					<Value>MainWindow.xbf</Value>
@@ -31,6 +36,16 @@
 			<NamedResource name="MySplashScreen.xbf" uri="ms-resource://main_interface/Files/MySplashScreen.xbf">
 				<Candidate type="Path">
 					<Value>MySplashScreen.xbf</Value>
+				</Candidate>
+			</NamedResource>
+			<NamedResource name="OverlayScreen.xbf" uri="ms-resource://main_interface/Files/OverlayScreen.xbf">
+				<Candidate type="Path">
+					<Value>OverlayScreen.xbf</Value>
+				</Candidate>
+			</NamedResource>
+			<NamedResource name="RegisterPage.xbf" uri="ms-resource://main_interface/Files/RegisterPage.xbf">
+				<Candidate type="Path">
+					<Value>RegisterPage.xbf</Value>
 				</Candidate>
 			</NamedResource>
 		</ResourceMapSubtree>

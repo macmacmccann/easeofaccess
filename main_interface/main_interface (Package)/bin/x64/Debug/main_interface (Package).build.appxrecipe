@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <Machine>DESKTOP-M8D0LBK</Machine>
+    <Machine>MAINCPU</Machine>
     <WindowsUser>macmac</WindowsUser>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetOsVersion>10.0</TargetOsVersion>
@@ -55,11 +55,20 @@
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\General.xbf">
       <PackagePath>General.xbf</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\LoginPage.xbf">
+      <PackagePath>LoginPage.xbf</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\MainWindow.xbf">
       <PackagePath>MainWindow.xbf</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\MySplashScreen.xbf">
       <PackagePath>MySplashScreen.xbf</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\OverlayScreen.xbf">
+      <PackagePath>OverlayScreen.xbf</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\RegisterPage.xbf">
+      <PackagePath>RegisterPage.xbf</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.UniversalCRT.Debug\10.0.19041.0\Redist\Debug\x64\ucrtbased.dll">
       <PackagePath>ucrtbased.dll</PackagePath>
@@ -96,6 +105,30 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\microsoft.web.webview2\1.0.3179.45\runtimes\win-x64\native_uap\Microsoft.Web.WebView2.Core.dll">
       <PackagePath>main_interface\Microsoft.Web.WebView2.Core.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\birdmessenger\3.1.4\lib\net8.0\BirdMessenger.dll">
+      <PackagePath>main_interface\BirdMessenger.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\microsoft.extensions.dependencyinjection.abstractions\8.0.0\lib\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll">
+      <PackagePath>main_interface\Microsoft.Extensions.DependencyInjection.Abstractions.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\microsoft.extensions.logging.abstractions\8.0.0\lib\net8.0\Microsoft.Extensions.Logging.Abstractions.dll">
+      <PackagePath>main_interface\Microsoft.Extensions.Logging.Abstractions.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\microsoft.identitymodel.abstractions\7.5.1\lib\net8.0\Microsoft.IdentityModel.Abstractions.dll">
+      <PackagePath>main_interface\Microsoft.IdentityModel.Abstractions.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\microsoft.identitymodel.jsonwebtokens\7.5.1\lib\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll">
+      <PackagePath>main_interface\Microsoft.IdentityModel.JsonWebTokens.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\microsoft.identitymodel.logging\7.5.1\lib\net8.0\Microsoft.IdentityModel.Logging.dll">
+      <PackagePath>main_interface\Microsoft.IdentityModel.Logging.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\microsoft.identitymodel.tokens\7.5.1\lib\net8.0\Microsoft.IdentityModel.Tokens.dll">
+      <PackagePath>main_interface\Microsoft.IdentityModel.Tokens.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\microsoft.io.recyclablememorystream\3.0.0\lib\net6.0\Microsoft.IO.RecyclableMemoryStream.dll">
+      <PackagePath>main_interface\Microsoft.IO.RecyclableMemoryStream.dll</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\microsoft.windowsappsdk.ai\1.8.38\lib\net6.0-windows10.0.17763.0\Microsoft.Graphics.Imaging.Projection.dll">
       <PackagePath>main_interface\Microsoft.Graphics.Imaging.Projection.dll</PackagePath>
@@ -184,6 +217,42 @@
     <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\microsoft.windowsappsdk.winui\1.8.250906003\lib\net6.0-windows10.0.17763.0\Microsoft.WinUI.dll">
       <PackagePath>main_interface\Microsoft.WinUI.dll</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\mimemapping\3.0.1\lib\netstandard2.0\MimeMapping.dll">
+      <PackagePath>main_interface\MimeMapping.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\newtonsoft.json\13.0.3\lib\net6.0\Newtonsoft.Json.dll">
+      <PackagePath>main_interface\Newtonsoft.Json.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\supabase\1.1.1\lib\netstandard2.1\Supabase.dll">
+      <PackagePath>main_interface\Supabase.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\supabase.core\1.0.0\lib\netstandard2.0\Supabase.Core.dll">
+      <PackagePath>main_interface\Supabase.Core.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\supabase.functions\2.0.0\lib\netstandard2.0\Supabase.Functions.dll">
+      <PackagePath>main_interface\Supabase.Functions.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\supabase.gotrue\6.0.3\lib\netstandard2.1\Supabase.Gotrue.dll">
+      <PackagePath>main_interface\Supabase.Gotrue.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\supabase.postgrest\4.1.0\lib\netstandard2.0\Supabase.Postgrest.dll">
+      <PackagePath>main_interface\Supabase.Postgrest.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\supabase.realtime\7.2.0\lib\netstandard2.1\Supabase.Realtime.dll">
+      <PackagePath>main_interface\Supabase.Realtime.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\supabase.storage\2.4.1\lib\netstandard2.0\Supabase.Storage.dll">
+      <PackagePath>main_interface\Supabase.Storage.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\system.identitymodel.tokens.jwt\7.5.1\lib\net8.0\System.IdentityModel.Tokens.Jwt.dll">
+      <PackagePath>main_interface\System.IdentityModel.Tokens.Jwt.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\system.reactive\6.0.0\lib\net6.0-windows10.0.19041\System.Reactive.dll">
+      <PackagePath>main_interface\System.Reactive.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\websocket.client\5.1.1\lib\net8.0\Websocket.Client.dll">
+      <PackagePath>main_interface\Websocket.Client.dll</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\microsoft.web.webview2\1.0.3179.45\runtimes\win-arm64\native\WebView2Loader.dll">
       <PackagePath>main_interface\runtimes\win-arm64\native\WebView2Loader.dll</PackagePath>
     </AppxPackagedFile>
@@ -253,11 +322,20 @@
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\General.xbf">
       <PackagePath>main_interface\General.xbf</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\LoginPage.xbf">
+      <PackagePath>main_interface\LoginPage.xbf</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\MainWindow.xbf">
       <PackagePath>main_interface\MainWindow.xbf</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\MySplashScreen.xbf">
       <PackagePath>main_interface\MySplashScreen.xbf</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\OverlayScreen.xbf">
+      <PackagePath>main_interface\OverlayScreen.xbf</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\RegisterPage.xbf">
+      <PackagePath>main_interface\RegisterPage.xbf</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\apphost.exe">
       <PackagePath>main_interface\main_interface.exe</PackagePath>

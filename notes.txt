@@ -1,0 +1,82 @@
+
+
+
+
+
+using Windows.ApplicationModel.DataTransfer;
+
+Clipboard.ContentChanged += () =>
+{
+    var content = Clipboard.GetContent();
+    if (content.Contains(StandardDataFormats.Text))
+    {
+        var text = await content.GetTextAsync();
+        ClipboardStore.Add(text);
+    }
+};
+
+
+
+
+
+
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using WinRT.Interop;
+
+// To learn more about WinUI, the WinUI project structure,
+// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+namespace main_interface
+{
+    /// <summary>
+    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// </summary>
+    public sealed partial class OverlayScreen : Page
+    {
+        public OverlayScreen()
+        {
+            InitializeComponent();
+        }
+
+
+        const int HOTKEY_ID = 9000; //hotkey id so when windows sends it back to us 
+        const int MOD_CONTROL = 0x002; // win32 flag meaning the control key must be held
+        const int MOD_SHIFT = 0x0004; // win32 flag meaning the shift key must be held 
+        const int VK_V = 0x56; // Virtual Key for the letter v so meaning shift + v 
+
+
+        [DllImport("user32.dll")]
+        static extern bool SetForegroundWindow(IntPtr hWnd, int id, int fsModifiers, int vk);
+
+        // Parameters
+        // hwnd = handle window , 
+        // id = the id of the identified hotkey ,
+         // hsModifiers = modifier keys eg., control 
+         // virtual key code 
+
+
+        protected override OnLaunched( LaunchActivatedEventArgs e) // starting code on run basically main 
+        {
+            var window = new MainWindow(); // creates new mainui window 
+            window.Activate(); // Shows window makes it interactive 
+
+
+            var hwnd = WindowNative.GetWindowHandle(window); // Extacts the win32 hwnd from the winui window 
+            RegisterHotKey(hwnd, HOTKEY_ID, MOD_CONTROL | MOD_SHIFT, VK_V); // 
+            // hwnd window to notify
+            // idenfiier for this hotkey
+            // ctrl shift must be pressed 
+            //the v key 
+            
+
+
+        }
+
+    }
+}
