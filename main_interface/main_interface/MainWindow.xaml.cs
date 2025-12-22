@@ -16,6 +16,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using Microsoft.UI.Text;
 using WinRT.Interop;
+using Windows.UI.ViewManagement;
 
 
 
@@ -29,15 +30,23 @@ namespace main_interface
         IntPtr lParam, // Lomg parameter eg., mouse correciated x /y 
         IntPtr uIdSubclass, // What if there is mutiple subclassers on the same hwnd (window ) this identifies 
         IntPtr dwRefData 
-
         
         );
 
 
-
     public sealed partial class MainWindow : Window
     {
-    private SubclassProc _windowProc; // Field is in scope of MainWindow - will live as long as MainWindow does !
+
+        const int HOTKEY_ID_OVERLAY = 1; // id to identify this hotkey 
+        const uint MOD_CONTROL = 0x0002; // ctrl key modifier 
+        const uint MOD_ALT = 0x0001; // alt key modifier 
+        const uint MOD_SHIFT = 0x0004;
+        const uint VK_O = 0x4F; // virtual key code for the letter 'O'
+
+
+
+
+        private SubclassProc _windowProc; // Field is in scope of MainWindow - will live as long as MainWindow does !
 
         public MainWindow()  {
             InitializeComponent();
@@ -63,15 +72,22 @@ namespace main_interface
 
             var hwnd = WindowNative.GetWindowHandle(this); // Get the hwnd for THIS  window 
 
-            _windowProc = WndProc;
+            _windowProc = WndProc; // The delegate is not be garbage collected -
 
-            SetWindowSubclass(
+            SetWindowSubclass( // Subclass needed in winui to hook into window procesdure
                 hwnd,
                 _windowProc,
                 IntPtr.Zero,
                 IntPtr.Zero 
                 );
 
+            // What is the hotkey ? Its these global variables at the top of the method im passing in = CRtl + Alt + O
+            RegisterHotKey(
+                hwnd,
+                HOTKEY_ID_OVERLAY,
+                MOD_CONTROL | MOD_ALT,
+                VK_O
+                );
 
 
         }
@@ -88,8 +104,13 @@ namespace main_interface
 
             // What ill do if there is an event that i coded for something to happen 
             if (msg == WM_HOTKEY) { // Was the event a hotkey press?
-                ToggleOverlay(); //Lets open our overlay screen
-                return IntPtr.Zero; // tell win32 the message was handled  
+                if (wParam.ToInt32() == HOTKEY_ID_OVERLAY) // 
+                {
+                        ToggleOverlay(); //Lets open our overlay screen
+                        return IntPtr.Zero; // tell win32 the message was handled  
+                }
+
+               
             }
             return DefSubclassProc(hwnd, msg, wParam, lParam);
             // Let windows handle all other messages normally . 
@@ -114,7 +135,21 @@ namespace main_interface
         int msg,
         IntPtr wParam,
         IntPtr lParam
-);
+        );
+
+
+
+        // win32 import - winui does not support hotkeys (kernel event ) as its only a wrapper 
+        [DllImport("user32.dll")]
+        static extern bool RegisterHotKey(
+            IntPtr hWnd, // Window thats going to receive 
+            int id , // hotkey id 
+            uint fsModifers, // anything called moidifer means modifier key = crtl atl 
+            uint vk //  virtual key code 
+
+            );
+
+
 
 
         void ToggleOverlay() // The method that is called that runs the other pages code ( the overlay screen ) 

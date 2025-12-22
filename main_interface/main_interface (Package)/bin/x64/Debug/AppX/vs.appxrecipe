@@ -30,7 +30,7 @@
     <AppXManifest Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface %28Package%29\bin\x64\Debug\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2025-12-22T13:10:02.517</Modified>
+      <Modified>2025-12-22T21:00:38.422</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
@@ -88,7 +88,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\OverlayScreen.xbf">
       <PackagePath>OverlayScreen.xbf</PackagePath>
-      <Modified>2025-12-21T00:52:24.921</Modified>
+      <Modified>2025-12-22T20:39:45.275</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\RegisterPage.xbf">
       <PackagePath>RegisterPage.xbf</PackagePath>
@@ -442,7 +442,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\OverlayScreen.xbf">
       <PackagePath>main_interface\OverlayScreen.xbf</PackagePath>
-      <Modified>2025-12-21T00:52:24.921</Modified>
+      <Modified>2025-12-22T20:39:45.275</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\RegisterPage.xbf">
       <PackagePath>main_interface\RegisterPage.xbf</PackagePath>
@@ -450,7 +450,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\apphost.exe">
       <PackagePath>main_interface\main_interface.exe</PackagePath>
-      <Modified>2025-12-22T13:10:01.256</Modified>
+      <Modified>2025-12-22T21:00:37.266</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\main_interface.runtimeconfig.json">
       <PackagePath>main_interface\main_interface.runtimeconfig.json</PackagePath>
@@ -458,7 +458,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\main_interface.dll">
       <PackagePath>main_interface\main_interface.dll</PackagePath>
-      <Modified>2025-12-22T13:10:01.248</Modified>
+      <Modified>2025-12-22T21:00:37.262</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>
