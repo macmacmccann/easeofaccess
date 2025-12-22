@@ -43,7 +43,7 @@ namespace main_interface
             InitializeComponent();
             ContentFrame.Navigate(typeof(LoginPage)); //default Page
             this.NavigationView.SelectionChanged += NavigationView_SelectionChanged;
-            Activated += OnActivated;
+            Activated += OnActivated; // we have to wait until the hwnd is created
        }
         void OnActivated(object sender , WindowActivatedEventArgs e) // hwnd exists after the fact thats why is activated when window is constructred not in the construcotr 
         {

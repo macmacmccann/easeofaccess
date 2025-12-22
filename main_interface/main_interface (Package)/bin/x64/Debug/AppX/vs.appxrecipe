@@ -30,7 +30,7 @@
     <AppXManifest Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface %28Package%29\bin\x64\Debug\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2025-12-20T15:42:32.207</Modified>
+      <Modified>2025-12-22T13:10:02.517</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
@@ -76,11 +76,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\LoginPage.xbf">
       <PackagePath>LoginPage.xbf</PackagePath>
-      <Modified>2025-12-10T11:31:06.311</Modified>
+      <Modified>2025-12-21T00:52:03.073</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\MainWindow.xbf">
       <PackagePath>MainWindow.xbf</PackagePath>
-      <Modified>2025-12-20T15:26:43.473</Modified>
+      <Modified>2025-12-21T00:52:03.078</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\MySplashScreen.xbf">
       <PackagePath>MySplashScreen.xbf</PackagePath>
@@ -88,11 +88,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\OverlayScreen.xbf">
       <PackagePath>OverlayScreen.xbf</PackagePath>
-      <Modified>2025-12-20T15:42:30.251</Modified>
+      <Modified>2025-12-21T00:52:24.921</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\RegisterPage.xbf">
       <PackagePath>RegisterPage.xbf</PackagePath>
-      <Modified>2025-12-10T11:31:06.312</Modified>
+      <Modified>2025-12-21T00:52:03.088</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.UniversalCRT.Debug\10.0.19041.0\Redist\Debug\x64\ucrtbased.dll">
       <PackagePath>ucrtbased.dll</PackagePath>
@@ -134,7 +134,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface %28Package%29\bin\x64\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2025-12-18T16:26:19.435</Modified>
+      <Modified>2025-12-21T00:52:27.822</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\microsoft.web.webview2\1.0.3179.45\runtimes\win-x64\native_uap\Microsoft.Web.WebView2.Core.dll">
       <PackagePath>main_interface\Microsoft.Web.WebView2.Core.dll</PackagePath>
@@ -410,7 +410,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\main_interface.deps.json">
       <PackagePath>main_interface\main_interface.deps.json</PackagePath>
-      <Modified>2025-12-18T16:26:17.492</Modified>
+      <Modified>2025-12-21T00:52:25.907</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\App.xbf">
       <PackagePath>main_interface\App.xbf</PackagePath>
@@ -430,11 +430,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\LoginPage.xbf">
       <PackagePath>main_interface\LoginPage.xbf</PackagePath>
-      <Modified>2025-12-10T11:31:06.311</Modified>
+      <Modified>2025-12-21T00:52:03.073</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\MainWindow.xbf">
       <PackagePath>main_interface\MainWindow.xbf</PackagePath>
-      <Modified>2025-12-20T15:26:43.473</Modified>
+      <Modified>2025-12-21T00:52:03.078</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\MySplashScreen.xbf">
       <PackagePath>main_interface\MySplashScreen.xbf</PackagePath>
@@ -442,23 +442,23 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\OverlayScreen.xbf">
       <PackagePath>main_interface\OverlayScreen.xbf</PackagePath>
-      <Modified>2025-12-20T15:42:30.251</Modified>
+      <Modified>2025-12-21T00:52:24.921</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\RegisterPage.xbf">
       <PackagePath>main_interface\RegisterPage.xbf</PackagePath>
-      <Modified>2025-12-10T11:31:06.312</Modified>
+      <Modified>2025-12-21T00:52:03.088</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\apphost.exe">
       <PackagePath>main_interface\main_interface.exe</PackagePath>
-      <Modified>2025-12-20T15:42:30.646</Modified>
+      <Modified>2025-12-22T13:10:01.256</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\main_interface.runtimeconfig.json">
       <PackagePath>main_interface\main_interface.runtimeconfig.json</PackagePath>
-      <Modified>2025-11-27T16:12:05.888</Modified>
+      <Modified>2025-12-21T00:52:25.933</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\main_interface.dll">
       <PackagePath>main_interface\main_interface.dll</PackagePath>
-      <Modified>2025-12-20T15:42:30.598</Modified>
+      <Modified>2025-12-22T13:10:01.248</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>
