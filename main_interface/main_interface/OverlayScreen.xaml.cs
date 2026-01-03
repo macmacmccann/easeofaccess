@@ -13,9 +13,13 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices; // Require call to native win32 functions - dllimport 
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using WinRT.Interop; // This allows access to the underlying hwnd of winui window 
+
+using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Xaml.Media.Animation;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -29,6 +33,11 @@ namespace main_interface
     public sealed partial class OverlayScreen : Window
     {
         private static OverlayScreen _instance;
+        IntPtr _previousforground; // What is the app to paste the command grab it 
+        //_previousforground = GetForegroundWindow();
+
+        DesktopAcrylicBackdrop acrylic;
+
 
 
         public static OverlayScreen Instance 
@@ -48,14 +57,35 @@ namespace main_interface
         public OverlayScreen() // Constructor 
         {
             InitializeComponent(); // Load Xaml
+            this.ExtendsContentIntoTitleBar = true;
+            //EnableAcrylic();
             Activate(); // Create a native window(hwnd) for this object !
             HideFromTaskbar();
             SetOverlayStyle(); // Attach a win32 message listener to this window 
-            EnableBlur();
+            //EnableBlur();
             LoadCommands();
             // EnableClickThrough();
-            AlwaysOnTop();
+            ApplySettings();
+
         }
+
+
+        public void ApplySettings()
+        {
+            if(!OverlaySettings.OverlayEnabled)
+            {
+                MoveOffScreen();
+                return;
+            }
+     
+            if (OverlaySettings.Backdrop)
+            {
+                EnableAcrylic();
+            }
+
+
+        }
+
 
         public void Toggle() 
         {
@@ -66,6 +96,8 @@ namespace main_interface
             }
             else
             {
+                _previousforground = GetForegroundWindow();
+
                 ShowOnScreen(); // Hide or show the window if currently visible . 
             }
 
@@ -80,36 +112,27 @@ namespace main_interface
 
         void ShowOnScreen()
         {
-            var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
 
+
+           // var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
+            /*
             SetWindowPos(
                 hwnd,
-                -1, // always on top z-Index 
+                IntPtr.Zero, // dont change the index i set on onTop
                 100, 100, // x and y screen postions 
                 400, 300, // width heigh 
                 0x0040); // Dont activate the window 
-
-            
-            
-        
-            RootPanel.Opacity = 0;
-            _opacity = 0;
-
-            _animationTimer = new DispatcherTimer();
-
-            _animationTimer.Interval = TimeSpan.FromMilliseconds(16); // docuemented to be 60 fps 
-
-            _animationTimer.Tick += (s, e) =>
+            */
+            if (OverlaySettings.AlwaysOnTop)
             {
-                _opacity += 0.1;
-                RootPanel.Opacity = _opacity;
+                AlwaysOnTop();
+            }
+            else
+            {
+                RemoveOnTopSetToDefault();
+            }
 
-                if (_opacity >= 1) // Okay now its visible 
-                    _animationTimer.Stop();
 
-            };
-
-            _animationTimer.Start();
    
 
         }
@@ -121,7 +144,7 @@ namespace main_interface
 
             SetWindowPos(
                 hwnd,
-                -1, // always on top z-Index 
+                IntPtr.Zero, // dont change index when your hiding
                 -2000, -2000, // x and y screen postions 
                 0,0,// width heigh 
                 0x0040); // Dont activate the window 
@@ -176,7 +199,15 @@ namespace main_interface
             dataPackage.SetText(commandText); // put the text into the clipbaord container 
 
             Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage); // Push cobntent onto system clipboard 
+
             MoveOffScreen();
+            SetForegroundWindow(_previousforground);
+            Sleep(50);
+
+            if (OverlaySettings.AutoPaste)
+            {
+                PasteIntoActiveApp(commandText);
+            }
 
         }
 
@@ -234,8 +265,9 @@ namespace main_interface
             uint uFlags // Flags controlling behavior 
             );
 
+        //Declare constants 
+        static readonly IntPtr HWND_NOTTOPMOST = new IntPtr(-2);
         static readonly IntPtr HWND_TOPMOST = new IntPtr(-1); // Special value telling windows " keep this above all otheres 
-
         const uint SWP_NOMOVE = 0x0002; // Dont move window 
         const uint SWP_NOSIZE = 0X0001; // Dont change window size 
         const uint SWP_NOACTIVATE = 0x0010; // Dont steal keyboard focus 
@@ -244,15 +276,124 @@ namespace main_interface
         {
             var hwnd = WindowNative.GetWindowHandle(this); // Get the hwnd for THIS  window 
 
+
             SetWindowPos(
                 hwnd,
                 HWND_TOPMOST, // Keep it on top var in docuemntation 
-                0, 0,
-                0, 0,
-                SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE // Keep position and size dont steal focus 
+                100, 100, // x and y screen postions 
+                400, 300, // width heigh 
+                SWP_NOACTIVATE
+               // SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE // Keep position and size dont steal focus 
                 );
+
+            FadeIn();
+
         }
 
+
+        void RemoveOnTopSetToDefault()
+        {
+            var hwnd = WindowNative.GetWindowHandle(this);
+
+            SetWindowPos(
+                hwnd,
+                HWND_NOTTOPMOST, // Declares not top like z index 
+
+                   100, 100, // x and y screen postions 
+                    400, 300, // width heigh 
+                    SWP_NOACTIVATE
+               // SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE
+                );
+
+
+            FadeIn();
+
+
+        }
+
+
+        void FadeIn(){
+
+
+
+            RootPanel.Opacity = 0;
+            _opacity = 0;
+
+            _animationTimer = new DispatcherTimer();
+
+            _animationTimer.Interval = TimeSpan.FromMilliseconds(16); // docuemented to be 60 fps 
+
+            _animationTimer.Tick += (s, e) =>
+            {
+                _opacity += 0.1;
+                RootPanel.Opacity = _opacity;
+
+                if (_opacity >= 1) // Okay now its visible 
+                    _animationTimer.Stop();
+
+            };
+
+            _animationTimer.Start();
+        }
+
+        void CopyToClipboard(string text)
+        {
+            var data = new Windows.ApplicationModel.DataTransfer.DataPackage(); // Create a clipboard data container 
+
+            data.SetText(text); // Put text into the container 
+
+            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(data);
+            
+        }
+
+
+        // Get currently focused window 
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+
+
+
+
+        // Set a window to be current focus import for use  
+        [DllImport("user32.dll")]
+        static extern IntPtr SetForegroundWindow(IntPtr hwnd);
+
+
+
+        // Simulate keyboard input 
+        [DllImport("user32.dll")]
+        static extern void keybd_event(
+            byte bVk, // bute virtual key code 
+            byte bScan, // Hardware scan code 
+            uint dwFlags, // Keydown / keyup
+            UIntPtr dwExtraInfo  // desktp window extra info param if needed 
+            );
+
+        //Actual keycode params to cope paste into an app 
+        const byte VK_CONTROL = 0x11; // keycode for control 
+        const byte VK_V = 0x56; // virtual key v 
+        const uint KEYEVENTF_KEYUP = 0x0002; // flag for indicating you releaed the buttons 
+
+
+        async void PasteIntoActiveApp(string text)
+        {
+            CopyToClipboard(text);
+
+            await Task.Delay(50); 
+
+            var targetHwnd = GetForegroundWindow();
+
+            MoveOffScreen();
+
+            await Task.Delay(50);
+
+            keybd_event(VK_CONTROL, 0, 0, UIntPtr.Zero); // ctrl key down 
+            keybd_event(VK_V, 0, 0, UIntPtr.Zero); // v key down 
+            keybd_event(VK_V, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // v key up 
+            keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // control key up  
+
+
+        }
 
 
 
@@ -284,6 +425,23 @@ namespace main_interface
             public int cyBottomHeight;
 
         }
+
+
+
+        [DllImport("kernel32.dll")]
+        static extern void Sleep(uint dwMilliseconds);
+
+
+
+
+        void EnableAcrylic()
+        {
+            //if (!DesktopAcrylicBackdrop.IsSupported())
+              //  return; // null check
+            acrylic = new DesktopAcrylicBackdrop();
+            this.SystemBackdrop = acrylic;
+        }
+
 
 
      }

@@ -8,23 +8,46 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Margin="20">
+    <Grid>
+        <!-- Tint overlay - add this first -->
+        <Grid Background="#30005080" />
+        <!-- Semi-transparent blue tint - adjust as needed -->
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        
-        <TextBox  Grid.Row="1" Width ="250" x:Name ="EmailTextBox" PlaceholderText="Enter email here" Foreground="LightGreen" FontSize="24" HorizontalAlignment="Center"/>
-        
-        <PasswordBox  Grid.Row="3" Width ="250" x:Name="MyPasswordBox"  FontSize="24" HorizontalAlignment="Center" />
-        <Button x:Name="LoginButton" Grid.Row="4" Width="250" Content="Login" Click="LoginButtonClicked" />
-        
-                <TextBlock Grid.Row="0" Width ="250" x:Name ="ErrorText" Text="Error" Foreground="Red" FontSize="24" HorizontalAlignment="Center" Visibility="Collapsed"/>
-        <TextBlock  Grid.Row="2" Width ="250" x:Name ="SuccessText" Text="Success " Foreground="Green" FontSize="24" HorizontalAlignment="Center" Visibility="Collapsed"/>
-
+        <!-- Your existing content -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="1" 
+                    Spacing="16" 
+                    MaxWidth="320" 
+                    HorizontalAlignment="Center">
+                <InfoBar x:Name="ErrorText"
+                     Severity="Error"
+                     IsOpen="False"
+                     IsClosable="True"
+                     Message="Invalid email or password"/>
+                <InfoBar x:Name="SuccessText"
+                     Severity="Success"
+                     IsOpen="False"
+                     IsClosable="True"
+                     Message="Login successful!"/>
+                <TextBox x:Name="EmailTextBox"
+                     Header="Email"
+                     PlaceholderText="Enter your email"
+                     TextWrapping="NoWrap"
+                     InputScope="EmailSmtpAddress"/>
+                <PasswordBox x:Name="MyPasswordBox"
+                         Header="Password"
+                         PlaceholderText="Enter your password"/>
+                <Button x:Name="LoginButton"
+                    Content="Login"
+                    Click="LoginButtonClicked"
+                    HorizontalAlignment="Stretch"
+                    Style="{StaticResource AccentButtonStyle}"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Page>

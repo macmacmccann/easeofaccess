@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="main_interface.ControlPanelOverlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:main_interface"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+
+
+    <Grid Padding="24">
+
+
+        <StackPanel Spacing="20" MaxWidth="500">
+
+            <TextBlock
+                Text="Quick Commands"
+                FontSize="24"
+                FontWeight="SemiBold" />
+
+            <TextBlock
+                Text="Quick Commands lets you instantly paste predefined commands into the active application using a floating overlay."
+                TextWrapping="Wrap"
+                Opacity="0.8" />
+
+            <TextBlock
+                Text="Features"
+                FontSize="18"
+                FontWeight="SemiBold"
+                Margin="0,12,0,0" />
+
+            <ToggleSwitch
+                x:Name="OverlayToggle"
+                Header="Enable Quick Commands Overlay"
+                OffContent="Disabled"
+                OnContent="Enabled"
+                Toggled="OverlayToggle_Toggled" />
+
+            <ToggleSwitch
+                x:Name="AlwaysOnTopToggle"
+                Header="Always on Top"
+                OffContent="Off"
+                OnContent="On"
+                Toggled="AlwaysOnTopToggle_Toggled" />
+
+            <ToggleSwitch
+                x:Name="AutoPasteToggle"
+                Header="Auto paste on selection"
+                OffContent="Manual"
+                OnContent="Automatic"
+                Toggled="AutoPasteToggle_Toggled" />
+
+            <ToggleSwitch
+                x:Name="BackdropToggle"
+                Header="Use Acrylic / Mica background"
+                OffContent="Disabled"
+                OnContent="Enabled"
+                Toggled="BackdropToggle_Toggled" />
+
+        </StackPanel>
+    </Grid>
+
+
+
+</Page>

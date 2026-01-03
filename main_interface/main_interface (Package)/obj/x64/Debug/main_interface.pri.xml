@@ -18,6 +18,11 @@
 					<Value>App.xbf</Value>
 				</Candidate>
 			</NamedResource>
+			<NamedResource name="ControlPanelOverlay.xbf" uri="ms-resource://main_interface/Files/ControlPanelOverlay.xbf">
+				<Candidate type="Path">
+					<Value>ControlPanelOverlay.xbf</Value>
+				</Candidate>
+			</NamedResource>
 			<NamedResource name="General.xbf" uri="ms-resource://main_interface/Files/General.xbf">
 				<Candidate type="Path">
 					<Value>General.xbf</Value>

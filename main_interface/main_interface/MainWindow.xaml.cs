@@ -18,6 +18,11 @@ using Microsoft.UI.Text;
 using WinRT.Interop;
 using Windows.UI.ViewManagement;
 
+using Microsoft.UI.Composition.SystemBackdrops;
+
+using Microsoft.UI;
+using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Xaml.Media;
 
 
 namespace main_interface
@@ -37,6 +42,9 @@ namespace main_interface
     public sealed partial class MainWindow : Window
     {
 
+     
+        DesktopAcrylicBackdrop acrylic;
+
         const int HOTKEY_ID_OVERLAY = 1; // id to identify this hotkey 
         const uint MOD_CONTROL = 0x0002; // ctrl key modifier 
         const uint MOD_ALT = 0x0001; // alt key modifier 
@@ -50,7 +58,8 @@ namespace main_interface
 
         public MainWindow()  {
             InitializeComponent();
-            ContentFrame.Navigate(typeof(LoginPage)); //default Page
+            this.ExtendsContentIntoTitleBar = true;
+           // ContentFrame.Navigate(typeof(LoginPage)); //default Page
             this.NavigationView.SelectionChanged += NavigationView_SelectionChanged;
             Activated += OnActivated; // we have to wait until the hwnd is created
        }
@@ -58,7 +67,8 @@ namespace main_interface
         {
             SetupHook();
             Activated -= OnActivated; // ensurws it only runs once 
-
+            //EnableAcrylic();
+            EnableMica();
         }
 
 
@@ -149,7 +159,31 @@ namespace main_interface
 
             );
 
+   
+        void EnableMica()
+        {
+            if (MicaController.IsSupported())
+            {
+                this.SystemBackdrop = new MicaBackdrop()
+                {
+                    Kind = MicaKind.Base
+                };
+            }
+            else
+            {
+                EnableAcrylic();
+            }
+        }
 
+
+     
+        void EnableAcrylic()
+        {
+            //if (!DesktopAcrylicBackdrop.IsSupported())
+            //  return; // null check
+            acrylic = new DesktopAcrylicBackdrop();
+            this.SystemBackdrop = acrylic;
+        }
 
 
         void ToggleOverlay() // The method that is called that runs the other pages code ( the overlay screen ) 
@@ -158,11 +192,7 @@ namespace main_interface
         }
 
 
-        private void Button_Click(object sender,RoutedEventArgs e)
-        {
-            GreetingText.Text = "Button Clicked";
-        }
-
+ 
         private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             var selectedItem = (NavigationViewItem)args.SelectedItem;
@@ -183,6 +213,10 @@ namespace main_interface
 
                 case "account":
                     ContentFrame.Navigate(typeof(Account));
+                    break;
+
+                case "Command":
+                    ContentFrame.Navigate(typeof(ControlPanelOverlay));
                     break;
                 case "about":
                     ContentFrame.Navigate(typeof(About));

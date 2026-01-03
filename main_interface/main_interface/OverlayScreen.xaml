@@ -14,7 +14,7 @@
         <Border
              x:Name="RootPanel"
                 Opacity="0"
-    Background="#AA1E1E1E"
+    Background="Transparent"
     CornerRadius="12"
     Padding="12">
 
@@ -34,7 +34,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Border
-                        Background="#33FFFFFF"
+                        Background="Transparent"
                         CornerRadius="6"
                         Padding="8"
                         Margin="0,2">

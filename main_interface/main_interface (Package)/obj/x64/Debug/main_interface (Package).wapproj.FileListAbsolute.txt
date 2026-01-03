@@ -119,3 +119,5 @@ C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\RegisterPage.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\OverlayScreen.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\OverlayScreen.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\ControlPanelOverlay.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\ControlPanelOverlay.xbf

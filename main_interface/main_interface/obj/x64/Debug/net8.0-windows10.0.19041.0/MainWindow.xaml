@@ -9,37 +9,33 @@
     mc:Ignorable="d"
     Title="main_interface">
 
-    <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center">
-
-        <TextBlock x:ConnectionId='2' x:Name="GreetingText" Text="HelloWorld" FontSize="28" Margin="0,0,0,20"/>
-        <Button x:ConnectionId='3' Content="Click Me"                     />
-
-        <Button x:ConnectionId='4' Content="Test Overlay"
-                                 />
 
 
-        <NavigationView x:ConnectionId='5' PaneTitle="Navigation" x:Name="NavigationView" IsBackButtonVisible="Collapsed" IsBackEnabled="False" PaneDisplayMode="Left" IsPaneOpen="True" >
-            
-        <NavigationView.MenuItems>
-            <NavigationViewItem Content="General" Icon="Setting" Tag="General"/>
-            <NavigationViewItem Content="Account" Icon="TouchPointer" Tag="Account"/>
-             <NavigationViewItem Content="About" Icon="Help" Tag="About"/>
+    <Grid>
+        <Grid Background="#30FFFF00" />
+
+        <NavigationView x:ConnectionId='2' x:Name="NavigationView" 
+                        IsBackButtonVisible="Collapsed" 
+                        IsBackEnabled="False" 
+                        PaneDisplayMode="Left" 
+                        IsPaneOpen="True"
+                        IsPaneToggleButtonVisible="False">
+
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="General" Icon="Setting" Tag="General"/>
+                <NavigationViewItem Content="Account" Icon="TouchPointer" Tag="Account"/>
+                <NavigationViewItem Content="About" Icon="Help" Tag="About"/>
                 <NavigationViewItem Content="Register" Icon="Help" Tag="RegisterPage"/>
+                <NavigationViewItem Content="Command" Icon="Setting" Tag="Command"/>
                 <NavigationViewItem Content="Login" Icon="Help" Tag="LoginPage"/>
-
-
             </NavigationView.MenuItems>
-        <Frame x:ConnectionId='6' x:Name="ContentFrame"/>
 
-  </NavigationView>
-
-
-
-    </StackPanel>
+            <Frame x:ConnectionId='3' x:Name="ContentFrame"/>
+        </NavigationView>
+    </Grid>
 
 
- 
-    
+
     <Window.SystemBackdrop>
         <MicaBackdrop />
     </Window.SystemBackdrop>

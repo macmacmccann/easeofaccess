@@ -7,6 +7,7 @@ C:\Users\markm\.nuget\packages\microsoft.web.webview2\1.0.3179.45\lib\Microsoft.
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\About.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\Account.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\App.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\ControlPanelOverlay.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\General.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\LoginPage.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\MainWindow.xbf
@@ -94,6 +95,7 @@ C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\App.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\About.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\Account.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\ControlPanelOverlay.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\General.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\LoginPage.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\MainWindow.xbf
