@@ -121,3 +121,9 @@ C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\OverlayScreen.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\ControlPanelOverlay.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\ControlPanelOverlay.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\ControlPanelVisuals.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\ControlPanelVisuals.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\SpotlightPage.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\SpotlightPage.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\SpotlightWindow.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\SpotlightWindow.xbf

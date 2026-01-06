@@ -9,12 +9,18 @@ namespace main_interface
 {
     public static class OverlaySettings
     {
-        public static bool OverlayEnabled = true;
+        public static bool OverlayEnabled = false;
+        public static bool AlwaysOnTopEnabled = false;
+        public static bool AutoPasteEnabled = false;   
+        public static bool BackdropEnabled = false;
 
-        public static bool AlwaysOnTop = false;
 
-        public static bool AutoPaste = false;   
-        public static bool Backdrop = true;
+        // Color gradients 
+        public static bool MonitorColorFixEnabled = false;
+
+        public static bool DimScreenEnabled = false;
+
+
 
 
     }

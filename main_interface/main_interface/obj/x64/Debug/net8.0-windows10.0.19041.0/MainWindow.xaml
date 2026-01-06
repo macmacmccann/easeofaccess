@@ -27,6 +27,8 @@
                 <NavigationViewItem Content="About" Icon="Help" Tag="About"/>
                 <NavigationViewItem Content="Register" Icon="Help" Tag="RegisterPage"/>
                 <NavigationViewItem Content="Command" Icon="Setting" Tag="Command"/>
+                <NavigationViewItem Content="Screen" Icon="Setting" Tag="Screen"/>
+
                 <NavigationViewItem Content="Login" Icon="Help" Tag="LoginPage"/>
             </NavigationView.MenuItems>
 

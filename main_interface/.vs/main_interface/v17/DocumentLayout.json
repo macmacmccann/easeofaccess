@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\controlpanelvisuals.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|solutionrelative:main_interface\\controlpanelvisuals.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\controlpanelvisuals.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|solutionrelative:main_interface\\controlpanelvisuals.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\controlpaneloverlay.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|solutionrelative:main_interface\\controlpaneloverlay.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\general.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|solutionrelative:main_interface\\general.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\general.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|solutionrelative:main_interface\\general.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\controlpaneloverlay.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -31,12 +31,44 @@
       "RelativeMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|solutionrelative:main_interface\\overlayscreen.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|solutionrelative:main_interface\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\spotlightwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|solutionrelative:main_interface\\spotlightwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|solutionrelative:main_interface\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D523FD6E-1AA1-4E53-83A0-B7E016E231F4}|main_interface (Package)\\main_interface (Package).wapproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface (package)\\main_interface (package).wapproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{D523FD6E-1AA1-4E53-83A0-B7E016E231F4}|main_interface (Package)\\main_interface (Package).wapproj|solutionrelative:main_interface (package)\\main_interface (package).wapproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\spotlightpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|solutionrelative:main_interface\\spotlightpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\obj\\x64\\Debug\\net8.0-windows10.0.19041.0\\ControlPanelVisuals.g.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:main_interface\\obj\\x64\\Debug\\net8.0-windows10.0.19041.0\\ControlPanelVisuals.g.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|solutionrelative:main_interface\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\loginpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|solutionrelative:main_interface\\loginpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\spotlightpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|solutionrelative:main_interface\\spotlightpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\general.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|solutionrelative:main_interface\\general.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\general.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|solutionrelative:main_interface\\general.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\main_interface.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
@@ -45,10 +77,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\loginpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|solutionrelative:main_interface\\loginpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\loginpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|solutionrelative:main_interface\\loginpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\mysplashscreen.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -73,10 +101,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\account.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|solutionrelative:main_interface\\account.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D523FD6E-1AA1-4E53-83A0-B7E016E231F4}|main_interface (Package)\\main_interface (Package).wapproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface (package)\\main_interface (package).wapproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{D523FD6E-1AA1-4E53-83A0-B7E016E231F4}|main_interface (Package)\\main_interface (Package).wapproj|solutionrelative:main_interface (package)\\main_interface (package).wapproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CBCF3881-8F55-4F82-B088-A3DB7F1C03D5}|main_interface\\main_interface.csproj|c:\\users\\markm\\college\\easeofaccess\\main_interface\\main_interface\\account.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
@@ -116,7 +140,7 @@
               "RelativeDocumentMoniker": "main_interface\\OverlaySettings.cs",
               "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\OverlaySettings.cs",
               "RelativeToolTip": "main_interface\\OverlaySettings.cs",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAiwBAAAAArAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-24T14:53:20.907Z",
               "EditorCaption": ""
@@ -128,40 +152,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ControlPanelOverlay.xaml",
-              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\ControlPanelOverlay.xaml",
-              "RelativeDocumentMoniker": "main_interface\\ControlPanelOverlay.xaml",
-              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\ControlPanelOverlay.xaml",
-              "RelativeToolTip": "main_interface\\ControlPanelOverlay.xaml",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAADYAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-12-24T14:19:10.178Z",
+              "Title": "ControlPanelVisuals.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\ControlPanelVisuals.xaml.cs",
+              "RelativeDocumentMoniker": "main_interface\\ControlPanelVisuals.xaml.cs",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\ControlPanelVisuals.xaml.cs",
+              "RelativeToolTip": "main_interface\\ControlPanelVisuals.xaml.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAABYAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T13:15:55.552Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "General.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\General.xaml.cs",
-              "RelativeDocumentMoniker": "main_interface\\General.xaml.cs",
-              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\General.xaml.cs",
-              "RelativeToolTip": "main_interface\\General.xaml.cs",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAABQAAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-09T15:23:26.438Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "General.xaml",
-              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\General.xaml",
-              "RelativeDocumentMoniker": "main_interface\\General.xaml",
-              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\General.xaml",
-              "RelativeToolTip": "main_interface\\General.xaml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Title": "ControlPanelOverlay.xaml",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\ControlPanelOverlay.xaml",
+              "RelativeDocumentMoniker": "main_interface\\ControlPanelOverlay.xaml",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\ControlPanelOverlay.xaml",
+              "RelativeToolTip": "main_interface\\ControlPanelOverlay.xaml",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAACMAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-10-09T15:22:44.209Z",
+              "WhenOpened": "2025-12-24T14:19:10.178Z",
               "EditorCaption": ""
             },
             {
@@ -172,7 +183,7 @@
               "RelativeDocumentMoniker": "main_interface\\OverlayScreen.xaml",
               "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\OverlayScreen.xaml",
               "RelativeToolTip": "main_interface\\OverlayScreen.xaml",
-              "ViewState": "AgIAACEAAAAAAAAAAAAAAC4AAAAmAAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAABQAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-12-22T16:00:05.543Z",
               "EditorCaption": ""
@@ -180,14 +191,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 7,
-              "Title": "MainWindow.xaml",
-              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\MainWindow.xaml",
-              "RelativeDocumentMoniker": "main_interface\\MainWindow.xaml",
-              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\MainWindow.xaml",
-              "RelativeToolTip": "main_interface\\MainWindow.xaml",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-10-09T14:05:48.025Z",
+              "Title": "SpotlightWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\SpotlightWindow.xaml.cs",
+              "RelativeDocumentMoniker": "main_interface\\SpotlightWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\SpotlightWindow.xaml.cs",
+              "RelativeToolTip": "main_interface\\SpotlightWindow.xaml.cs",
+              "ViewState": "AgIAANAAAAAAAAAAAAAUwEMAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-03T17:34:56.199Z",
               "EditorCaption": ""
             },
             {
@@ -198,127 +209,14 @@
               "RelativeDocumentMoniker": "main_interface\\MainWindow.xaml.cs",
               "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\MainWindow.xaml.cs",
               "RelativeToolTip": "main_interface\\MainWindow.xaml.cs",
-              "ViewState": "AgIAAMsAAAAAAAAAAADwv9gAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAEEAAAAAAAAAAIA0wHoAAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-09T14:06:26.077Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "LoginPage.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\LoginPage.xaml.cs",
-              "RelativeDocumentMoniker": "main_interface\\LoginPage.xaml.cs",
-              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\LoginPage.xaml.cs",
-              "RelativeToolTip": "main_interface\\LoginPage.xaml.cs",
-              "ViewState": "AgIAABEAAAAAAAAAAAAIwDYAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-23T17:35:08.707Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 9,
-              "Title": "main_interface.csproj",
-              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\main_interface.csproj",
-              "RelativeDocumentMoniker": "main_interface\\main_interface.csproj",
-              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\main_interface.csproj",
-              "RelativeToolTip": "main_interface\\main_interface.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-10-09T15:24:46.97Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "LoginPage.xaml",
-              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\LoginPage.xaml",
-              "RelativeDocumentMoniker": "main_interface\\LoginPage.xaml",
-              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\LoginPage.xaml",
-              "RelativeToolTip": "main_interface\\LoginPage.xaml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-12-23T17:25:24.792Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "MySplashScreen.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\MySplashScreen.xaml.cs",
-              "RelativeDocumentMoniker": "main_interface\\MySplashScreen.xaml.cs",
-              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\MySplashScreen.xaml.cs",
-              "RelativeToolTip": "main_interface\\MySplashScreen.xaml.cs",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAABgAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-10T20:53:35.902Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "RegisterPage.g.cs",
-              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\obj\\x64\\Debug\\net8.0-windows10.0.19041.0\\RegisterPage.g.cs",
-              "RelativeDocumentMoniker": "main_interface\\obj\\x64\\Debug\\net8.0-windows10.0.19041.0\\RegisterPage.g.cs",
-              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\obj\\x64\\Debug\\net8.0-windows10.0.19041.0\\RegisterPage.g.cs",
-              "RelativeToolTip": "main_interface\\obj\\x64\\Debug\\net8.0-windows10.0.19041.0\\RegisterPage.g.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-27T11:17:52.805Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "RegisterPage.xaml",
-              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\RegisterPage.xaml",
-              "RelativeDocumentMoniker": "main_interface\\RegisterPage.xaml",
-              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\RegisterPage.xaml",
-              "RelativeToolTip": "main_interface\\RegisterPage.xaml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-12-23T16:37:44.553Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "MySplashScreen.xaml",
-              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\MySplashScreen.xaml",
-              "RelativeDocumentMoniker": "main_interface\\MySplashScreen.xaml",
-              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\MySplashScreen.xaml",
-              "RelativeToolTip": "main_interface\\MySplashScreen.xaml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAABiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-10-10T20:53:02.035Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "App.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\App.xaml.cs",
-              "RelativeDocumentMoniker": "main_interface\\App.xaml.cs",
-              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\App.xaml.cs",
-              "RelativeToolTip": "main_interface\\App.xaml.cs",
-              "ViewState": "AgIAAC8AAAAAAAAAAAArwD4AAAAPAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-10T16:47:25.18Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "About.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\About.xaml.cs",
-              "RelativeDocumentMoniker": "main_interface\\About.xaml.cs",
-              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\About.xaml.cs",
-              "RelativeToolTip": "main_interface\\About.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-26T16:37:30.709Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
               "Title": "main_interface (Package).wapproj",
               "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface (Package)\\main_interface (Package).wapproj",
               "RelativeDocumentMoniker": "main_interface (Package)\\main_interface (Package).wapproj",
@@ -331,7 +229,185 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "ControlPanelVisuals.g.cs",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\obj\\x64\\Debug\\net8.0-windows10.0.19041.0\\ControlPanelVisuals.g.cs",
+              "RelativeDocumentMoniker": "main_interface\\obj\\x64\\Debug\\net8.0-windows10.0.19041.0\\ControlPanelVisuals.g.cs",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\obj\\x64\\Debug\\net8.0-windows10.0.19041.0\\ControlPanelVisuals.g.cs",
+              "RelativeToolTip": "main_interface\\obj\\x64\\Debug\\net8.0-windows10.0.19041.0\\ControlPanelVisuals.g.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T18:00:53.481Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "main_interface\\MainWindow.xaml",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\MainWindow.xaml",
+              "RelativeToolTip": "main_interface\\MainWindow.xaml",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAACcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-10-09T14:05:48.025Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "SpotlightPage.xaml",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\SpotlightPage.xaml",
+              "RelativeDocumentMoniker": "main_interface\\SpotlightPage.xaml",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\SpotlightPage.xaml",
+              "RelativeToolTip": "main_interface\\SpotlightPage.xaml",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAACYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-01-04T16:08:35.981Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "LoginPage.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\LoginPage.xaml.cs",
+              "RelativeDocumentMoniker": "main_interface\\LoginPage.xaml.cs",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\LoginPage.xaml.cs",
+              "RelativeToolTip": "main_interface\\LoginPage.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-23T17:35:08.707Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "General.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\General.xaml.cs",
+              "RelativeDocumentMoniker": "main_interface\\General.xaml.cs",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\General.xaml.cs",
+              "RelativeToolTip": "main_interface\\General.xaml.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAABQAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-09T15:23:26.438Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "General.xaml",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\General.xaml",
+              "RelativeDocumentMoniker": "main_interface\\General.xaml",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\General.xaml",
+              "RelativeToolTip": "main_interface\\General.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-10-09T15:22:44.209Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "main_interface.csproj",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\main_interface.csproj",
+              "RelativeDocumentMoniker": "main_interface\\main_interface.csproj",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\main_interface.csproj",
+              "RelativeToolTip": "main_interface\\main_interface.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-10-09T15:24:46.97Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "LoginPage.xaml",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\LoginPage.xaml",
+              "RelativeDocumentMoniker": "main_interface\\LoginPage.xaml",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\LoginPage.xaml",
+              "RelativeToolTip": "main_interface\\LoginPage.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-12-23T17:25:24.792Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "MySplashScreen.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\MySplashScreen.xaml.cs",
+              "RelativeDocumentMoniker": "main_interface\\MySplashScreen.xaml.cs",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\MySplashScreen.xaml.cs",
+              "RelativeToolTip": "main_interface\\MySplashScreen.xaml.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAABgAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-10T20:53:35.902Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 22,
+              "Title": "RegisterPage.g.cs",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\obj\\x64\\Debug\\net8.0-windows10.0.19041.0\\RegisterPage.g.cs",
+              "RelativeDocumentMoniker": "main_interface\\obj\\x64\\Debug\\net8.0-windows10.0.19041.0\\RegisterPage.g.cs",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\obj\\x64\\Debug\\net8.0-windows10.0.19041.0\\RegisterPage.g.cs",
+              "RelativeToolTip": "main_interface\\obj\\x64\\Debug\\net8.0-windows10.0.19041.0\\RegisterPage.g.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-27T11:17:52.805Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "RegisterPage.xaml",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\RegisterPage.xaml",
+              "RelativeDocumentMoniker": "main_interface\\RegisterPage.xaml",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\RegisterPage.xaml",
+              "RelativeToolTip": "main_interface\\RegisterPage.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-12-23T16:37:44.553Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "MySplashScreen.xaml",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\MySplashScreen.xaml",
+              "RelativeDocumentMoniker": "main_interface\\MySplashScreen.xaml",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\MySplashScreen.xaml",
+              "RelativeToolTip": "main_interface\\MySplashScreen.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAABiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-10-10T20:53:02.035Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "App.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\App.xaml.cs",
+              "RelativeDocumentMoniker": "main_interface\\App.xaml.cs",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\App.xaml.cs",
+              "RelativeToolTip": "main_interface\\App.xaml.cs",
+              "ViewState": "AgIAAC8AAAAAAAAAAAArwD4AAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-10T16:47:25.18Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "About.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\About.xaml.cs",
+              "RelativeDocumentMoniker": "main_interface\\About.xaml.cs",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\About.xaml.cs",
+              "RelativeToolTip": "main_interface\\About.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-26T16:37:30.709Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
               "Title": "App.xaml",
               "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\App.xaml",
               "RelativeDocumentMoniker": "main_interface\\App.xaml",
@@ -344,7 +420,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 27,
               "Title": "About.xaml",
               "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\About.xaml",
               "RelativeDocumentMoniker": "main_interface\\About.xaml",
@@ -356,7 +432,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 24,
               "Title": "Account.xaml.cs",
               "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\Account.xaml.cs",
               "RelativeDocumentMoniker": "main_interface\\Account.xaml.cs",
@@ -368,7 +444,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 25,
               "Title": "Account.xaml",
               "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\Account.xaml",
               "RelativeDocumentMoniker": "main_interface\\Account.xaml",
@@ -387,13 +463,26 @@
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ControlPanelVisuals.xaml",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\ControlPanelVisuals.xaml",
+              "RelativeDocumentMoniker": "main_interface\\ControlPanelVisuals.xaml",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\ControlPanelVisuals.xaml",
+              "RelativeToolTip": "main_interface\\ControlPanelVisuals.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-01-03T17:18:12.78Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 3,
               "Title": "ControlPanelOverlay.xaml.cs",
               "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\ControlPanelOverlay.xaml.cs",
               "RelativeDocumentMoniker": "main_interface\\ControlPanelOverlay.xaml.cs",
               "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\ControlPanelOverlay.xaml.cs",
               "RelativeToolTip": "main_interface\\ControlPanelOverlay.xaml.cs",
-              "ViewState": "AgIAABoAAAAAAAAAAAA1wCkAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAACEAAAAAAAAAAAA5wDMAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-24T14:22:30.41Z",
               "EditorCaption": ""
@@ -406,9 +495,22 @@
               "RelativeDocumentMoniker": "main_interface\\OverlayScreen.xaml.cs",
               "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\OverlayScreen.xaml.cs",
               "RelativeToolTip": "main_interface\\OverlayScreen.xaml.cs",
-              "ViewState": "AgIAADcAAAAAAAAAAAAiwEMAAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAAP8AAAAAAAAAAAAAwAkBAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-22T16:00:10.342Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "SpotlightPage.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\SpotlightPage.xaml.cs",
+              "RelativeDocumentMoniker": "main_interface\\SpotlightPage.xaml.cs",
+              "ToolTip": "C:\\Users\\markm\\College\\easeofaccess\\main_interface\\main_interface\\SpotlightPage.xaml.cs",
+              "RelativeToolTip": "main_interface\\SpotlightPage.xaml.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAACIAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-04T16:14:56.954Z",
               "EditorCaption": ""
             }
           ]

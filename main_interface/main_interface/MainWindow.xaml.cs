@@ -191,8 +191,10 @@ namespace main_interface
             OverlayScreen.Instance.Toggle();
         }
 
+        private SpotlightWindow _spotlightWindow;
+      
 
- 
+
         private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             var selectedItem = (NavigationViewItem)args.SelectedItem;
@@ -218,6 +220,11 @@ namespace main_interface
                 case "Command":
                     ContentFrame.Navigate(typeof(ControlPanelOverlay));
                     break;
+
+                case "Screen":
+                    ContentFrame.Navigate(typeof(ControlPanelVisuals));
+                    break;
+
                 case "about":
                     ContentFrame.Navigate(typeof(About));
                     break;

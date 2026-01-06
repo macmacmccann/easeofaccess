@@ -32,28 +32,28 @@
                 Margin="0,12,0,0" />
 
             <ToggleSwitch
-                x:Name="OverlayToggle"
+                x:Name="OverlayEnabledToggle"
                 Header="Enable Quick Commands Overlay"
                 OffContent="Disabled"
                 OnContent="Enabled"
                 Toggled="OverlayToggle_Toggled" />
 
             <ToggleSwitch
-                x:Name="AlwaysOnTopToggle"
+                x:Name="AlwaysOnTopEnabledToggle"
                 Header="Always on Top"
                 OffContent="Off"
                 OnContent="On"
                 Toggled="AlwaysOnTopToggle_Toggled" />
 
             <ToggleSwitch
-                x:Name="AutoPasteToggle"
+                x:Name="AutoPasteEnabledToggle"
                 Header="Auto paste on selection"
                 OffContent="Manual"
                 OnContent="Automatic"
                 Toggled="AutoPasteToggle_Toggled" />
 
             <ToggleSwitch
-                x:Name="BackdropToggle"
+                x:Name="BackdropEnabledToggle"
                 Header="Use Acrylic / Mica background"
                 OffContent="Disabled"
                 OnContent="Enabled"

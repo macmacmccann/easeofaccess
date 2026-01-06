@@ -23,6 +23,11 @@
 					<Value>ControlPanelOverlay.xbf</Value>
 				</Candidate>
 			</NamedResource>
+			<NamedResource name="ControlPanelVisuals.xbf" uri="ms-resource://main_interface/Files/ControlPanelVisuals.xbf">
+				<Candidate type="Path">
+					<Value>ControlPanelVisuals.xbf</Value>
+				</Candidate>
+			</NamedResource>
 			<NamedResource name="General.xbf" uri="ms-resource://main_interface/Files/General.xbf">
 				<Candidate type="Path">
 					<Value>General.xbf</Value>
@@ -51,6 +56,16 @@
 			<NamedResource name="RegisterPage.xbf" uri="ms-resource://main_interface/Files/RegisterPage.xbf">
 				<Candidate type="Path">
 					<Value>RegisterPage.xbf</Value>
+				</Candidate>
+			</NamedResource>
+			<NamedResource name="SpotlightPage.xbf" uri="ms-resource://main_interface/Files/SpotlightPage.xbf">
+				<Candidate type="Path">
+					<Value>SpotlightPage.xbf</Value>
+				</Candidate>
+			</NamedResource>
+			<NamedResource name="SpotlightWindow.xbf" uri="ms-resource://main_interface/Files/SpotlightWindow.xbf">
+				<Candidate type="Path">
+					<Value>SpotlightWindow.xbf</Value>
 				</Candidate>
 			</NamedResource>
 		</ResourceMapSubtree>

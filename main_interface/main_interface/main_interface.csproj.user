@@ -8,6 +8,15 @@
     <None Update="App.xaml">
       <SubType>Designer</SubType>
     </None>
+    <Page Update="SpotlightPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="SpotlightWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="ControlPanelVisuals.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="ControlPanelOverlay.xaml">
       <SubType>Designer</SubType>
     </Page>

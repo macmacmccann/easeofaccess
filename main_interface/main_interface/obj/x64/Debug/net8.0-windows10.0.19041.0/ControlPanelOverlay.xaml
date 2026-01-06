@@ -10,58 +10,50 @@
 
 
 
-    <!-- Root container for the page -->
     <Grid Padding="24">
 
-        <!-- Vertical layout keeps things readable and simple -->
+
         <StackPanel Spacing="20" MaxWidth="500">
 
-            <!-- Page title -->
             <TextBlock
                 Text="Quick Commands"
                 FontSize="24"
                 FontWeight="SemiBold" />
 
-            <!-- Short explanation of the feature -->
             <TextBlock
                 Text="Quick Commands lets you instantly paste predefined commands into the active application using a floating overlay."
                 TextWrapping="Wrap"
                 Opacity="0.8" />
 
-            <!-- Section header -->
             <TextBlock
                 Text="Features"
                 FontSize="18"
                 FontWeight="SemiBold"
                 Margin="0,12,0,0" />
 
-            <!-- Toggle: enable / disable overlay -->
             <ToggleSwitch x:ConnectionId='2'
-                x:Name="OverlayToggle"
+                x:Name="OverlayEnabledToggle"
                 Header="Enable Quick Commands Overlay"
                 OffContent="Disabled"
                 OnContent="Enabled"
                                                 />
 
-            <!-- Toggle: always on top -->
             <ToggleSwitch x:ConnectionId='3'
-                x:Name="AlwaysOnTopToggle"
+                x:Name="AlwaysOnTopEnabledToggle"
                 Header="Always on Top"
                 OffContent="Off"
                 OnContent="On"
                                                     />
 
-            <!-- Toggle: auto paste -->
             <ToggleSwitch x:ConnectionId='4'
-                x:Name="AutoPasteToggle"
+                x:Name="AutoPasteEnabled"
                 Header="Auto paste on selection"
                 OffContent="Manual"
                 OnContent="Automatic"
                                                   />
 
-            <!-- Toggle: visual effects -->
             <ToggleSwitch x:ConnectionId='5'
-                x:Name="BackdropToggle"
+                x:Name="BackdropEnabled"
                 Header="Use Acrylic / Mica background"
                 OffContent="Disabled"
                 OnContent="Enabled"

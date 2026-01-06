@@ -33,26 +33,26 @@ public sealed partial class ControlPanelOverlay : Page
 
     private void OverlayToggle_Toggled(object sender, RoutedEventArgs e)
     {
-        bool enabled = OverlayToggle.IsOn;
+        OverlaySettings.OverlayEnabled = OverlayEnabledToggle.IsOn;
         OverlayScreen.Instance.ApplySettings();
     }
 
 
     private void AlwaysOnTopToggle_Toggled(object sender, RoutedEventArgs e)
     {
-        bool enabled = AlwaysOnTopToggle.IsOn;
+        OverlaySettings.AlwaysOnTopEnabled = AlwaysOnTopEnabledToggle.IsOn;
         OverlayScreen.Instance.ApplySettings();
 
     }
     private void AutoPasteToggle_Toggled(object sender, RoutedEventArgs e)
     {
-        OverlaySettings.AutoPaste = AutoPasteToggle.IsOn;
+        OverlaySettings.AutoPasteEnabled = AutoPasteEnabledToggle.IsOn;
+        OverlayScreen.Instance.ApplySettings();
 
     }
     private void BackdropToggle_Toggled(object sender, RoutedEventArgs e)
     {
-        bool enabled = BackdropToggle.IsOn;
-
+        OverlaySettings.BackdropEnabled = BackdropEnabledToggle.IsOn;
         OverlayScreen.Instance.ApplySettings();
 
 

@@ -67,6 +67,7 @@ namespace main_interface
             // EnableClickThrough();
             ApplySettings();
 
+
         }
 
 
@@ -78,7 +79,7 @@ namespace main_interface
                 return;
             }
      
-            if (OverlaySettings.Backdrop)
+            if (OverlaySettings.BackdropEnabled)
             {
                 EnableAcrylic();
             }
@@ -123,7 +124,7 @@ namespace main_interface
                 400, 300, // width heigh 
                 0x0040); // Dont activate the window 
             */
-            if (OverlaySettings.AlwaysOnTop)
+            if (OverlaySettings.AlwaysOnTopEnabled)
             {
                 AlwaysOnTop();
             }
@@ -204,7 +205,7 @@ namespace main_interface
             SetForegroundWindow(_previousforground);
             Sleep(50);
 
-            if (OverlaySettings.AutoPaste)
+            if (OverlaySettings.AutoPasteEnabled)
             {
                 PasteIntoActiveApp(commandText);
             }
