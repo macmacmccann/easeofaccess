@@ -46,14 +46,14 @@
                                                     />
 
             <ToggleSwitch x:ConnectionId='4'
-                x:Name="AutoPasteEnabled"
+                x:Name="AutoPasteEnabledToggle"
                 Header="Auto paste on selection"
                 OffContent="Manual"
                 OnContent="Automatic"
                                                   />
 
             <ToggleSwitch x:ConnectionId='5'
-                x:Name="BackdropEnabled"
+                x:Name="BackdropEnabledToggle"
                 Header="Use Acrylic / Mica background"
                 OffContent="Disabled"
                 OnContent="Enabled"

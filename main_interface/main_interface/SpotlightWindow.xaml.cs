@@ -35,10 +35,13 @@ public sealed partial class SpotlightWindow : Window
         HideFromTaskbar();
         SetOverlayStyle();
         AlwaysOnTop();
+        //MakeDyslexiaOverlay();
+
         //HideFromTaskbar();
-        MakeTransparentAndClickThrough();
+        // MakeTransparentAndClickThrough();
+        //MakeRosePinkOverlay();
         //TurnIntoBook();
-       // this.SystemBackdrop = null;
+        // this.SystemBackdrop = null;
         //Content = new SpotlightPage();
 
 
@@ -61,19 +64,44 @@ public sealed partial class SpotlightWindow : Window
 
     public void ApplySettings()
     {
-        if (!OverlaySettings.MonitorColorFixEnabled)
+        // Check which overlay should be active and apply it
+        if (OverlaySettings.DyslexiaEnabled)
         {
-           MoveOffScreen();
+            MakeDyslexiaOverlay();
+            ShowOnScreen();
             return;
         }
 
-        if (!OverlaySettings.DimScreenEnabled)
+        if (OverlaySettings.LightSensitiveEnabled)
+        {
+            MakeLightSensitiveOverlay();
+            ShowOnScreen();
+            return;
+        }
+
+        if (OverlaySettings.MigraineEnabled)
+        {
+            MakeMigraineOverlay();
+            ShowOnScreen();
+            return;
+        }
+
+        if (OverlaySettings.VisualProcessingEnabled)
+        {
+            MakeVisualProcessingOverlay();
+            ShowOnScreen();
+            return;
+        }
+
+        if (OverlaySettings.DimScreenEnabled)
         {
             MakeTransparentAndClickThrough();
+            ShowOnScreen();
             return;
         }
-        ShowOnScreen();
 
+        // If nothing is enabled, hide the window
+        MoveOffScreen();
     }
 
 
@@ -139,7 +167,8 @@ public sealed partial class SpotlightWindow : Window
         var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
         var style = GetWindowLong(hwnd, -16); // Reads current window style flags 
 
-        SetWindowLong(hwnd, -16, style & ~0x00C00000); // remove titlebar 
+        SetWindowLong(hwnd, -16, style & ~0x00C00000); // remove titlebar
+        MoveOffScreen();
     }
 
 
@@ -182,15 +211,128 @@ public sealed partial class SpotlightWindow : Window
     void MakeTransparentAndClickThrough()
     {
         var hwnd = WindowNative.GetWindowHandle(this);
-
         int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
         exStyle |= WS_EX_LAYERED | WS_EX_TRANSPARENT; // Add layered and transparent flags
-
         SetWindowLong(hwnd, GWL_EXSTYLE, exStyle);
+
+
+        var grid = new Grid
+        {
+            Background = new SolidColorBrush(
+           Windows.UI.Color.FromArgb(255, 0, 0, 0) 
+       )
+        };
+
+        Content = grid;
 
         // Optional: Set opacity (255 = opaque, 0 = fully transparent)
         SetLayeredWindowAttributes(hwnd, 0, 150, LWA_ALPHA);
     }
+
+
+    void MakeRosePinkOverlay()
+    {
+
+        var hwnd = WindowNative.GetWindowHandle(this);
+        int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+        exStyle |= WS_EX_LAYERED | WS_EX_TRANSPARENT; // Add layered and transparent flags
+        SetWindowLong(hwnd, GWL_EXSTYLE, exStyle);
+
+        var grid = new Grid
+        {
+            Background = new SolidColorBrush(
+                Windows.UI.Color.FromArgb(255, 255, 230, 240) 
+            )
+        };
+
+        Content = grid;
+
+        SetLayeredWindowAttributes(hwnd, 0, 180, LWA_ALPHA);
+    }
+
+    void MakeDyslexiaOverlay()
+    {
+
+        var hwnd = WindowNative.GetWindowHandle(this);
+        int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+        exStyle |= WS_EX_LAYERED | WS_EX_TRANSPARENT; // Add layered and transparent flags
+        SetWindowLong(hwnd, GWL_EXSTYLE, exStyle);
+
+        var grid = new Grid
+        {
+            Background = new SolidColorBrush(
+                Windows.UI.Color.FromArgb(255, 255, 230, 204)
+            )
+        };
+
+        Content = grid;
+
+        SetLayeredWindowAttributes(hwnd, 0, 180, LWA_ALPHA);
+    }
+
+    void MakeLightSensitiveOverlay()
+    {
+
+        var hwnd = WindowNative.GetWindowHandle(this);
+        int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+        exStyle |= WS_EX_LAYERED | WS_EX_TRANSPARENT; // Add layered and transparent flags
+        SetWindowLong(hwnd, GWL_EXSTYLE, exStyle);
+
+        var grid = new Grid
+        {
+            Background = new SolidColorBrush(
+                Windows.UI.Color.FromArgb(255, 255, 229, 204)
+            )
+        };
+
+        Content = grid;
+
+        SetLayeredWindowAttributes(hwnd, 0, 180, LWA_ALPHA);
+    }
+
+    void MakeMigraineOverlay()
+    {
+
+        var hwnd = WindowNative.GetWindowHandle(this);
+        int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+        exStyle |= WS_EX_LAYERED | WS_EX_TRANSPARENT; // Add layered and transparent flags
+        SetWindowLong(hwnd, GWL_EXSTYLE, exStyle);
+
+        var grid = new Grid
+        {
+            Background = new SolidColorBrush(
+                Windows.UI.Color.FromArgb(255, 255, 230, 240)
+            )
+        };
+
+        Content = grid;
+
+        SetLayeredWindowAttributes(hwnd, 0, 180, LWA_ALPHA);
+    }
+
+    void MakeVisualProcessingOverlay()
+    {
+
+        var hwnd = WindowNative.GetWindowHandle(this);
+        int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+        exStyle |= WS_EX_LAYERED | WS_EX_TRANSPARENT; // Add layered and transparent flags
+        SetWindowLong(hwnd, GWL_EXSTYLE, exStyle);
+
+        var grid = new Grid
+        {
+            Background = new SolidColorBrush(
+                Windows.UI.Color.FromArgb(255, 230, 243, 255)
+            )
+        };
+
+        Content = grid;
+
+        SetLayeredWindowAttributes(hwnd, 0, 180, LWA_ALPHA);
+    }
+
+
+
+
 
 
     // IMPORTS 

@@ -44,15 +44,40 @@
             
             
             <ToggleSwitch x:ConnectionId='3'
-                x:Name="DimScreenEnabled"
+                x:Name="DimScreenEnabledToggle"
                 Header="Dim Screen"
                 OffContent="Disabled"
                 OnContent="Enabled"
                                                   />
 
+            <ToggleSwitch x:ConnectionId='4'
+               x:Name="DyslexiaEnabledToggle"
+               Header="Dyslexia Support"
+               OffContent="Disabled"
+               OnContent="Enabled"
+                                                /> 
 
 
-        
+            <ToggleSwitch x:ConnectionId='5'
+               x:Name="LightSensitiveEnabledToggle"
+               Header="Cater for Light Sensitivity"
+               OffContent="Disabled"
+               OnContent="Enabled"
+                                                      />
+
+            <ToggleSwitch x:ConnectionId='6'
+              x:Name="MigraineEnabledToggle"
+              Header="Cater for migraines"
+              OffContent="Disabled"
+              OnContent="Enabled"
+                                               />
+
+            <ToggleSwitch x:ConnectionId='7'
+              x:Name="VisualProcessingEnabledToggle"
+              Header="Visual Processing Disorder Filter"
+              OffContent="Disabled"
+              OnContent="Enabled"
+                                                       />
 
 
         </StackPanel>

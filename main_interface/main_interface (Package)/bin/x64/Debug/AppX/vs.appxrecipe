@@ -30,7 +30,7 @@
     <AppXManifest Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface %28Package%29\bin\x64\Debug\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2026-01-06T11:25:19.178</Modified>
+      <Modified>2026-01-06T14:11:08.901</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
@@ -72,11 +72,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\ControlPanelOverlay.xbf">
       <PackagePath>ControlPanelOverlay.xbf</PackagePath>
-      <Modified>2026-01-06T11:25:16.651</Modified>
+      <Modified>2026-01-06T11:41:43.874</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\ControlPanelVisuals.xbf">
       <PackagePath>ControlPanelVisuals.xbf</PackagePath>
-      <Modified>2026-01-06T11:25:16.652</Modified>
+      <Modified>2026-01-06T14:04:17.328</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\General.xbf">
       <PackagePath>General.xbf</PackagePath>
@@ -108,7 +108,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\SpotlightWindow.xbf">
       <PackagePath>SpotlightWindow.xbf</PackagePath>
-      <Modified>2026-01-05T12:55:02.133</Modified>
+      <Modified>2026-01-06T12:46:03.362</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.UniversalCRT.Debug\10.0.19041.0\Redist\Debug\x64\ucrtbased.dll">
       <PackagePath>ucrtbased.dll</PackagePath>
@@ -442,11 +442,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\ControlPanelOverlay.xbf">
       <PackagePath>main_interface\ControlPanelOverlay.xbf</PackagePath>
-      <Modified>2026-01-06T11:25:16.651</Modified>
+      <Modified>2026-01-06T11:41:43.874</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\ControlPanelVisuals.xbf">
       <PackagePath>main_interface\ControlPanelVisuals.xbf</PackagePath>
-      <Modified>2026-01-06T11:25:16.652</Modified>
+      <Modified>2026-01-06T14:04:17.328</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\General.xbf">
       <PackagePath>main_interface\General.xbf</PackagePath>
@@ -478,11 +478,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\SpotlightWindow.xbf">
       <PackagePath>main_interface\SpotlightWindow.xbf</PackagePath>
-      <Modified>2026-01-05T12:55:02.133</Modified>
+      <Modified>2026-01-06T12:46:03.362</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\apphost.exe">
       <PackagePath>main_interface\main_interface.exe</PackagePath>
-      <Modified>2026-01-06T11:25:17.249</Modified>
+      <Modified>2026-01-06T14:11:07.882</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\main_interface.runtimeconfig.json">
       <PackagePath>main_interface\main_interface.runtimeconfig.json</PackagePath>
@@ -490,7 +490,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\main_interface.dll">
       <PackagePath>main_interface\main_interface.dll</PackagePath>
-      <Modified>2026-01-06T11:25:17.187</Modified>
+      <Modified>2026-01-06T14:11:07.876</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

@@ -39,10 +39,7 @@ public sealed partial class ControlPanelVisuals : Page
     {
         OverlaySettings.MonitorColorFixEnabled = MonitorColorFixEnabledToggle.IsOn;
 
-       EnsureSpotLightWindow();
-
-        _spotlightWindow.ShowOnScreen();
-        _spotlightWindow.ApplySettings(); // Now apply settings from the other codes file
+UpdateOverlayState();
     }
 
 
@@ -50,13 +47,44 @@ public sealed partial class ControlPanelVisuals : Page
     private void DimScreenEnabledToggled(object sender, RoutedEventArgs e)
     {
         OverlaySettings.DimScreenEnabled = DimScreenEnabledToggle.IsOn;
-        _spotlightWindow.ApplySettings();
 
-        EnsureSpotLightWindow();
-        _spotlightWindow.ShowOnScreen();
-
+        UpdateOverlayState();
 
     }
+
+    private void DyslexiaEnabledToggled(object sender, RoutedEventArgs e)
+    {
+        OverlaySettings.DyslexiaEnabled = DyslexiaEnabledToggle.IsOn;
+
+        UpdateOverlayState();
+
+    }
+
+
+    private void LightSensitiveEnabledToggled(object sender, RoutedEventArgs e)
+    {
+        OverlaySettings.LightSensitiveEnabled = LightSensitiveEnabledToggle.IsOn;
+
+        UpdateOverlayState();
+
+    }
+
+    private void MigraineEnabledToggled(object sender, RoutedEventArgs e)
+    {
+        OverlaySettings.MigraineEnabled = MigraineEnabledToggle.IsOn;
+
+        UpdateOverlayState();
+
+    }
+
+    private void VisualProcessingEnabledToggled(object sender, RoutedEventArgs e)
+    {
+        OverlaySettings.VisualProcessingEnabled = VisualProcessingEnabledToggle.IsOn;
+
+        UpdateOverlayState();
+
+    }
+
 
 
     public void EnsureSpotLightWindow()
@@ -66,11 +94,35 @@ public sealed partial class ControlPanelVisuals : Page
         {
             _spotlightWindow = new SpotlightWindow();
             _spotlightWindow.Activate(); // shows the window
+
         }
-        
+
 
     }
 
+    private void UpdateOverlayState()
+    {
+        bool shouldShow =
+      OverlaySettings.MonitorColorFixEnabled && (
+        OverlaySettings.DimScreenEnabled ||
+        OverlaySettings.DyslexiaEnabled ||
+        OverlaySettings.LightSensitiveEnabled ||
+        OverlaySettings.MigraineEnabled ||
+        OverlaySettings.VisualProcessingEnabled);
+
+        if (shouldShow)
+        {
+            EnsureSpotLightWindow();          
+            _spotlightWindow.ApplySettings(); 
+            _spotlightWindow.ShowOnScreen();  
+        }
+        else
+        {
+            _spotlightWindow?.HideSpotlight();
+        }
+
+
+    }
 
 
 

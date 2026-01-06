@@ -50,9 +50,34 @@
                 OnContent="Enabled"
                 Toggled="DimScreenEnabledToggled" />
 
+            <ToggleSwitch
+               x:Name="DyslexiaEnabledToggle"
+               Header="Dyslexia Support"
+               OffContent="Disabled"
+               OnContent="Enabled"
+               Toggled="DyslexiaEnabledToggled" /> 
 
 
-        
+            <ToggleSwitch
+               x:Name="LightSensitiveEnabledToggle"
+               Header="Cater for Light Sensitivity"
+               OffContent="Disabled"
+               OnContent="Enabled"
+               Toggled="LightSensitiveEnabledToggled" />
+
+            <ToggleSwitch
+              x:Name="MigraineEnabledToggle"
+              Header="Cater for migraines"
+              OffContent="Disabled"
+              OnContent="Enabled"
+              Toggled="MigraineEnabledToggled" />
+
+            <ToggleSwitch
+              x:Name="VisualProcessingEnabledToggle"
+              Header="Visual Processing Disorder Filter"
+              OffContent="Disabled"
+              OnContent="Enabled"
+              Toggled="VisualProcessingEnabledToggled" />
 
 
         </StackPanel>

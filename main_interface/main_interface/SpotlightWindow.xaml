@@ -15,13 +15,7 @@
     </Window.SystemBackdrop>
 
 
-    <Grid Background="White">
 
 
-        <TextBlock Text="Hello, world spotlight window !"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="32" />
-    </Grid>
     
 </Window>

@@ -19,7 +19,11 @@ namespace main_interface
         public static bool MonitorColorFixEnabled = false;
 
         public static bool DimScreenEnabled = false;
-
+        public static bool DyslexiaEnabled = false;
+        public static bool LightSensitiveEnabled = false;
+        public static bool MigraineEnabled = false;
+        public static bool VisualProcessingEnabled = false;
+  
 
 
 
