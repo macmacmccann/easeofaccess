@@ -20,12 +20,12 @@
         <StackPanel Spacing="20" MaxWidth="500">
 
             <TextBlock
-                Text="Quick Commands"
+                Text="Control your screen easier "
                 FontSize="24"
                 FontWeight="SemiBold" />
 
             <TextBlock
-                Text=" Filter your monitors  "
+                Text=" Filter by any sort of issue "
                 TextWrapping="Wrap"
                 Opacity="0.8" />
 

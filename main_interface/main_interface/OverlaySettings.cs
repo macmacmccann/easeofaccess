@@ -23,7 +23,11 @@ namespace main_interface
         public static bool LightSensitiveEnabled = false;
         public static bool MigraineEnabled = false;
         public static bool VisualProcessingEnabled = false;
-  
+
+
+        // Mouseless Toggles 
+
+        public static bool MouselessEnabled = false;
 
 
 

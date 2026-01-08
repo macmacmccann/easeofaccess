@@ -225,6 +225,10 @@ namespace main_interface
                     ContentFrame.Navigate(typeof(ControlPanelVisuals));
                     break;
 
+                case "Mouseless":
+                    ContentFrame.Navigate(typeof(MouselessControlPanel));
+                    break;
+
                 case "about":
                     ContentFrame.Navigate(typeof(About));
                     break;

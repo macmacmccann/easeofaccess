@@ -226,7 +226,7 @@ namespace main_interface.main_interface_XamlTypeInfo
         
         private void InitTypeTables()
         {
-            _typeNameTable = new string[67];
+            _typeNameTable = new string[69];
             _typeNameTable[0] = "Microsoft.UI.Xaml.Controls.XamlControlsResources";
             _typeNameTable[1] = "Microsoft.UI.Xaml.ResourceDictionary";
             _typeNameTable[2] = "Object";
@@ -276,26 +276,28 @@ namespace main_interface.main_interface_XamlTypeInfo
             _typeNameTable[46] = "Microsoft.UI.Composition.SystemBackdrops.MicaKind";
             _typeNameTable[47] = "main_interface.MainWindow";
             _typeNameTable[48] = "Microsoft.UI.Xaml.Window";
-            _typeNameTable[49] = "Microsoft.UI.Xaml.Controls.ProgressRing";
-            _typeNameTable[50] = "Microsoft.UI.Xaml.Controls.ProgressRingTemplateSettings";
-            _typeNameTable[51] = "main_interface.MySplashScreen";
-            _typeNameTable[52] = "main_interface.OverlayScreen";
-            _typeNameTable[53] = "main_interface.RegisterPage";
-            _typeNameTable[54] = "Microsoft.UI.Xaml.Media.RadialGradientBrush";
-            _typeNameTable[55] = "Microsoft.UI.Xaml.Media.XamlCompositionBrushBase";
-            _typeNameTable[56] = "Windows.Foundation.Collections.IObservableVector`1<Microsoft.UI.Xaml.Media.GradientStop>";
-            _typeNameTable[57] = "Microsoft.UI.Xaml.Media.GradientStop";
-            _typeNameTable[58] = "Windows.Foundation.Point";
-            _typeNameTable[59] = "Microsoft.UI.Composition.CompositionColorSpace";
-            _typeNameTable[60] = "Microsoft.UI.Xaml.Media.BrushMappingMode";
-            _typeNameTable[61] = "Microsoft.UI.Xaml.Media.GradientSpreadMethod";
-            _typeNameTable[62] = "main_interface.SpotlightPage";
-            _typeNameTable[63] = "main_interface.SpotlightWindow";
-            _typeNameTable[64] = "Microsoft.UI.Xaml.Controls.TreeViewNode";
-            _typeNameTable[65] = "System.Collections.Generic.IList`1<Microsoft.UI.Xaml.Controls.TreeViewNode>";
-            _typeNameTable[66] = "Int32";
+            _typeNameTable[49] = "main_interface.Mouseless";
+            _typeNameTable[50] = "main_interface.MouselessControlPanel";
+            _typeNameTable[51] = "Microsoft.UI.Xaml.Controls.ProgressRing";
+            _typeNameTable[52] = "Microsoft.UI.Xaml.Controls.ProgressRingTemplateSettings";
+            _typeNameTable[53] = "main_interface.MySplashScreen";
+            _typeNameTable[54] = "main_interface.OverlayScreen";
+            _typeNameTable[55] = "main_interface.RegisterPage";
+            _typeNameTable[56] = "Microsoft.UI.Xaml.Media.RadialGradientBrush";
+            _typeNameTable[57] = "Microsoft.UI.Xaml.Media.XamlCompositionBrushBase";
+            _typeNameTable[58] = "Windows.Foundation.Collections.IObservableVector`1<Microsoft.UI.Xaml.Media.GradientStop>";
+            _typeNameTable[59] = "Microsoft.UI.Xaml.Media.GradientStop";
+            _typeNameTable[60] = "Windows.Foundation.Point";
+            _typeNameTable[61] = "Microsoft.UI.Composition.CompositionColorSpace";
+            _typeNameTable[62] = "Microsoft.UI.Xaml.Media.BrushMappingMode";
+            _typeNameTable[63] = "Microsoft.UI.Xaml.Media.GradientSpreadMethod";
+            _typeNameTable[64] = "main_interface.SpotlightPage";
+            _typeNameTable[65] = "main_interface.SpotlightWindow";
+            _typeNameTable[66] = "Microsoft.UI.Xaml.Controls.TreeViewNode";
+            _typeNameTable[67] = "System.Collections.Generic.IList`1<Microsoft.UI.Xaml.Controls.TreeViewNode>";
+            _typeNameTable[68] = "Int32";
 
-            _typeTable = new global::System.Type[67];
+            _typeTable = new global::System.Type[69];
             _typeTable[0] = typeof(global::Microsoft.UI.Xaml.Controls.XamlControlsResources);
             _typeTable[1] = typeof(global::Microsoft.UI.Xaml.ResourceDictionary);
             _typeTable[2] = typeof(global::System.Object);
@@ -345,24 +347,26 @@ namespace main_interface.main_interface_XamlTypeInfo
             _typeTable[46] = typeof(global::Microsoft.UI.Composition.SystemBackdrops.MicaKind);
             _typeTable[47] = typeof(global::main_interface.MainWindow);
             _typeTable[48] = typeof(global::Microsoft.UI.Xaml.Window);
-            _typeTable[49] = typeof(global::Microsoft.UI.Xaml.Controls.ProgressRing);
-            _typeTable[50] = typeof(global::Microsoft.UI.Xaml.Controls.ProgressRingTemplateSettings);
-            _typeTable[51] = typeof(global::main_interface.MySplashScreen);
-            _typeTable[52] = typeof(global::main_interface.OverlayScreen);
-            _typeTable[53] = typeof(global::main_interface.RegisterPage);
-            _typeTable[54] = typeof(global::Microsoft.UI.Xaml.Media.RadialGradientBrush);
-            _typeTable[55] = typeof(global::Microsoft.UI.Xaml.Media.XamlCompositionBrushBase);
-            _typeTable[56] = typeof(global::Windows.Foundation.Collections.IObservableVector<global::Microsoft.UI.Xaml.Media.GradientStop>);
-            _typeTable[57] = typeof(global::Microsoft.UI.Xaml.Media.GradientStop);
-            _typeTable[58] = typeof(global::Windows.Foundation.Point);
-            _typeTable[59] = typeof(global::Microsoft.UI.Composition.CompositionColorSpace);
-            _typeTable[60] = typeof(global::Microsoft.UI.Xaml.Media.BrushMappingMode);
-            _typeTable[61] = typeof(global::Microsoft.UI.Xaml.Media.GradientSpreadMethod);
-            _typeTable[62] = typeof(global::main_interface.SpotlightPage);
-            _typeTable[63] = typeof(global::main_interface.SpotlightWindow);
-            _typeTable[64] = typeof(global::Microsoft.UI.Xaml.Controls.TreeViewNode);
-            _typeTable[65] = typeof(global::System.Collections.Generic.IList<global::Microsoft.UI.Xaml.Controls.TreeViewNode>);
-            _typeTable[66] = typeof(global::System.Int32);
+            _typeTable[49] = typeof(global::main_interface.Mouseless);
+            _typeTable[50] = typeof(global::main_interface.MouselessControlPanel);
+            _typeTable[51] = typeof(global::Microsoft.UI.Xaml.Controls.ProgressRing);
+            _typeTable[52] = typeof(global::Microsoft.UI.Xaml.Controls.ProgressRingTemplateSettings);
+            _typeTable[53] = typeof(global::main_interface.MySplashScreen);
+            _typeTable[54] = typeof(global::main_interface.OverlayScreen);
+            _typeTable[55] = typeof(global::main_interface.RegisterPage);
+            _typeTable[56] = typeof(global::Microsoft.UI.Xaml.Media.RadialGradientBrush);
+            _typeTable[57] = typeof(global::Microsoft.UI.Xaml.Media.XamlCompositionBrushBase);
+            _typeTable[58] = typeof(global::Windows.Foundation.Collections.IObservableVector<global::Microsoft.UI.Xaml.Media.GradientStop>);
+            _typeTable[59] = typeof(global::Microsoft.UI.Xaml.Media.GradientStop);
+            _typeTable[60] = typeof(global::Windows.Foundation.Point);
+            _typeTable[61] = typeof(global::Microsoft.UI.Composition.CompositionColorSpace);
+            _typeTable[62] = typeof(global::Microsoft.UI.Xaml.Media.BrushMappingMode);
+            _typeTable[63] = typeof(global::Microsoft.UI.Xaml.Media.GradientSpreadMethod);
+            _typeTable[64] = typeof(global::main_interface.SpotlightPage);
+            _typeTable[65] = typeof(global::main_interface.SpotlightWindow);
+            _typeTable[66] = typeof(global::Microsoft.UI.Xaml.Controls.TreeViewNode);
+            _typeTable[67] = typeof(global::System.Collections.Generic.IList<global::Microsoft.UI.Xaml.Controls.TreeViewNode>);
+            _typeTable[68] = typeof(global::System.Int32);
         }
 
         private int LookupTypeIndexByName(string typeName)
@@ -412,14 +416,16 @@ namespace main_interface.main_interface_XamlTypeInfo
         private object Activate_43_InfoBadge() { return new global::Microsoft.UI.Xaml.Controls.InfoBadge(); }
         private object Activate_44_MicaBackdrop() { return new global::Microsoft.UI.Xaml.Media.MicaBackdrop(); }
         private object Activate_47_MainWindow() { return new global::main_interface.MainWindow(); }
-        private object Activate_49_ProgressRing() { return new global::Microsoft.UI.Xaml.Controls.ProgressRing(); }
-        private object Activate_51_MySplashScreen() { return new global::main_interface.MySplashScreen(); }
-        private object Activate_52_OverlayScreen() { return new global::main_interface.OverlayScreen(); }
-        private object Activate_53_RegisterPage() { return new global::main_interface.RegisterPage(); }
-        private object Activate_54_RadialGradientBrush() { return new global::Microsoft.UI.Xaml.Media.RadialGradientBrush(); }
-        private object Activate_62_SpotlightPage() { return new global::main_interface.SpotlightPage(); }
-        private object Activate_63_SpotlightWindow() { return new global::main_interface.SpotlightWindow(); }
-        private object Activate_64_TreeViewNode() { return new global::Microsoft.UI.Xaml.Controls.TreeViewNode(); }
+        private object Activate_49_Mouseless() { return new global::main_interface.Mouseless(); }
+        private object Activate_50_MouselessControlPanel() { return new global::main_interface.MouselessControlPanel(); }
+        private object Activate_51_ProgressRing() { return new global::Microsoft.UI.Xaml.Controls.ProgressRing(); }
+        private object Activate_53_MySplashScreen() { return new global::main_interface.MySplashScreen(); }
+        private object Activate_54_OverlayScreen() { return new global::main_interface.OverlayScreen(); }
+        private object Activate_55_RegisterPage() { return new global::main_interface.RegisterPage(); }
+        private object Activate_56_RadialGradientBrush() { return new global::Microsoft.UI.Xaml.Media.RadialGradientBrush(); }
+        private object Activate_64_SpotlightPage() { return new global::main_interface.SpotlightPage(); }
+        private object Activate_65_SpotlightWindow() { return new global::main_interface.SpotlightWindow(); }
+        private object Activate_66_TreeViewNode() { return new global::Microsoft.UI.Xaml.Controls.TreeViewNode(); }
         private void StaticInitializer_0_XamlControlsResources() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Xaml.Controls.XamlControlsResources).TypeHandle);
         private void StaticInitializer_4_About() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::main_interface.About).TypeHandle);
         private void StaticInitializer_7_Account() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::main_interface.Account).TypeHandle);
@@ -448,18 +454,20 @@ namespace main_interface.main_interface_XamlTypeInfo
         private void StaticInitializer_44_MicaBackdrop() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Xaml.Media.MicaBackdrop).TypeHandle);
         private void StaticInitializer_46_MicaKind() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Composition.SystemBackdrops.MicaKind).TypeHandle);
         private void StaticInitializer_47_MainWindow() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::main_interface.MainWindow).TypeHandle);
-        private void StaticInitializer_49_ProgressRing() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Xaml.Controls.ProgressRing).TypeHandle);
-        private void StaticInitializer_50_ProgressRingTemplateSettings() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Xaml.Controls.ProgressRingTemplateSettings).TypeHandle);
-        private void StaticInitializer_51_MySplashScreen() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::main_interface.MySplashScreen).TypeHandle);
-        private void StaticInitializer_52_OverlayScreen() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::main_interface.OverlayScreen).TypeHandle);
-        private void StaticInitializer_53_RegisterPage() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::main_interface.RegisterPage).TypeHandle);
-        private void StaticInitializer_54_RadialGradientBrush() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Xaml.Media.RadialGradientBrush).TypeHandle);
-        private void StaticInitializer_56_IObservableVector() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Windows.Foundation.Collections.IObservableVector<global::Microsoft.UI.Xaml.Media.GradientStop>).TypeHandle);
-        private void StaticInitializer_59_CompositionColorSpace() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Composition.CompositionColorSpace).TypeHandle);
-        private void StaticInitializer_62_SpotlightPage() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::main_interface.SpotlightPage).TypeHandle);
-        private void StaticInitializer_63_SpotlightWindow() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::main_interface.SpotlightWindow).TypeHandle);
-        private void StaticInitializer_64_TreeViewNode() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Xaml.Controls.TreeViewNode).TypeHandle);
-        private void StaticInitializer_65_IList() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::System.Collections.Generic.IList<global::Microsoft.UI.Xaml.Controls.TreeViewNode>).TypeHandle);
+        private void StaticInitializer_49_Mouseless() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::main_interface.Mouseless).TypeHandle);
+        private void StaticInitializer_50_MouselessControlPanel() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::main_interface.MouselessControlPanel).TypeHandle);
+        private void StaticInitializer_51_ProgressRing() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Xaml.Controls.ProgressRing).TypeHandle);
+        private void StaticInitializer_52_ProgressRingTemplateSettings() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Xaml.Controls.ProgressRingTemplateSettings).TypeHandle);
+        private void StaticInitializer_53_MySplashScreen() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::main_interface.MySplashScreen).TypeHandle);
+        private void StaticInitializer_54_OverlayScreen() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::main_interface.OverlayScreen).TypeHandle);
+        private void StaticInitializer_55_RegisterPage() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::main_interface.RegisterPage).TypeHandle);
+        private void StaticInitializer_56_RadialGradientBrush() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Xaml.Media.RadialGradientBrush).TypeHandle);
+        private void StaticInitializer_58_IObservableVector() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Windows.Foundation.Collections.IObservableVector<global::Microsoft.UI.Xaml.Media.GradientStop>).TypeHandle);
+        private void StaticInitializer_61_CompositionColorSpace() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Composition.CompositionColorSpace).TypeHandle);
+        private void StaticInitializer_64_SpotlightPage() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::main_interface.SpotlightPage).TypeHandle);
+        private void StaticInitializer_65_SpotlightWindow() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::main_interface.SpotlightWindow).TypeHandle);
+        private void StaticInitializer_66_TreeViewNode() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Xaml.Controls.TreeViewNode).TypeHandle);
+        private void StaticInitializer_67_IList() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::System.Collections.Generic.IList<global::Microsoft.UI.Xaml.Controls.TreeViewNode>).TypeHandle);
         private void MapAdd_0_XamlControlsResources(object instance, object key, object item)
         {
             var collection = (global::System.Collections.Generic.IDictionary<global::System.Object, global::System.Object>)instance;
@@ -473,13 +481,13 @@ namespace main_interface.main_interface_XamlTypeInfo
             var newItem = (global::System.Object)item;
             collection.Add(newItem);
         }
-        private void VectorAdd_56_IObservableVector(object instance, object item)
+        private void VectorAdd_58_IObservableVector(object instance, object item)
         {
             var collection = (global::System.Collections.Generic.ICollection<global::Microsoft.UI.Xaml.Media.GradientStop>)instance;
             var newItem = (global::Microsoft.UI.Xaml.Media.GradientStop)item;
             collection.Add(newItem);
         }
-        private void VectorAdd_65_IList(object instance, object item)
+        private void VectorAdd_67_IList(object instance, object item)
         {
             var collection = (global::System.Collections.Generic.ICollection<global::Microsoft.UI.Xaml.Controls.TreeViewNode>)instance;
             var newItem = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)item;
@@ -862,10 +870,26 @@ namespace main_interface.main_interface_XamlTypeInfo
                 xamlType = new global::main_interface.main_interface_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
-            case 49:   //  Microsoft.UI.Xaml.Controls.ProgressRing
+            case 49:   //  main_interface.Mouseless
+                userType = new global::main_interface.main_interface_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Microsoft.UI.Xaml.Window"));
+                userType.Activator = Activate_49_Mouseless;
+                userType.StaticInitializer = StaticInitializer_49_Mouseless;
+                userType.SetIsLocalType();
+                xamlType = userType;
+                break;
+
+            case 50:   //  main_interface.MouselessControlPanel
+                userType = new global::main_interface.main_interface_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Microsoft.UI.Xaml.Controls.Page"));
+                userType.Activator = Activate_50_MouselessControlPanel;
+                userType.StaticInitializer = StaticInitializer_50_MouselessControlPanel;
+                userType.SetIsLocalType();
+                xamlType = userType;
+                break;
+
+            case 51:   //  Microsoft.UI.Xaml.Controls.ProgressRing
                 userType = new global::main_interface.main_interface_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Microsoft.UI.Xaml.Controls.Control"));
-                userType.Activator = Activate_49_ProgressRing;
-                userType.StaticInitializer = StaticInitializer_49_ProgressRing;
+                userType.Activator = Activate_51_ProgressRing;
+                userType.StaticInitializer = StaticInitializer_51_ProgressRing;
                 userType.AddMemberName("IsActive");
                 userType.AddMemberName("IsIndeterminate");
                 userType.AddMemberName("Maximum");
@@ -875,41 +899,41 @@ namespace main_interface.main_interface_XamlTypeInfo
                 xamlType = userType;
                 break;
 
-            case 50:   //  Microsoft.UI.Xaml.Controls.ProgressRingTemplateSettings
+            case 52:   //  Microsoft.UI.Xaml.Controls.ProgressRingTemplateSettings
                 userType = new global::main_interface.main_interface_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Microsoft.UI.Xaml.DependencyObject"));
-                userType.StaticInitializer = StaticInitializer_50_ProgressRingTemplateSettings;
+                userType.StaticInitializer = StaticInitializer_52_ProgressRingTemplateSettings;
                 userType.SetIsReturnTypeStub();
                 xamlType = userType;
                 break;
 
-            case 51:   //  main_interface.MySplashScreen
+            case 53:   //  main_interface.MySplashScreen
                 userType = new global::main_interface.main_interface_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Microsoft.UI.Xaml.Window"));
-                userType.Activator = Activate_51_MySplashScreen;
-                userType.StaticInitializer = StaticInitializer_51_MySplashScreen;
+                userType.Activator = Activate_53_MySplashScreen;
+                userType.StaticInitializer = StaticInitializer_53_MySplashScreen;
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 52:   //  main_interface.OverlayScreen
+            case 54:   //  main_interface.OverlayScreen
                 userType = new global::main_interface.main_interface_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Microsoft.UI.Xaml.Window"));
-                userType.Activator = Activate_52_OverlayScreen;
-                userType.StaticInitializer = StaticInitializer_52_OverlayScreen;
+                userType.Activator = Activate_54_OverlayScreen;
+                userType.StaticInitializer = StaticInitializer_54_OverlayScreen;
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 53:   //  main_interface.RegisterPage
+            case 55:   //  main_interface.RegisterPage
                 userType = new global::main_interface.main_interface_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Microsoft.UI.Xaml.Controls.Page"));
-                userType.Activator = Activate_53_RegisterPage;
-                userType.StaticInitializer = StaticInitializer_53_RegisterPage;
+                userType.Activator = Activate_55_RegisterPage;
+                userType.StaticInitializer = StaticInitializer_55_RegisterPage;
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 54:   //  Microsoft.UI.Xaml.Media.RadialGradientBrush
+            case 56:   //  Microsoft.UI.Xaml.Media.RadialGradientBrush
                 userType = new global::main_interface.main_interface_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Microsoft.UI.Xaml.Media.XamlCompositionBrushBase"));
-                userType.Activator = Activate_54_RadialGradientBrush;
-                userType.StaticInitializer = StaticInitializer_54_RadialGradientBrush;
+                userType.Activator = Activate_56_RadialGradientBrush;
+                userType.StaticInitializer = StaticInitializer_56_RadialGradientBrush;
                 userType.SetContentPropertyName("Microsoft.UI.Xaml.Media.RadialGradientBrush.GradientStops");
                 userType.AddMemberName("GradientStops");
                 userType.AddMemberName("Center");
@@ -922,29 +946,29 @@ namespace main_interface.main_interface_XamlTypeInfo
                 xamlType = userType;
                 break;
 
-            case 55:   //  Microsoft.UI.Xaml.Media.XamlCompositionBrushBase
+            case 57:   //  Microsoft.UI.Xaml.Media.XamlCompositionBrushBase
                 xamlType = new global::main_interface.main_interface_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
-            case 56:   //  Windows.Foundation.Collections.IObservableVector`1<Microsoft.UI.Xaml.Media.GradientStop>
+            case 58:   //  Windows.Foundation.Collections.IObservableVector`1<Microsoft.UI.Xaml.Media.GradientStop>
                 userType = new global::main_interface.main_interface_XamlTypeInfo.XamlUserType(this, typeName, type, null);
-                userType.StaticInitializer = StaticInitializer_56_IObservableVector;
-                userType.CollectionAdd = VectorAdd_56_IObservableVector;
+                userType.StaticInitializer = StaticInitializer_58_IObservableVector;
+                userType.CollectionAdd = VectorAdd_58_IObservableVector;
                 userType.SetIsReturnTypeStub();
                 xamlType = userType;
                 break;
 
-            case 57:   //  Microsoft.UI.Xaml.Media.GradientStop
+            case 59:   //  Microsoft.UI.Xaml.Media.GradientStop
                 xamlType = new global::main_interface.main_interface_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
-            case 58:   //  Windows.Foundation.Point
+            case 60:   //  Windows.Foundation.Point
                 xamlType = new global::main_interface.main_interface_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
-            case 59:   //  Microsoft.UI.Composition.CompositionColorSpace
+            case 61:   //  Microsoft.UI.Composition.CompositionColorSpace
                 userType = new global::main_interface.main_interface_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("System.Enum"));
-                userType.StaticInitializer = StaticInitializer_59_CompositionColorSpace;
+                userType.StaticInitializer = StaticInitializer_61_CompositionColorSpace;
                 userType.AddEnumValue("Auto", global::Microsoft.UI.Composition.CompositionColorSpace.Auto);
                 userType.AddEnumValue("Hsl", global::Microsoft.UI.Composition.CompositionColorSpace.Hsl);
                 userType.AddEnumValue("Rgb", global::Microsoft.UI.Composition.CompositionColorSpace.Rgb);
@@ -953,34 +977,34 @@ namespace main_interface.main_interface_XamlTypeInfo
                 xamlType = userType;
                 break;
 
-            case 60:   //  Microsoft.UI.Xaml.Media.BrushMappingMode
+            case 62:   //  Microsoft.UI.Xaml.Media.BrushMappingMode
                 xamlType = new global::main_interface.main_interface_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
-            case 61:   //  Microsoft.UI.Xaml.Media.GradientSpreadMethod
+            case 63:   //  Microsoft.UI.Xaml.Media.GradientSpreadMethod
                 xamlType = new global::main_interface.main_interface_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
-            case 62:   //  main_interface.SpotlightPage
+            case 64:   //  main_interface.SpotlightPage
                 userType = new global::main_interface.main_interface_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Microsoft.UI.Xaml.Controls.Page"));
-                userType.Activator = Activate_62_SpotlightPage;
-                userType.StaticInitializer = StaticInitializer_62_SpotlightPage;
+                userType.Activator = Activate_64_SpotlightPage;
+                userType.StaticInitializer = StaticInitializer_64_SpotlightPage;
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 63:   //  main_interface.SpotlightWindow
+            case 65:   //  main_interface.SpotlightWindow
                 userType = new global::main_interface.main_interface_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Microsoft.UI.Xaml.Window"));
-                userType.Activator = Activate_63_SpotlightWindow;
-                userType.StaticInitializer = StaticInitializer_63_SpotlightWindow;
+                userType.Activator = Activate_65_SpotlightWindow;
+                userType.StaticInitializer = StaticInitializer_65_SpotlightWindow;
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 64:   //  Microsoft.UI.Xaml.Controls.TreeViewNode
+            case 66:   //  Microsoft.UI.Xaml.Controls.TreeViewNode
                 userType = new global::main_interface.main_interface_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Microsoft.UI.Xaml.DependencyObject"));
-                userType.Activator = Activate_64_TreeViewNode;
-                userType.StaticInitializer = StaticInitializer_64_TreeViewNode;
+                userType.Activator = Activate_66_TreeViewNode;
+                userType.StaticInitializer = StaticInitializer_66_TreeViewNode;
                 userType.AddMemberName("Children");
                 userType.AddMemberName("Content");
                 userType.AddMemberName("Depth");
@@ -992,15 +1016,15 @@ namespace main_interface.main_interface_XamlTypeInfo
                 xamlType = userType;
                 break;
 
-            case 65:   //  System.Collections.Generic.IList`1<Microsoft.UI.Xaml.Controls.TreeViewNode>
+            case 67:   //  System.Collections.Generic.IList`1<Microsoft.UI.Xaml.Controls.TreeViewNode>
                 userType = new global::main_interface.main_interface_XamlTypeInfo.XamlUserType(this, typeName, type, null);
-                userType.StaticInitializer = StaticInitializer_65_IList;
-                userType.CollectionAdd = VectorAdd_65_IList;
+                userType.StaticInitializer = StaticInitializer_67_IList;
+                userType.CollectionAdd = VectorAdd_67_IList;
                 userType.SetIsReturnTypeStub();
                 xamlType = userType;
                 break;
 
-            case 66:   //  Int32
+            case 68:   //  Int32
                 xamlType = new global::main_interface.main_interface_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
             }

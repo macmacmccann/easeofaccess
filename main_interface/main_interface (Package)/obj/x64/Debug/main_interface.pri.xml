@@ -43,6 +43,16 @@
 					<Value>MainWindow.xbf</Value>
 				</Candidate>
 			</NamedResource>
+			<NamedResource name="Mouseless.xbf" uri="ms-resource://main_interface/Files/Mouseless.xbf">
+				<Candidate type="Path">
+					<Value>Mouseless.xbf</Value>
+				</Candidate>
+			</NamedResource>
+			<NamedResource name="MouselessControlPanel.xbf" uri="ms-resource://main_interface/Files/MouselessControlPanel.xbf">
+				<Candidate type="Path">
+					<Value>MouselessControlPanel.xbf</Value>
+				</Candidate>
+			</NamedResource>
 			<NamedResource name="MySplashScreen.xbf" uri="ms-resource://main_interface/Files/MySplashScreen.xbf">
 				<Candidate type="Path">
 					<Value>MySplashScreen.xbf</Value>

@@ -6,6 +6,8 @@ ControlPanelVisuals.xbf
 General.xbf
 LoginPage.xbf
 MainWindow.xbf
+Mouseless.xbf
+MouselessControlPanel.xbf
 MySplashScreen.xbf
 OverlayScreen.xbf
 RegisterPage.xbf
