@@ -14,6 +14,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Windows.Forms;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Media.Miracast;
 using WinRT.Interop;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -40,14 +41,14 @@ public sealed partial class Mouseless : Window
     {
         InitializeComponent();
         InstallKeyboardHook();
-        MouselessEvent();
-       
+        //MouselessEvent();
+        
 
         Activate(); // Create a native window(hwnd) for this object !
         HideFromTaskbar();
 
         SetOverlayStyle(); // Attach a win32 message listener to this window 
-
+        MoveOffScreen();
 
         //ApplySettings();
 
@@ -68,6 +69,25 @@ public sealed partial class Mouseless : Window
     }
 
 
+
+
+    int speed;
+
+    public void ApplySettings()
+    {
+        if( OverlaySettings.SpeedFastEnabled)
+        {
+            speed = 30;
+        }
+        if (OverlaySettings.SpeedMedEnabled)
+        {
+            speed = 15;
+        }
+        if (OverlaySettings.SpeedSlowEnabled)
+        {
+            speed = 10;
+        }
+    }
 
 
     [DllImport("user32.dll")]
@@ -133,6 +153,102 @@ public sealed partial class Mouseless : Window
         // No horizontal movement
 
         input.mi.dy = -amount;
+        // Negative Y moves the mouse upward
+
+        input.mi.mouseData = 0;
+        // Not used for movement
+
+        input.mi.dwFlags = MOUSEEVENTF_MOVE;
+        // Tell Windows this is a movement event
+
+        input.mi.time = 0;
+        // Let Windows set the timestamp
+
+        input.mi.dwExtraInfo = IntPtr.Zero;
+        // No extra info
+
+        SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
+        // Inject the mouse input into the OS
+    }
+
+
+
+
+    void MoveMouseDown(int amount)
+    {
+        INPUT input = new INPUT();
+        // Create a new input event
+
+        input.type = INPUT_MOUSE;
+        // Specify that this is mouse input
+
+        input.mi.dx = 0;
+        // No horizontal movement
+
+        input.mi.dy = amount;
+        // Negative Y moves the mouse upward
+
+        input.mi.mouseData = 0;
+        // Not used for movement
+
+        input.mi.dwFlags = MOUSEEVENTF_MOVE;
+        // Tell Windows this is a movement event
+
+        input.mi.time = 0;
+        // Let Windows set the timestamp
+
+        input.mi.dwExtraInfo = IntPtr.Zero;
+        // No extra info
+
+        SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
+        // Inject the mouse input into the OS
+    }
+
+
+    void MoveMouseLeft(int amount)
+    {
+        INPUT input = new INPUT();
+        // Create a new input event
+
+        input.type = INPUT_MOUSE;
+        // Specify that this is mouse input
+
+        input.mi.dx = -1;
+        //  horizontal movement
+
+        input.mi.dy = 0;
+        // Negative Y moves the mouse upward
+
+        input.mi.mouseData = 0;
+        // Not used for movement
+
+        input.mi.dwFlags = MOUSEEVENTF_MOVE;
+        // Tell Windows this is a movement event
+
+        input.mi.time = 0;
+        // Let Windows set the timestamp
+
+        input.mi.dwExtraInfo = IntPtr.Zero;
+        // No extra info
+
+        SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
+        // Inject the mouse input into the OS
+    }
+
+
+
+    void MoveMouseRight(int amount)
+    {
+        INPUT input = new INPUT();
+        // Create a new input event
+
+        input.type = INPUT_MOUSE;
+        // Specify that this is mouse input
+
+        input.mi.dx = 1;
+        //  horizontal movement
+
+        input.mi.dy = 0;
         // Negative Y moves the mouse upward
 
         input.mi.mouseData = 0;
@@ -231,20 +347,35 @@ public sealed partial class Mouseless : Window
         public IntPtr dwExtraInfo;
     }
 
-
     IntPtr KeyboardHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
     {
+        if (speed == null)
+        {
+            speed = 20;
+        }
         if (nCode >=0)
         {
             // Convert raw pointer to usable struct we made 
             var keyInfo = Marshal.PtrToStructure<KBDLLHOOKSTRUCT>(lParam);
             
-            // if any key was pressed down caused aerror not as same type 
+            // if any key was pressed down  
             if (wParam == (IntPtr)WM_KEYDOWN)
             {
                 if (keyInfo.vkCode == 38) // if the key pressed is up arrow (num 38)
                 {
-                    MoveMouseUp(5);
+                    MoveMouseUp(speed);
+                }
+                if (keyInfo.vkCode == (uint)Keys.Down) // cast
+                {
+                    MoveMouseDown(speed);
+                }
+                if (keyInfo.vkCode == (uint)Keys.Left) 
+                {
+                    MoveMouseLeft(speed);
+                }
+                if (keyInfo.vkCode == (uint)Keys.Right)
+                {
+                    MoveMouseRight(speed);
                 }
             }
         }

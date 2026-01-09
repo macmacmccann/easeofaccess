@@ -24,7 +24,7 @@
                 FontWeight="SemiBold" />
 
             <TextBlock
-                Text="Quick Commands lets you instantly paste predefined commands into the active application using a floating overlay."
+                Text="Nagivate the computer without a mouse "
                 TextWrapping="Wrap"
                 Opacity="0.8" />
 
@@ -36,12 +36,38 @@
 
             <ToggleSwitch x:ConnectionId='2'
                 x:Name="MouselessToggle"
-                Header="Enable Quick Commands Overlay"
+                Header="Enable Mouseless"
                 OffContent="Disabled"
                 OnContent="Enabled"
                                                   />
 
-         
+
+
+                <ToggleSwitch x:ConnectionId='3'
+              x:Name="SpeedFastToggle"
+              Header="Fast Mouse Speed"
+              OffContent="Disabled"
+              OnContent="Enabled"
+                                                />
+
+
+            <ToggleSwitch x:ConnectionId='4'
+              x:Name="SpeedMedToggle"
+              Header="Medium Mouse Speed"
+              OffContent="Disabled"
+              OnContent="Enabled"
+                                               />
+
+
+            <ToggleSwitch x:ConnectionId='5'
+              x:Name="SpeedSlowToggle"
+              Header="Slow Mouse Speed"
+              OffContent="Disabled"
+              OnContent="Enabled"
+                                                />
+
+
+
         </StackPanel>
     </Grid>
 

@@ -28,6 +28,10 @@ namespace main_interface
         // Mouseless Toggles 
 
         public static bool MouselessEnabled = false;
+        public static bool SpeedFastEnabled = false;
+        public static bool SpeedMedEnabled = false;
+        public static bool SpeedSlowEnabled = false;
+
 
 
 
