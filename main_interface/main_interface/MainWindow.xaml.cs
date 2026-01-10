@@ -228,7 +228,9 @@ namespace main_interface
                 case "Mouseless":
                     ContentFrame.Navigate(typeof(MouselessControlPanel));
                     break;
-
+                case "TilingManager":
+                    ContentFrame.Navigate(typeof(TilingManagerControlPanel));
+                    break;
                 case "about":
                     ContentFrame.Navigate(typeof(About));
                     break;

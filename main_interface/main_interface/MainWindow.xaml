@@ -23,14 +23,14 @@
 
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="General" Icon="Setting" Tag="General"/>
-                <NavigationViewItem Content="Account" Icon="TouchPointer" Tag="Account"/>
-                <NavigationViewItem Content="About" Icon="Help" Tag="About"/>
-                <NavigationViewItem Content="Register" Icon="Help" Tag="RegisterPage"/>
-                <NavigationViewItem Content="Command" Icon="Setting" Tag="Command"/>
-                <NavigationViewItem Content="Screen" Icon="Setting" Tag="Screen"/>
-                <NavigationViewItem Content="Mouseless" Icon="Setting" Tag="Mouseless"/>
-
                 <NavigationViewItem Content="Login" Icon="Help" Tag="LoginPage"/>
+                <NavigationViewItem Content="Account" Icon="TouchPointer" Tag="Account"/>
+                <NavigationViewItem Content="Register" Icon="Help" Tag="RegisterPage"/>
+                <NavigationViewItem Content="Typing Control " Icon="Setting" Tag="Command"/>
+                <NavigationViewItem Content="Ease your eyes" Icon="Setting" Tag="Screen"/>
+                <NavigationViewItem Content="Mouseless" Icon="Setting" Tag="Mouseless"/>
+                <NavigationViewItem Content="Tiling Manager" Icon="Setting" Tag="TilingManager"/>
+                <NavigationViewItem Content="About" Icon="Help" Tag="About"/>
             </NavigationView.MenuItems>
 
             <Frame x:Name="ContentFrame"/>

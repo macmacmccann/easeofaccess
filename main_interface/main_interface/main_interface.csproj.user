@@ -8,6 +8,12 @@
     <None Update="App.xaml">
       <SubType>Designer</SubType>
     </None>
+    <Page Update="TilingManagerControlPanel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="TilingManager.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="MouselessControlPanel.xaml">
       <SubType>Designer</SubType>
     </Page>

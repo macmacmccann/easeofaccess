@@ -30,7 +30,7 @@
     <AppXManifest Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface %28Package%29\bin\x64\Debug\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2026-01-08T23:44:58.662</Modified>
+      <Modified>2026-01-10T15:09:11.712</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
@@ -88,7 +88,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\MainWindow.xbf">
       <PackagePath>MainWindow.xbf</PackagePath>
-      <Modified>2026-01-06T15:53:05.668</Modified>
+      <Modified>2026-01-10T14:58:37.035</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\Mouseless.xbf">
       <PackagePath>Mouseless.xbf</PackagePath>
@@ -117,6 +117,14 @@
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\SpotlightWindow.xbf">
       <PackagePath>SpotlightWindow.xbf</PackagePath>
       <Modified>2026-01-06T12:46:03.362</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\TilingManager.xbf">
+      <PackagePath>TilingManager.xbf</PackagePath>
+      <Modified>2026-01-10T13:15:16.171</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\TilingManagerControlPanel.xbf">
+      <PackagePath>TilingManagerControlPanel.xbf</PackagePath>
+      <Modified>2026-01-10T14:36:01.759</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.UniversalCRT.Debug\10.0.19041.0\Redist\Debug\x64\ucrtbased.dll">
       <PackagePath>ucrtbased.dll</PackagePath>
@@ -158,7 +166,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface %28Package%29\bin\x64\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2026-01-06T15:58:57.637</Modified>
+      <Modified>2026-01-10T14:36:04.371</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\microsoft.web.webview2\1.0.3179.45\runtimes\win-x64\native_uap\Microsoft.Web.WebView2.Core.dll">
       <PackagePath>main_interface\Microsoft.Web.WebView2.Core.dll</PackagePath>
@@ -434,7 +442,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\main_interface.deps.json">
       <PackagePath>main_interface\main_interface.deps.json</PackagePath>
-      <Modified>2026-01-06T15:58:56.483</Modified>
+      <Modified>2026-01-10T14:36:02.809</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\App.xbf">
       <PackagePath>main_interface\App.xbf</PackagePath>
@@ -466,7 +474,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\MainWindow.xbf">
       <PackagePath>main_interface\MainWindow.xbf</PackagePath>
-      <Modified>2026-01-06T15:53:05.668</Modified>
+      <Modified>2026-01-10T14:58:37.035</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\Mouseless.xbf">
       <PackagePath>main_interface\Mouseless.xbf</PackagePath>
@@ -496,9 +504,17 @@
       <PackagePath>main_interface\SpotlightWindow.xbf</PackagePath>
       <Modified>2026-01-06T12:46:03.362</Modified>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\TilingManager.xbf">
+      <PackagePath>main_interface\TilingManager.xbf</PackagePath>
+      <Modified>2026-01-10T13:15:16.171</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\TilingManagerControlPanel.xbf">
+      <PackagePath>main_interface\TilingManagerControlPanel.xbf</PackagePath>
+      <Modified>2026-01-10T14:36:01.759</Modified>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\apphost.exe">
       <PackagePath>main_interface\main_interface.exe</PackagePath>
-      <Modified>2026-01-08T23:44:57.299</Modified>
+      <Modified>2026-01-10T15:09:10.808</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\main_interface.runtimeconfig.json">
       <PackagePath>main_interface\main_interface.runtimeconfig.json</PackagePath>
@@ -506,7 +522,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\main_interface.dll">
       <PackagePath>main_interface\main_interface.dll</PackagePath>
-      <Modified>2026-01-08T23:44:57.244</Modified>
+      <Modified>2026-01-10T15:09:10.803</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

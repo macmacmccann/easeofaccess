@@ -78,6 +78,16 @@
 					<Value>SpotlightWindow.xbf</Value>
 				</Candidate>
 			</NamedResource>
+			<NamedResource name="TilingManager.xbf" uri="ms-resource://main_interface/Files/TilingManager.xbf">
+				<Candidate type="Path">
+					<Value>TilingManager.xbf</Value>
+				</Candidate>
+			</NamedResource>
+			<NamedResource name="TilingManagerControlPanel.xbf" uri="ms-resource://main_interface/Files/TilingManagerControlPanel.xbf">
+				<Candidate type="Path">
+					<Value>TilingManagerControlPanel.xbf</Value>
+				</Candidate>
+			</NamedResource>
 		</ResourceMapSubtree>
 	</ResourceMap>
 </PriInfo>

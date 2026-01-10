@@ -131,3 +131,7 @@ C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\MouselessControlPanel.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\Mouseless.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\MouselessControlPanel.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\TilingManager.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\TilingManager.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\TilingManagerControlPanel.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\TilingManagerControlPanel.xbf

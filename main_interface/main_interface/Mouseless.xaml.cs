@@ -136,11 +136,6 @@ public sealed partial class Mouseless : Window
 
 
 
-
-
-
-
-
     void MoveMouseUp(int amount)
     {
         INPUT input = new INPUT();
@@ -213,7 +208,7 @@ public sealed partial class Mouseless : Window
         input.type = INPUT_MOUSE;
         // Specify that this is mouse input
 
-        input.mi.dx = -1;
+        input.mi.dx = -10;
         //  horizontal movement
 
         input.mi.dy = 0;
@@ -245,7 +240,7 @@ public sealed partial class Mouseless : Window
         input.type = INPUT_MOUSE;
         // Specify that this is mouse input
 
-        input.mi.dx = 1;
+        input.mi.dx = 10;
         //  horizontal movement
 
         input.mi.dy = 0;

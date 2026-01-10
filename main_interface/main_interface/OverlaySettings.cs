@@ -32,7 +32,9 @@ namespace main_interface
         public static bool SpeedMedEnabled = false;
         public static bool SpeedSlowEnabled = false;
 
+        // Tiling Manager
 
+        public static bool TilingManagerEnabled = false;
 
 
     }

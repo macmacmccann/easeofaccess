@@ -21,6 +21,8 @@
     <None Remove="OverlayScreen.xaml" />
     <None Remove="RegisterPage.xaml" />
     <None Remove="SpotlightPage.xaml" />
+    <None Remove="TilingManager.xaml" />
+    <None Remove="TilingManagerControlPanel.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -75,6 +77,18 @@
 
   <ItemGroup>
     <Folder Include="NewFolder\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="TilingManagerControlPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="TilingManager.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
