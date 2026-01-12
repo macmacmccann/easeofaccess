@@ -8,44 +8,101 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <Grid RowDefinitions="0.2*,*">
+
+        <Border x:Name="Headertop">
+
+
+            <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Top"  Height="120" Padding="16" Margin="24,24,0,0">
+                <StackPanel Spacing="4">
+
+                    <TextBlock
+                        Text="Enable Tiling"
+                        FontSize="30"
+                        FontWeight="SemiBold" />
+
+                    <TextBlock
+                        Text="Automatically arranges windows for you"
+                        FontSize="14"
+                        Opacity="0.7" />
+                </StackPanel>
+
+
+                <ToggleSwitch 
+                        x:Name="TilingManagerToggle"
+                        Grid.Column="1"
+                        OnContent="On"
+                        OffContent="Off"
+                        VerticalAlignment="Center"
+                        Toggled="TilingManagerToggle_Toggled"
+                        PointerEntered="Border_PointerEntered"
+                        PointerExited="Border_PointerExited"/>
+
+            </StackPanel>
+
+        </Border>
+
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" Padding="16" Margin="24,24,0,0">
+
+            <StackPanel Grid.Column="0" Spacing="8">
+                <TextBlock
+                    Text="Snap your windows "
+                    FontSize="20"
+                    Opacity="0.7"
+                    VerticalAlignment="Top" />
+
+                    <!-- gif -->
+
+                <ToggleButton></ToggleButton>
+                <ToggleButton></ToggleButton>
+                <ToggleButton></ToggleButton>
+<!-- -->
 
 
 
-    <Grid Padding="24">
+            </StackPanel>
 
 
-        <StackPanel Spacing="20" MaxWidth="500">
+            <StackPanel Grid.Column="1" Spacing="8">
+                    <TextBlock
+                    Grid.Column="1"
+                    Text="Features"
+                    FontSize="20"
+                    Opacity="0.7"
+                    VerticalAlignment="Top" />
+                    
+                    <!-- toggles -->
 
-            <TextBlock
-                Text="Tiling Manager"
-                FontSize="24"
-                FontWeight="SemiBold" />
+                
 
-            <TextBlock
-                Text=" Let your computer do the organisation for you  "
-                TextWrapping="Wrap"
-                Opacity="0.8" />
-
-            <TextBlock
-                Text="Features"
-                FontSize="18"
-                FontWeight="SemiBold"
-                Margin="0,12,0,0" />
-
-            <ToggleSwitch
-                x:Name="TilingManagerToggle"
-                Header="Enable Tiling"
-                OffContent="Disabled"
-                OnContent="Enabled"
-                Toggled="TilingManagerToggle_Toggled" />
-
-
+                <!-- NICE TOGGLE BAR BORDER WRAPPED -->
+                <Border Background="#FFE67E22" CornerRadius="8" Padding="16" Margin="0,8,0,0">
+                    <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                    <Grid ColumnDefinitions="*,Auto">
+                        
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock Text="Enable Tiling" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Automatically arranges windows" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+                        
+                    <!-- GRID COL 2 TOGGLE -->
+                        <ToggleSwitch 
+                            Grid.Column="1"
+                            x:Name="TilingToggle"
+                            OnContent="On"
+                            OffContent="Off"
+                            VerticalAlignment="Center"
+                            Margin="16,0,0,0" />
+                    </Grid>
+                </Border>
 
 
-        </StackPanel>
+
+
+            </StackPanel>
+
+        </Grid>
+
+
     </Grid>
-
-
-
-
 </Page>

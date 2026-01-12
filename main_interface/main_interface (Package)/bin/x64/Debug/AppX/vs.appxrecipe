@@ -30,7 +30,7 @@
     <AppXManifest Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface %28Package%29\bin\x64\Debug\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2026-01-10T15:09:11.712</Modified>
+      <Modified>2026-01-12T13:05:10.240</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
@@ -124,7 +124,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\TilingManagerControlPanel.xbf">
       <PackagePath>TilingManagerControlPanel.xbf</PackagePath>
-      <Modified>2026-01-10T14:36:01.759</Modified>
+      <Modified>2026-01-12T13:05:08.828</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.UniversalCRT.Debug\10.0.19041.0\Redist\Debug\x64\ucrtbased.dll">
       <PackagePath>ucrtbased.dll</PackagePath>
@@ -510,11 +510,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\TilingManagerControlPanel.xbf">
       <PackagePath>main_interface\TilingManagerControlPanel.xbf</PackagePath>
-      <Modified>2026-01-10T14:36:01.759</Modified>
+      <Modified>2026-01-12T13:05:08.828</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\apphost.exe">
       <PackagePath>main_interface\main_interface.exe</PackagePath>
-      <Modified>2026-01-10T15:09:10.808</Modified>
+      <Modified>2026-01-12T13:05:09.308</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\main_interface.runtimeconfig.json">
       <PackagePath>main_interface\main_interface.runtimeconfig.json</PackagePath>
@@ -522,7 +522,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\main_interface.dll">
       <PackagePath>main_interface\main_interface.dll</PackagePath>
-      <Modified>2026-01-10T15:09:10.803</Modified>
+      <Modified>2026-01-12T13:05:09.303</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

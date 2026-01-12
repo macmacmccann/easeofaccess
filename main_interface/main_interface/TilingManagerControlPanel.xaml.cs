@@ -12,7 +12,12 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-
+using Microsoft.UI.Xaml.Media.Animation;
+using Border = Microsoft.UI.Xaml.Controls.Border;
+using Microsoft.UI.Xaml.Hosting;
+using Windows.UI.Composition;
+using Windows.UI;
+using Microsoft.UI;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -30,9 +35,15 @@ namespace main_interface
         public TilingManagerControlPanel()
         {
             InitializeComponent();
+            HeaderColour(null,null);
         }
 
 
+        public void HeaderColour(object sender, RoutedEventArgs e)
+        {
+            var yellowbrush = new SolidColorBrush(Color.FromArgb(30, 255, 200, 0));
+            Headertop.Background = yellowbrush;
+        }
 
         private void TilingManagerToggle_Toggled(object sender, RoutedEventArgs e)
         {
@@ -73,8 +84,187 @@ namespace main_interface
         */
 
 
+        private void Border_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if (sender is UIElement element)
+            {
+                // Get the visual backing this Border
+                var visual = ElementCompositionPreview.GetElementVisual(element);
+
+                // Create a compositor instance
+                var compositor = visual.Compositor;
+
+                // Create a scalar animation for opacity
+                var animation = compositor.CreateScalarKeyFrameAnimation();
+
+                // End fully visible
+                animation.InsertKeyFrame(1f, 1f);
+
+                // Smooth timing
+                animation.Duration = TimeSpan.FromMilliseconds(200);
+
+                // Start animation
+                visual.StartAnimation("Opacity", animation);
 
 
+             // Scale up slightly
+            var scaleAnimation = compositor.CreateVector3KeyFrameAnimation();
+            scaleAnimation.InsertKeyFrame(1f, new System.Numerics.Vector3(1.05f)); // 5% larger
+            scaleAnimation.Duration = TimeSpan.FromMilliseconds(200);
+            visual.StartAnimation("Scale", scaleAnimation);
+
+
+
+                if (sender is Panel panel)
+                {
+                var backgroundBrush = panel.Background as SolidColorBrush;
+
+                    // backgroundBrush.Color = Colors.LightBlue;
+
+                    var colorAnimation = compositor.CreateColorKeyFrameAnimation();
+                    // Light blue with more opacity (ARGB: Alpha, Red, Green, Blue)
+                    colorAnimation.InsertKeyFrame(1f, Color.FromArgb(200, 173, 216, 230)); // Semi-transparent light blue
+                    colorAnimation.Duration = TimeSpan.FromMilliseconds(300);
+                    var brushVisual = ElementCompositionPreview.GetElementVisual(element);
+                    brushVisual.Compositor.CreateColorKeyFrameAnimation();
+
+                    if (backgroundBrush != null)
+                    {
+                    backgroundBrush.Color = Color.FromArgb(200, 173, 216, 230);
+
+                    }
+                }
+            }
+        }
+
+        
+        private void Border_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+
+     
+      
+            // if its any ui element // needs to casted its an object
+            if (sender is UIElement element)
+            {
+                // get the visual backing for the element 
+                var visual = ElementCompositionPreview.GetElementVisual(element);
+               //access compositor for animations 
+                var compositor = visual.Compositor;
+                
+                // Create opacity docuementatyion  animation 
+                var animation = compositor.CreateScalarKeyFrameAnimation();
+                //Fade slightly on exit 
+                animation.InsertKeyFrame(1f, 0.85f);
+                //smoothlu
+                animation.Duration = TimeSpan.FromMilliseconds(250);
+
+                // Start it 
+                visual.StartAnimation("Opacity", animation);
+
+                //create a scale animation 
+                var scaleAnimation = compositor.CreateVector3KeyFrameAnimation();
+
+                // reset back to normal 
+                scaleAnimation.InsertKeyFrame(1f, new System.Numerics.Vector3(1f)); // Back to normal
+                
+                // quick snap back 
+                scaleAnimation.Duration = TimeSpan.FromMilliseconds(200);
+
+                // start the scale animtion 
+                visual.StartAnimation("Scale", scaleAnimation);
+
+
+                if (sender is Panel panel)
+                {
+                // Then reset to theme resource
+
+                   panel.Background =
+                        Application.Current.Resources["CardBackgroundFillColorDefaultBrush"] as Brush;
+                }
+            }
+        }
+        
+
+/*
+
+        private void Border_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            // Ensure the event sender is actually a Border
+            if (sender is Border border)
+            {
+                // Try to reuse the existing background brush
+                // This prevents recreating it every hover
+                if (border.Background is not SolidColorBrush brush)
+                {
+                    // Create a soft gold-tinted brush
+                    brush = new SolidColorBrush(Windows.UI.Color.FromArgb(80, 255, 180, 120));
+
+                    // Start fully transparent so we can fade it in
+                    brush.Opacity = 0.0;
+
+                    // Assign the brush once to the Border
+                    border.Background = brush;
+                }
+
+                // Define the opacity animation
+                var fadeIn = new DoubleAnimation
+                {
+                    // Start transparent
+                    From = 0.0,
+
+                    // End visible
+                    To = 1.0,
+
+                    // Smooth 300ms animation
+                    Duration = new Duration(TimeSpan.FromMilliseconds(400)),
+
+                    // Soft easing for natural motion
+                    EasingFunction = new CircleEase
+                    {
+                        EasingMode = EasingMode.EaseInOut
+                    }
+                };
+
+                // Create the storyboard container
+                var storyboard = new Storyboard();
+
+                // IMPORTANT: Target the BRUSH, not the Border
+                Storyboard.SetTarget(fadeIn, brush);
+
+                // Animate the brush's Opacity property directly
+                Storyboard.SetTargetProperty(fadeIn, "Opacity");
+
+                // Add the animation to the storyboard
+                storyboard.Children.Add(fadeIn);
+
+                // Start the animation
+                storyboard.Begin();
+            }
+        }
+
+
+
+        private void Border_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            if (sender is Border border && border.Background is SolidColorBrush brush)
+            {
+                var fadeOut = new DoubleAnimation
+                {
+                    From = brush.Opacity,
+                    To = 0.0,
+                    Duration = new Duration(TimeSpan.FromMilliseconds(250)),
+                    EasingFunction = new CircleEase { EasingMode = EasingMode.EaseInOut }
+                };
+
+                var storyboard = new Storyboard();
+                Storyboard.SetTarget(fadeOut, brush);
+                Storyboard.SetTargetProperty(fadeOut, "Opacity");
+                storyboard.Children.Add(fadeOut);
+                storyboard.Begin();
+            }
+        }
+
+        */
         public void EnsureWindow()
         {
 
