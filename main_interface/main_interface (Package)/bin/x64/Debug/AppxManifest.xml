@@ -26,7 +26,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="main_interface\main_interface.exe" EntryPoint="Windows.FullTrustApplication">
-      <uap:VisualElements DisplayName="main_interface (Package)" Description="main_interface (Package)" BackgroundColor="transparent" Square150x150Logo="Images\Square150x150Logo.png" Square44x44Logo="Images\Square44x44Logo.png">
+      <uap:VisualElements DisplayName="EaseOfAccess" Description="EaseOfAccess" BackgroundColor="transparent" Square150x150Logo="Images\Square150x150Logo.png" Square44x44Logo="Images\Square44x44Logo.png">
         <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png" />
         <uap:SplashScreen Image="Images\SplashScreen.png" />
       </uap:VisualElements>

@@ -18,6 +18,10 @@ using Microsoft.UI.Xaml.Hosting;
 using Windows.UI.Composition;
 using Windows.UI;
 using Microsoft.UI;
+using Microsoft.UI.Xaml.Media;
+
+
+
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -38,13 +42,26 @@ namespace main_interface
             HeaderColour(null,null);
         }
 
+        /*
+        public void HeaderColourx(object sender, RoutedEventArgs e)
+        {
+            var acrylicBrush = new Microsoft.UI.Xaml.Media.AcrylicBrush
+            {
+                TintColor = Microsoft.UI.ColorHelper.FromArgb(0, 255, 200, 0),    // Yellow tint
+                TintOpacity = 0.5,
+                TintLuminosityOpacity = 0.9,
+                FallbackColor = Microsoft.UI.ColorHelper.FromArgb(0, 255, 200, 0) // Solid yellow
+            };
 
+            Headertop.Background = acrylicBrush;
+        }
+        */
         public void HeaderColour(object sender, RoutedEventArgs e)
         {
             var yellowbrush = new SolidColorBrush(Color.FromArgb(30, 255, 200, 0));
             Headertop.Background = yellowbrush;
         }
-
+        
         private void TilingManagerToggle_Toggled(object sender, RoutedEventArgs e)
         {
           
@@ -77,8 +94,6 @@ namespace main_interface
                 return;
             }
 
-
-
         }
 
         */
@@ -86,6 +101,7 @@ namespace main_interface
 
         private void Border_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
+
             if (sender is UIElement element)
             {
                 // Get the visual backing this Border
@@ -106,6 +122,7 @@ namespace main_interface
                 // Start animation
                 visual.StartAnimation("Opacity", animation);
 
+                visual.Scale = new System.Numerics.Vector3(1.1f);
 
              // Scale up slightly
             var scaleAnimation = compositor.CreateVector3KeyFrameAnimation();
@@ -113,11 +130,11 @@ namespace main_interface
             scaleAnimation.Duration = TimeSpan.FromMilliseconds(200);
             visual.StartAnimation("Scale", scaleAnimation);
 
-
-
-                if (sender is Panel panel)
+                //if (sender is FrameworkElement element && element.GetType().GetProperty("Background"));
+               // if (sender is Control control)
+               if (sender is Border control)
                 {
-                var backgroundBrush = panel.Background as SolidColorBrush;
+                var backgroundBrush = control.Background as SolidColorBrush;
 
                     // backgroundBrush.Color = Colors.LightBlue;
 
@@ -130,7 +147,7 @@ namespace main_interface
 
                     if (backgroundBrush != null)
                     {
-                    backgroundBrush.Color = Color.FromArgb(200, 173, 216, 230);
+                        backgroundBrush.Color = Color.FromArgb(50, 255, 200, 0);
 
                     }
                 }
@@ -172,14 +189,18 @@ namespace main_interface
 
                 // start the scale animtion 
                 visual.StartAnimation("Scale", scaleAnimation);
+                
+                   if (sender is Border control)
+                {                   
+                    var backgroundBrush = control.Background as SolidColorBrush;
+
+                    backgroundBrush.Color = Colors.Transparent;
 
 
-                if (sender is Panel panel)
-                {
-                // Then reset to theme resource
+                    // Then reset to theme resource
 
-                   panel.Background =
-                        Application.Current.Resources["CardBackgroundFillColorDefaultBrush"] as Brush;
+                    //border.Background =
+                    //   Application.Current.Resources["CardBackgroundFillColorDefaultBrush"] as Brush;
                 }
             }
         }

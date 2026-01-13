@@ -58,6 +58,11 @@ namespace main_interface
 
         public MainWindow()  {
             InitializeComponent();
+
+            var appWindow = this.AppWindow;
+            appWindow.SetIcon("Assets/Images/WindowIcon.ico");
+            this.AppWindow.Title = "Ease Of Access";
+
             this.ExtendsContentIntoTitleBar = true;
            // ContentFrame.Navigate(typeof(LoginPage)); //default Page
             this.NavigationView.SelectionChanged += NavigationView_SelectionChanged;
@@ -176,13 +181,15 @@ namespace main_interface
         }
 
 
-     
+
         void EnableAcrylic()
         {
             //if (!DesktopAcrylicBackdrop.IsSupported())
             //  return; // null check
             acrylic = new DesktopAcrylicBackdrop();
             this.SystemBackdrop = acrylic;
+
+
         }
 
 
@@ -197,6 +204,12 @@ namespace main_interface
 
         private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
+
+            if (args.IsSettingsSelected)
+            {
+                ContentFrame.Navigate(typeof(SettingsControlPanel));
+                return;
+            }
             var selectedItem = (NavigationViewItem)args.SelectedItem;
             string tag = (string)selectedItem.Tag;
 
@@ -231,6 +244,8 @@ namespace main_interface
                 case "TilingManager":
                     ContentFrame.Navigate(typeof(TilingManagerControlPanel));
                     break;
+
+            
                 case "about":
                     ContentFrame.Navigate(typeof(About));
                     break;

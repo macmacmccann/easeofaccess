@@ -20,6 +20,7 @@
     <None Remove="MySplashScreen.xaml" />
     <None Remove="OverlayScreen.xaml" />
     <None Remove="RegisterPage.xaml" />
+    <None Remove="SettingsControlPanel.xaml" />
     <None Remove="SpotlightPage.xaml" />
     <None Remove="TilingManager.xaml" />
     <None Remove="TilingManagerControlPanel.xaml" />
@@ -76,7 +77,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Assets\gifs\" />
     <Folder Include="NewFolder\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="SettingsControlPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

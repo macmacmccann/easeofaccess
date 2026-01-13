@@ -37,5 +37,11 @@ namespace main_interface
         public static bool TilingManagerEnabled = false;
 
 
+        //Settings Page
+
+        public static bool BackgroundProcessActiveEnabled = false;
+        public static bool SyncActiveEnabled = false;
+
+
     }
 }

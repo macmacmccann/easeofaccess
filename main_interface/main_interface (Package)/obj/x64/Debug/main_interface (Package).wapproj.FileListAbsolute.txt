@@ -135,3 +135,11 @@ C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\TilingManager.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\TilingManagerControlPanel.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\TilingManagerControlPanel.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\Assets\gifs\TilingManager.gif
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\Assets\gifs\TilingManager.gif
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\Assets\gifs\Mouseless.gif
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\Assets\gifs\Mouseless.gif
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\Assets\Images\WindowIcon.ico
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\Assets\Images\WindowIcon.ico
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\SettingsControlPanel.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\SettingsControlPanel.xbf

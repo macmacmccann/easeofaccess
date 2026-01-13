@@ -10,7 +10,7 @@
 
     <Grid RowDefinitions="0.2*,*">
 
-        <Border x:ConnectionId='2' x:Name="Headertop">
+        <Border x:ConnectionId='2' x:Name="Headertop" Background="Transparent">
 
 
             <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Top"  Height="120" Padding="16" Margin="24,24,0,0">
@@ -28,15 +28,24 @@
                 </StackPanel>
 
 
-                <ToggleSwitch x:ConnectionId='4' 
+                <ToggleSwitch x:ConnectionId='5' 
                         x:Name="TilingManagerToggle"
                         Grid.Column="1"
+                      FontSize="16"
+                     MinHeight="48"
+                        Padding="4"
                         OnContent="On"
                         OffContent="Off"
                         VerticalAlignment="Center"
                                                              
                                                               
-                                                            />
+                                                            >
+
+                <ToggleSwitch.RenderTransform>
+                    <ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
+                </ToggleSwitch.RenderTransform>
+                </ToggleSwitch>
+
 
             </StackPanel>
 
@@ -53,10 +62,9 @@
 
                     <!-- gif -->
 
-                <ToggleButton></ToggleButton>
-                <ToggleButton></ToggleButton>
-                <ToggleButton></ToggleButton>
-<!-- -->
+                <Image Source="/Assets/gifs/TilingManager.gif" />
+
+                <!-- -->
 
 
 
@@ -76,17 +84,18 @@
                 
 
                 <!-- NICE TOGGLE BAR BORDER WRAPPED -->
-                <Border Background="#FFE67E22" CornerRadius="8" Padding="16" Margin="0,8,0,0">
+                <Border x:ConnectionId='3' Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"                                       
+                                    >
                     <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
                     <Grid ColumnDefinitions="*,Auto">
                         
                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                            <TextBlock Text="Enable Tiling" FontSize="14" FontWeight="SemiBold" Foreground="White" />
-                            <TextBlock Text="Automatically arranges windows" FontSize="12" Opacity="0.9" Foreground="White" />
+                            <TextBlock Text="toggl1" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="toggle 1 desc" FontSize="12" Opacity="0.9" Foreground="White" />
                         </StackPanel>
                         
                     <!-- GRID COL 2 TOGGLE -->
-                        <ToggleSwitch x:ConnectionId='3' 
+                        <ToggleSwitch x:ConnectionId='4' 
                             Grid.Column="1"
                             x:Name="TilingToggle"
                             OnContent="On"

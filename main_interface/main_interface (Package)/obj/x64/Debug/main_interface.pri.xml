@@ -68,6 +68,11 @@
 					<Value>RegisterPage.xbf</Value>
 				</Candidate>
 			</NamedResource>
+			<NamedResource name="SettingsControlPanel.xbf" uri="ms-resource://main_interface/Files/SettingsControlPanel.xbf">
+				<Candidate type="Path">
+					<Value>SettingsControlPanel.xbf</Value>
+				</Candidate>
+			</NamedResource>
 			<NamedResource name="SpotlightPage.xbf" uri="ms-resource://main_interface/Files/SpotlightPage.xbf">
 				<Candidate type="Path">
 					<Value>SpotlightPage.xbf</Value>
@@ -88,6 +93,27 @@
 					<Value>TilingManagerControlPanel.xbf</Value>
 				</Candidate>
 			</NamedResource>
+			<ResourceMapSubtree name="Assets">
+				<ResourceMapSubtree name="gifs">
+					<NamedResource name="Mouseless.gif" uri="ms-resource://main_interface/Files/Assets/gifs/Mouseless.gif">
+						<Candidate type="Path">
+							<Value>Assets\gifs\Mouseless.gif</Value>
+						</Candidate>
+					</NamedResource>
+					<NamedResource name="TilingManager.gif" uri="ms-resource://main_interface/Files/Assets/gifs/TilingManager.gif">
+						<Candidate type="Path">
+							<Value>Assets\gifs\TilingManager.gif</Value>
+						</Candidate>
+					</NamedResource>
+				</ResourceMapSubtree>
+				<ResourceMapSubtree name="Images">
+					<NamedResource name="WindowIcon.ico" uri="ms-resource://main_interface/Files/Assets/Images/WindowIcon.ico">
+						<Candidate type="Path">
+							<Value>Assets\Images\WindowIcon.ico</Value>
+						</Candidate>
+					</NamedResource>
+				</ResourceMapSubtree>
+			</ResourceMapSubtree>
 		</ResourceMapSubtree>
 	</ResourceMap>
 </PriInfo>

@@ -19,7 +19,7 @@
     <DeployOptionalPackages>false</DeployOptionalPackages>
     <WindowsSdkPath>C:\Program Files %28x86%29\Windows Kits\10\</WindowsSdkPath>
     <LayoutDir>C:\Users\markm\College\easeofaccess\main_interface\main_interface %28Package%29\bin\x64\Debug\AppX</LayoutDir>
-    <RegisteredManifestChecksum>2525EC5F7053366818CA7EE9EFD2AB46E6F71B458D008A564E2EE25987180443</RegisteredManifestChecksum>
+    <RegisteredManifestChecksum>F0779E69A6DFAFC58BD030028D8203A019B1AA08C9408414D9A9D1EAF48614AE</RegisteredManifestChecksum>
     <RegisteredPackageMoniker>60e57fb0-3c42-44f0-99a5-35d27c51be08_1.0.0.0_x64__04h47qktpsde2</RegisteredPackageMoniker>
     <RegisteredUserModeAppID>60e57fb0-3c42-44f0-99a5-35d27c51be08_04h47qktpsde2!App</RegisteredUserModeAppID>
     <RegisteredPackageID>60e57fb0-3c42-44f0-99a5-35d27c51be08</RegisteredPackageID>
@@ -30,7 +30,7 @@
     <AppXManifest Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface %28Package%29\bin\x64\Debug\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2026-01-12T13:05:10.240</Modified>
+      <Modified>2026-01-13T13:22:13.231</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
@@ -96,7 +96,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\MouselessControlPanel.xbf">
       <PackagePath>MouselessControlPanel.xbf</PackagePath>
-      <Modified>2026-01-08T22:45:35.178</Modified>
+      <Modified>2026-01-13T12:32:39.687</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\MySplashScreen.xbf">
       <PackagePath>MySplashScreen.xbf</PackagePath>
@@ -109,6 +109,10 @@
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\RegisterPage.xbf">
       <PackagePath>RegisterPage.xbf</PackagePath>
       <Modified>2025-12-21T00:52:03.088</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\SettingsControlPanel.xbf">
+      <PackagePath>SettingsControlPanel.xbf</PackagePath>
+      <Modified>2026-01-13T13:22:11.786</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\SpotlightPage.xbf">
       <PackagePath>SpotlightPage.xbf</PackagePath>
@@ -124,7 +128,19 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\TilingManagerControlPanel.xbf">
       <PackagePath>TilingManagerControlPanel.xbf</PackagePath>
-      <Modified>2026-01-12T13:05:08.828</Modified>
+      <Modified>2026-01-13T00:07:30.357</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\Assets\gifs\Mouseless.gif">
+      <PackagePath>Assets\gifs\Mouseless.gif</PackagePath>
+      <Modified>2026-01-12T23:41:31.268</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\Assets\gifs\TilingManager.gif">
+      <PackagePath>Assets\gifs\TilingManager.gif</PackagePath>
+      <Modified>2026-01-12T23:17:17.116</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\Assets\Images\WindowIcon.ico">
+      <PackagePath>Assets\Images\WindowIcon.ico</PackagePath>
+      <Modified>2026-01-13T00:24:37.038</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.UniversalCRT.Debug\10.0.19041.0\Redist\Debug\x64\ucrtbased.dll">
       <PackagePath>ucrtbased.dll</PackagePath>
@@ -166,7 +182,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface %28Package%29\bin\x64\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2026-01-10T14:36:04.371</Modified>
+      <Modified>2026-01-13T12:40:26.665</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\.nuget\packages\microsoft.web.webview2\1.0.3179.45\runtimes\win-x64\native_uap\Microsoft.Web.WebView2.Core.dll">
       <PackagePath>main_interface\Microsoft.Web.WebView2.Core.dll</PackagePath>
@@ -442,7 +458,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\main_interface.deps.json">
       <PackagePath>main_interface\main_interface.deps.json</PackagePath>
-      <Modified>2026-01-10T14:36:02.809</Modified>
+      <Modified>2026-01-13T12:40:25.089</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\App.xbf">
       <PackagePath>main_interface\App.xbf</PackagePath>
@@ -482,7 +498,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\MouselessControlPanel.xbf">
       <PackagePath>main_interface\MouselessControlPanel.xbf</PackagePath>
-      <Modified>2026-01-08T22:45:35.178</Modified>
+      <Modified>2026-01-13T12:32:39.687</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\MySplashScreen.xbf">
       <PackagePath>main_interface\MySplashScreen.xbf</PackagePath>
@@ -495,6 +511,10 @@
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\RegisterPage.xbf">
       <PackagePath>main_interface\RegisterPage.xbf</PackagePath>
       <Modified>2025-12-21T00:52:03.088</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\SettingsControlPanel.xbf">
+      <PackagePath>main_interface\SettingsControlPanel.xbf</PackagePath>
+      <Modified>2026-01-13T13:22:11.786</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\SpotlightPage.xbf">
       <PackagePath>main_interface\SpotlightPage.xbf</PackagePath>
@@ -510,11 +530,23 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\TilingManagerControlPanel.xbf">
       <PackagePath>main_interface\TilingManagerControlPanel.xbf</PackagePath>
-      <Modified>2026-01-12T13:05:08.828</Modified>
+      <Modified>2026-01-13T00:07:30.357</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\Assets\gifs\Mouseless.gif">
+      <PackagePath>main_interface\Assets\gifs\Mouseless.gif</PackagePath>
+      <Modified>2026-01-12T23:41:31.268</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\Assets\gifs\TilingManager.gif">
+      <PackagePath>main_interface\Assets\gifs\TilingManager.gif</PackagePath>
+      <Modified>2026-01-12T23:17:17.116</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\Assets\Images\WindowIcon.ico">
+      <PackagePath>main_interface\Assets\Images\WindowIcon.ico</PackagePath>
+      <Modified>2026-01-13T00:24:37.038</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\apphost.exe">
       <PackagePath>main_interface\main_interface.exe</PackagePath>
-      <Modified>2026-01-12T13:05:09.308</Modified>
+      <Modified>2026-01-13T13:22:12.267</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\main_interface.runtimeconfig.json">
       <PackagePath>main_interface\main_interface.runtimeconfig.json</PackagePath>
@@ -522,7 +554,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\main_interface.dll">
       <PackagePath>main_interface\main_interface.dll</PackagePath>
-      <Modified>2026-01-12T13:05:09.303</Modified>
+      <Modified>2026-01-13T13:22:12.256</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>
