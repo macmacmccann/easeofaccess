@@ -8,22 +8,64 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Margin="20">
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
 
-        <TextBox x:ConnectionId='2'  Grid.Row="1" Width ="250" x:Name ="EmailTextBox" PlaceholderText="Enter email here" Foreground="LightGreen" FontSize="24" HorizontalAlignment="Center"/>
-        <PasswordBox x:ConnectionId='3'  Grid.Row="3" Width ="250" x:Name="MyPasswordBox"  FontSize="24" HorizontalAlignment="Center" />
-        <Button x:ConnectionId='4' x:Name="RegisterButton" Grid.Row="4" Width="250" Content="Register"                              />
-        <TextBlock x:ConnectionId='5' Grid.Row="0" Width ="250" x:Name ="ErrorText" Text="Error" Foreground="Red" FontSize="24" HorizontalAlignment="Center" Visibility="Collapsed"/>
-        <TextBlock x:ConnectionId='6'  Grid.Row="2" Width ="250" x:Name ="SuccessText" Text="Success " Foreground="Green" FontSize="24" HorizontalAlignment="Center" Visibility="Collapsed"/>
-        
+
+    <Grid>
+        <Grid Background="#30005080" />
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="1" 
+                 Spacing="16" 
+                 MaxWidth="320" 
+                 HorizontalAlignment="Center">
+
+
+                <TextBlock
+                   Text="Register Here"
+                   FontSize="30"
+                   FontWeight="SemiBold" />
+
+                <InfoBar x:ConnectionId='2' x:Name="ErrorText"
+                  Severity="Error"
+                  IsOpen="False"
+                  IsClosable="True"
+                  Message="Invalid email or password"/>
+
+                <InfoBar x:ConnectionId='3' x:Name="SuccessText"
+                  Severity="Success"
+                  IsOpen="False"
+                  IsClosable="True"
+                  Message="Login successful!"/>
+
+                <TextBox x:ConnectionId='4' x:Name="EmailTextBox"
+                  Header="Email"
+                  PlaceholderText="Enter an unused email"
+                  TextWrapping="NoWrap"
+                  InputScope="EmailSmtpAddress"/>
+
+                <PasswordBox x:ConnectionId='5' x:Name="MyPasswordBox"
+                      Header="Password"
+                      PlaceholderText="Enter a secure password"/>
+
+
+                <Button x:ConnectionId='6' x:Name="RegisterButton"
+                 Content="Register"
+                                             
+                 HorizontalAlignment="Stretch"
+                 Style="{StaticResource AccentButtonStyle}"/>
+
+
+            </StackPanel>
+        </Grid>
     </Grid>
+
+
+
 </Page>
 

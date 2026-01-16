@@ -17,6 +17,7 @@ C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\MySplashScreen.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\OverlayScreen.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\RegisterPage.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\ReprogramKeysControlPanel.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\SettingsControlPanel.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\SpotlightPage.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\SpotlightWindow.xbf
@@ -116,6 +117,7 @@ C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\MySplashScreen.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\OverlayScreen.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\RegisterPage.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\ReprogramKeysControlPanel.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\SettingsControlPanel.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\SpotlightPage.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\SpotlightWindow.xbf

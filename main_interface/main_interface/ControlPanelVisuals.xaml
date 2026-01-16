@@ -11,76 +11,274 @@
 
 
 
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+
+        <Grid RowDefinitions="0.2*,*,Auto">
+
+        <!-- HEADER -->
+        <Border x:Name="Headertop">
+
+
+            <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Top"  Height="120" Padding="16" Margin="24,24,0,0">
+                <StackPanel Spacing="4">
+
+                    <TextBlock
+                        Text="Enable Monitor Control"
+                        FontSize="30"
+                        FontWeight="SemiBold" />
+
+                    <TextBlock
+                        Text="Use your monitor to build a better relationship with your eyes and your brian"
+                        FontSize="14"
+                        Opacity="0.7" />
+                </StackPanel>
 
 
 
-    <Grid Padding="24">
+                <ToggleSwitch 
+         
+                    
+                        x:Name="MonitorColorFixEnabledToggle"
+                        OffContent="Off"
+                        OnContent="On"
+                        Toggled="MonitorColorFixEnabledToggled" 
+                        Grid.Column="1"
+                        FontSize="16"
+                        MinHeight="48"
+                        Padding="4"
+                        VerticalAlignment="Center"
+                        PointerEntered="Border_PointerEntered"
+                        PointerExited="Border_PointerExited"
+
+                        >
+
+                    <ToggleSwitch.RenderTransform>
+                        <ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
+                    </ToggleSwitch.RenderTransform>
+                </ToggleSwitch>
 
 
-        <StackPanel Spacing="20" MaxWidth="500">
+            </StackPanel>
 
-            <TextBlock
-                Text="Control your screen easier "
-                FontSize="24"
-                FontWeight="SemiBold" />
+        </Border>
+        <!-- END OF HEADER -->
 
-            <TextBlock
-                Text=" Filter by any sort of issue "
-                TextWrapping="Wrap"
-                Opacity="0.8" />
+        <!-- COL 1: GIF -->
 
-            <TextBlock
-                Text="Features"
-                FontSize="18"
-                FontWeight="SemiBold"
-                Margin="0,12,0,0" />
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" Padding="16" Margin="24,24,0,0">
 
-            <ToggleSwitch
-                x:Name="MonitorColorFixEnabledToggle"
-                Header="Enable or block all overlays "
-                OffContent="Off"
-                OnContent="On"
-                Toggled="MonitorColorFixEnabledToggled" />
-            
-            
-            <ToggleSwitch
-                x:Name="DimScreenEnabledToggle"
-                Header="Dim Screen"
-                OffContent="Disabled"
-                OnContent="Enabled"
-                Toggled="DimScreenEnabledToggled" />
+            <StackPanel Grid.Column="0" Spacing="8">
+                <TextBlock
+                    Text="Access controls you cant usually"
+                    FontSize="20"
+                    Opacity="0.7"
+                    VerticalAlignment="Top" />
 
-            <ToggleSwitch
-               x:Name="DyslexiaEnabledToggle"
-               Header="Dyslexia Support"
-               OffContent="Disabled"
-               OnContent="Enabled"
-               Toggled="DyslexiaEnabledToggled" /> 
+                <!-- gif -->
+
+                <Image Source="/Assets/gifs/TilingManager.gif" />
+
+                <!-- -->
 
 
-            <ToggleSwitch
-               x:Name="LightSensitiveEnabledToggle"
-               Header="Cater for Light Sensitivity"
-               OffContent="Disabled"
-               OnContent="Enabled"
-               Toggled="LightSensitiveEnabledToggled" />
 
-            <ToggleSwitch
-              x:Name="MigraineEnabledToggle"
-              Header="Cater for migraines"
-              OffContent="Disabled"
-              OnContent="Enabled"
-              Toggled="MigraineEnabledToggled" />
+            </StackPanel>
 
-            <ToggleSwitch
-              x:Name="VisualProcessingEnabledToggle"
-              Header="Visual Processing Disorder Filter"
-              OffContent="Disabled"
-              OnContent="Enabled"
-              Toggled="VisualProcessingEnabledToggled" />
+            <!-- COL 2: FEATURES -->
+
+            <StackPanel Grid.Column="1" Spacing="8">
+                <TextBlock
+                    Grid.Column="1"
+                    Text="Features"
+                    FontSize="20"
+                    Opacity="0.7"
+                    VerticalAlignment="Top" />
+
+                <!-- toggles -->
 
 
-        </StackPanel>
+
+                <!-- ONE TOGGLE BAR BORDER WRAPPED -->
+                <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+PointerExited="Border_PointerExited">
+                    <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                    <Grid ColumnDefinitions="*,Auto">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock Text="toggl1" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="toggle 1 desc" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+
+                        <!-- GRID COL 2 TOGGLE -->
+                        <ToggleSwitch 
+                           
+                            x:Name="TilingToggle"
+                            OnContent="On"
+                            OffContent="Off"
+
+                             Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Margin="16,0,0,0" />
+                    </Grid>
+                </Border>
+                <!-- END ONE TOGGLE BAR BORDER WRAPPED -->
+
+
+
+
+            </StackPanel>
+
+        </Grid>
+
+
+
+
+       
+            <Grid Grid.Row="2" RowDefinitions="*,*"
+                  ColumnDefinitions="*,*,*"
+                  HorizontalAlignment="Stretch"
+                  Margin="40,0,0,0">
+
+
+
+                <Border
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+                    PointerExited="Border_PointerExited">
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock Text="Dim Screen" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Late Night Work" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+                        <ToggleSwitch
+                    Grid.Column="1"
+                    x:Name="DimScreenEnabledToggle"
+                    Header="Apply"
+                    OffContent="Disabled"
+                    OnContent="Enabled"
+                    Toggled="DimScreenEnabledToggled" />
+                    </Grid>
+                </Border>
+
+
+                <Border
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+                    PointerExited="Border_PointerExited">
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Top" Spacing="4">
+                            <TextBlock Text="Dyslexia Support" FontSize="16" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Prevent exitability" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+                        <ToggleSwitch
+                        Grid.Column="1"
+                        x:Name="DyslexiaEnabledToggle"
+                        Header="Apply"
+                        OffContent="Disabled"
+                        OnContent="Enabled"
+                        Toggled="DyslexiaEnabledToggled" />
+                    </Grid>
+                </Border>
+
+
+                <Border
+                   Grid.Row="0"
+                   Grid.Column="2"
+                   Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+                   PointerExited="Border_PointerExited">
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Top" Spacing="4">
+                            <TextBlock Text="Photophobia / Insomnia " FontSize="16" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Disable High Wavelength" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+                        <ToggleSwitch
+                       Grid.Column="1"
+                       x:Name="LightSensitiveEnabledToggle"
+                       Header="Apply"
+                       OffContent="Disabled"
+                       OnContent="Enabled"
+                       Toggled="LightSensitiveEnabledToggled" />
+                    </Grid>
+                </Border>
+
+                <Border
+                   Grid.Row="1"
+                   Grid.Column="0"
+                   Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+                   PointerExited="Border_PointerExited">
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Top" Spacing="4">
+                            <TextBlock Text="Migraine Control" FontSize="16" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Help relax your brain" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+                        <ToggleSwitch
+                      Grid.Column="1"
+                      x:Name="MigraineEnabledToggle"
+                      Header="Apply"
+                      OffContent="Disabled"
+                      OnContent="Enabled"
+                      Toggled="MigraineEnabledToggled" />
+
+                    </Grid>
+                </Border>
+
+                <Border
+                   Grid.Row="1"
+                   Grid.Column="1"
+                   Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+                   PointerExited="Border_PointerExited">
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Top" Spacing="4">
+                            <TextBlock Text="Visual Processing " FontSize="16" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Tint to help process correct shapes" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+                        <ToggleSwitch                 
+                                Grid.Row="1"
+                                Grid.Column="1"
+                              x:Name="VisualProcessingEnabledToggle"
+                              Header="Apply"
+                              OffContent="Disabled"
+                              OnContent="Enabled"
+                              Toggled="VisualProcessingEnabledToggled" />
+                    </Grid>
+                </Border>
+
+
+
+            </Grid>
+
+
+
+
+
+
+
     </Grid>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </ScrollViewer>
 
 </Page>

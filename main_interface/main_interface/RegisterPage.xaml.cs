@@ -37,12 +37,14 @@ namespace main_interface
         {
             bool success = await AuthService.Register(EmailTextBox.Text, MyPasswordBox.Password);
             if (success) {
-                SuccessText.Text = "Account created you can now log in !";
-                SuccessText.Visibility = Visibility.Visible;
+                SuccessText.IsOpen = true;
+                   SuccessText.Message =  "Account created you can now log in !";
+                ErrorText.IsOpen = false;
             }
             else {
-                ErrorText.Text = "Failed to create account ";
-                ErrorText.Visibility = Visibility.Visible;
+                ErrorText.IsOpen = true;
+                ErrorText.Message = "Failed to create account ";
+                SuccessText.IsOpen = false;
 
             }
 

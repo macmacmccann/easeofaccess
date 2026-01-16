@@ -143,3 +143,5 @@ C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\Assets\Images\WindowIcon.ico
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\SettingsControlPanel.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\SettingsControlPanel.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\ReprogramKeysControlPanel.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\ReprogramKeysControlPanel.xbf

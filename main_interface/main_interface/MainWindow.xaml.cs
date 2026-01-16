@@ -244,8 +244,12 @@ namespace main_interface
                 case "TilingManager":
                     ContentFrame.Navigate(typeof(TilingManagerControlPanel));
                     break;
+                case "ReprogramKeys":
+                    ContentFrame.Navigate(typeof(ReprogramKeysControlPanel));
+                    break;
 
-            
+
+
                 case "about":
                     ContentFrame.Navigate(typeof(About));
                     break;

@@ -68,6 +68,11 @@
 					<Value>RegisterPage.xbf</Value>
 				</Candidate>
 			</NamedResource>
+			<NamedResource name="ReprogramKeysControlPanel.xbf" uri="ms-resource://main_interface/Files/ReprogramKeysControlPanel.xbf">
+				<Candidate type="Path">
+					<Value>ReprogramKeysControlPanel.xbf</Value>
+				</Candidate>
+			</NamedResource>
 			<NamedResource name="SettingsControlPanel.xbf" uri="ms-resource://main_interface/Files/SettingsControlPanel.xbf">
 				<Candidate type="Path">
 					<Value>SettingsControlPanel.xbf</Value>

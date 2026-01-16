@@ -10,57 +10,163 @@
 
 
 
-    <Grid Padding="24">
+
+    <Grid RowDefinitions="0.2*,*">
+
+        <!-- HEADER -->
+        <Border x:ConnectionId='2' x:Name="Headertop">
 
 
-        <StackPanel Spacing="20" MaxWidth="500">
+            <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Top"  Height="120" Padding="16" Margin="24,24,0,0">
+                <StackPanel Spacing="4">
 
-            <TextBlock
-                Text="Quick Commands"
-                FontSize="24"
-                FontWeight="SemiBold" />
+                    <TextBlock
+                        Text="Enable Elevated Clipboard"
+                        FontSize="30"
+                        FontWeight="SemiBold" />
 
-            <TextBlock
-                Text="Quick Commands lets you instantly paste predefined commands into the active application using a floating overlay."
-                TextWrapping="Wrap"
-                Opacity="0.8" />
+                    <TextBlock
+                        Text="Design your own typing history"
+                        FontSize="14"
+                        Opacity="0.7" />
+                </StackPanel>
 
-            <TextBlock
-                Text="Features"
-                FontSize="18"
-                FontWeight="SemiBold"
-                Margin="0,12,0,0" />
 
-            <ToggleSwitch x:ConnectionId='2'
-                x:Name="OverlayEnabledToggle"
-                Header="Enable Quick Commands Overlay"
-                OffContent="Disabled"
-                OnContent="Enabled"
-                                                />
+                <ToggleSwitch x:ConnectionId='7' 
+                        x:Name="OverlayEnabledToggle"
+                          OffContent="Disabled"
+                          OnContent="Enabled"
+                                                          
+                        Grid.Column="1"
+                        FontSize="16"
+                        MinHeight="48"
+                        Padding="4"
+                        VerticalAlignment="Center"
+                                                              
+                                                            
 
-            <ToggleSwitch x:ConnectionId='3'
-                x:Name="AlwaysOnTopEnabledToggle"
-                Header="Always on Top"
-                OffContent="Off"
-                OnContent="On"
-                                                    />
+                        >
 
-            <ToggleSwitch x:ConnectionId='4'
-                x:Name="AutoPasteEnabledToggle"
-                Header="Auto paste on selection"
-                OffContent="Manual"
-                OnContent="Automatic"
-                                                  />
 
-            <ToggleSwitch x:ConnectionId='5'
-                x:Name="BackdropEnabledToggle"
-                Header="Use Acrylic / Mica background"
-                OffContent="Disabled"
-                OnContent="Enabled"
-                                                 />
+         
 
-        </StackPanel>
+                    <ToggleSwitch.RenderTransform>
+                        <ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
+                    </ToggleSwitch.RenderTransform>
+                </ToggleSwitch>
+
+
+            </StackPanel>
+
+        </Border>
+        <!-- END OF HEADER -->
+
+        <!-- COL 1: GIF -->
+
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" Padding="16" Margin="24,24,0,0">
+
+            <StackPanel Grid.Column="0" Spacing="8">
+                <TextBlock
+                    Text="Snap your windows "
+                    FontSize="20"
+                    Opacity="0.7"
+                    VerticalAlignment="Top" />
+
+                <!-- gif -->
+
+                <Image Source="/Assets/gifs/TilingManager.gif" />
+
+                <!-- -->
+
+
+
+            </StackPanel>
+
+            <!-- COL 2: FEATURES -->
+
+            <StackPanel Grid.Column="1" Spacing="8">
+                <TextBlock
+                    Grid.Column="1"
+                    Text="Features"
+                    FontSize="20"
+                    Opacity="0.7"
+                    VerticalAlignment="Top" />
+
+                <!-- toggles -->
+
+
+
+                <!-- ONE TOGGLE BAR BORDER WRAPPED -->
+                <Border x:ConnectionId='3' Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"                                       
+                                    >
+                    <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                    <Grid ColumnDefinitions="*,Auto">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock Text="Enable High Priority" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Make sure it you get a pop up without distactions" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+
+                        <!-- GRID COL 2 TOGGLE -->
+                        <ToggleSwitch x:ConnectionId='6' 
+                           
+                              x:Name="AlwaysOnTopEnabledToggle"
+                              Header="Activate this feature "
+
+                              OffContent="Off"
+                              OnContent="On"
+                                                                  
+                    
+
+                             Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Margin="16,0,0,0" />
+                    </Grid>
+                </Border>
+                <!-- END ONE TOGGLE BAR BORDER WRAPPED -->
+                
+                
+
+                <!--  TOGGLE 2  BAR BORDER WRAPPED -->
+                <Border x:ConnectionId='4' Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"                                       
+                                    >
+                    <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                    <Grid ColumnDefinitions="*,Auto">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock Text="Auto Command" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Automate specified command to active window" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+
+                        <!-- GRID COL 2 TOGGLE -->
+                        <ToggleSwitch x:ConnectionId='5' 
+                           
+                          x:Name="AutoPasteEnabledToggle"
+                           Header="Activate this feature "
+                           OffContent="Manual"
+                           OnContent="Automatic"
+                                                            
+                             Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Margin="16,0,0,0" />
+                    </Grid>
+                </Border>
+                <!-- END ONE TOGGLE BAR BORDER WRAPPED -->
+
+
+
+            </StackPanel>
+
+        </Grid>
+
+
     </Grid>
+
+
+
+
+
+
 
 
 

@@ -9,11 +9,8 @@
     mc:Ignorable="d">
 
     <Grid>
-        <!-- Tint overlay - add this first -->
         <Grid Background="#30005080" />
-        <!-- Semi-transparent blue tint - adjust as needed -->
 
-        <!-- Your existing content -->
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -24,29 +21,41 @@
                     Spacing="16" 
                     MaxWidth="320" 
                     HorizontalAlignment="Center">
+
+                <TextBlock
+                   Text="Login Here"
+                   FontSize="30"
+                   FontWeight="SemiBold" />
+
                 <InfoBar x:Name="ErrorText"
                      Severity="Error"
                      IsOpen="False"
                      IsClosable="True"
                      Message="Invalid email or password"/>
+                
                 <InfoBar x:Name="SuccessText"
                      Severity="Success"
                      IsOpen="False"
                      IsClosable="True"
                      Message="Login successful!"/>
+                
                 <TextBox x:Name="EmailTextBox"
                      Header="Email"
                      PlaceholderText="Enter your email"
                      TextWrapping="NoWrap"
                      InputScope="EmailSmtpAddress"/>
+                
                 <PasswordBox x:Name="MyPasswordBox"
                          Header="Password"
                          PlaceholderText="Enter your password"/>
+                
                 <Button x:Name="LoginButton"
                     Content="Login"
                     Click="LoginButtonClicked"
                     HorizontalAlignment="Stretch"
                     Style="{StaticResource AccentButtonStyle}"/>
+                
+                
             </StackPanel>
         </Grid>
     </Grid>

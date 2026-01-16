@@ -82,6 +82,9 @@
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\RegisterPage.xbf">
       <PackagePath>RegisterPage.xbf</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\ReprogramKeysControlPanel.xbf">
+      <PackagePath>ReprogramKeysControlPanel.xbf</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\SettingsControlPanel.xbf">
       <PackagePath>SettingsControlPanel.xbf</PackagePath>
     </AppxPackagedFile>
@@ -384,6 +387,9 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\RegisterPage.xbf">
       <PackagePath>main_interface\RegisterPage.xbf</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\ReprogramKeysControlPanel.xbf">
+      <PackagePath>main_interface\ReprogramKeysControlPanel.xbf</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\SettingsControlPanel.xbf">
       <PackagePath>main_interface\SettingsControlPanel.xbf</PackagePath>

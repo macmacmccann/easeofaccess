@@ -1,6 +1,7 @@
 
 
 
+                    <!-- title 20* of grid, content gets 80 -->
 
     <Grid RowDefinitions="0.2*,*">
 
@@ -25,6 +26,7 @@
 
                 <ToggleSwitch 
                         x:Name="TilingManagerToggle"
+                        Header= "DELETE THIS" 
                         OnContent="On"
                         OffContent="Off"
                         Toggled="TilingManagerToggle_Toggled"
@@ -33,7 +35,6 @@
                         MinHeight="48"
                         Padding="4"
                         VerticalAlignment="Center"
-                        Toggled="TilingManagerToggle_Toggled"
                         PointerEntered="Border_PointerEntered"
                         PointerExited="Border_PointerExited"
 
