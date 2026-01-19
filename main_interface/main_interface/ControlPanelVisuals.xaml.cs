@@ -90,7 +90,20 @@ UpdateOverlayState();
 
     }
 
+    private void HighStrengthToggle_Toggled(object sender, RoutedEventArgs e)
+    {
+        OverlaySettings.HighStrengthEnabled = HighStrengthToggle.IsOn;
+    }
 
+    private void MediumStrengthToggle_Toggled(object sender, RoutedEventArgs e)
+    {
+        OverlaySettings.MediumStrengthEnabled = MediumStrengthToggle.IsOn;
+    }
+
+    private void LowStrengthToggle_Toggled(object sender, RoutedEventArgs e)
+    {
+        OverlaySettings.LowStrengthEnabled = LowStrengthToggle.IsOn;
+    }
 
     public void EnsureSpotLightWindow()
     {
@@ -156,6 +169,7 @@ UpdateOverlayState();
     {
         var yellowbrush = new SolidColorBrush(Color.FromArgb(30, 255, 200, 0));
         Headertop.Background = yellowbrush;
+        SplitPage.Background = yellowbrush;
     }
 
 

@@ -26,12 +26,13 @@
                 <NavigationViewItem Content="Login" Icon="Contact" Tag="LoginPage"/>
                 <NavigationViewItem Content="Account" Icon="Account" Tag="Account"/>
                 <NavigationViewItem Content="Register" Icon="People" Tag="RegisterPage"/>
-                <NavigationViewItem Content="Typing Control " Icon="BackToWindow" Tag="Command"/>
-                <NavigationViewItem Content="Ease your eyes" Icon="Setting" Tag="Screen"/>
+                <NavigationViewItem Content="Typing Control " Icon="UnSyncFolder" Tag="Command"/>
+                <NavigationViewItem Content="Ease your eyes" Icon="Target" Tag="Screen"/>
                 <NavigationViewItem Content="Mouseless" Icon="TouchPointer" Tag="Mouseless"/>
-                <NavigationViewItem Content="Tiling Manager" Icon="Mail" Tag="TilingManager"/>
-                <NavigationViewItem Content="Key Control" Icon="Mail" Tag="ReprogramKeys"/>
+                <NavigationViewItem Content="Tiling Manager" Icon= "GoToStart" Tag="TilingManager"/>
+                <NavigationViewItem Content="Key Control" Icon="Link" Tag="ReprogramKeys"/>
 
+                <NavigationViewItem Content="Assistant" Icon="Help" Tag="ReprogramKeys"/>
                 <NavigationViewItem Content="About" Icon="Help" Tag="About"/>
             </NavigationView.MenuItems>
 

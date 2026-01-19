@@ -13,7 +13,7 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
 
-        <Grid RowDefinitions="0.2*,*,Auto">
+        <Grid RowDefinitions="0.2*,*,Auto,Auto">
 
         <!-- HEADER -->
         <Border x:ConnectionId='2' x:Name="Headertop">
@@ -35,7 +35,7 @@
 
 
 
-                <ToggleSwitch x:ConnectionId='15' 
+                <ToggleSwitch x:ConnectionId='20' 
          
                     
                         x:Name="MonitorColorFixEnabledToggle"
@@ -76,7 +76,7 @@
 
                 <!-- gif -->
 
-                <Image Source="/Assets/gifs/TilingManager.gif" />
+                <Image Source="/Assets/gifs/Monitor.jpg" />
 
                 <!-- -->
 
@@ -97,48 +97,119 @@
                 <!-- toggles -->
 
 
+                    <!-- NICE TOGGLE BAR BORDER WRAPPED -->
+                    <Border x:ConnectionId='14' Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"                                       
+                                                >
+                        <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                        <Grid ColumnDefinitions="*,Auto">
 
-                <!-- ONE TOGGLE BAR BORDER WRAPPED -->
-                <Border x:ConnectionId='13' Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"                                       
-                                    >
-                    <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
-                    <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="High Intensity" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                                <TextBlock Text="Proven set intensity for effective support" FontSize="12" Opacity="0.9" Foreground="White" />
+                            </StackPanel>
 
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                            <TextBlock Text="toggl1" FontSize="14" FontWeight="SemiBold" Foreground="White" />
-                            <TextBlock Text="toggle 1 desc" FontSize="12" Opacity="0.9" Foreground="White" />
-                        </StackPanel>
-
-                        <!-- GRID COL 2 TOGGLE -->
-                        <ToggleSwitch x:ConnectionId='14' 
-                           
-                            x:Name="TilingToggle"
-                            OnContent="On"
-                            OffContent="Off"
-
-                             Grid.Column="1"
-                            VerticalAlignment="Center"
-                            Margin="16,0,0,0" />
-                    </Grid>
-                </Border>
-                <!-- END ONE TOGGLE BAR BORDER WRAPPED -->
+                            <!-- GRID COL 2 TOGGLE -->
+                            <ToggleSwitch x:ConnectionId='19' 
+                                Grid.Column="1"
+                                 x:Name="HighStrengthToggle"
+                               Header="Apply"
+                               OffContent="Disabled"
+                               OnContent="Enabled"
+                                                                    
+                                VerticalAlignment="Center"
+                                Margin="16,0,0,0" />
+                        </Grid>
+                    </Border>
 
 
 
+                    <!-- NICE TOGGLE BAR BORDER WRAPPED -->
+                    <Border x:ConnectionId='15' Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"                                       
+                                       >
+                        <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                        <Grid ColumnDefinitions="*,Auto">
 
-            </StackPanel>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="Medium Intensity" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                                <TextBlock Text="Meet in the middle" FontSize="12" Opacity="0.9" Foreground="White" />
+                            </StackPanel>
+
+                            <!-- GRID COL 2 TOGGLE -->
+                            <ToggleSwitch x:ConnectionId='18' 
+                               Grid.Column="1"
+                                x:Name="MediumStrengthToggle"
+                              Header="Medium Speed"
+                              OffContent="Disabled"
+                              OnContent="Enabled"
+                                                                     
+                               VerticalAlignment="Center"
+                               Margin="16,0,0,0" />
+                        </Grid>
+                    </Border>
+
+
+
+                    <!-- NICE TOGGLE BAR BORDER WRAPPED -->
+                    <Border x:ConnectionId='16' Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"                                       
+                                       >
+                        <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                        <Grid ColumnDefinitions="*,Auto">
+
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="Low Intensity" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                                <TextBlock Text="Introduce a light colour shift" FontSize="12" Opacity="0.9" Foreground="White" />
+                            </StackPanel>
+
+                            <!-- GRID COL 2 TOGGLE -->
+                            <ToggleSwitch x:ConnectionId='17' 
+                               Grid.Column="1"
+                                x:Name="LowStrengthToggle"
+                              Header="Slow Speed"
+                              OffContent="Disabled"
+                              OnContent="Enabled"
+                                                                  
+                               VerticalAlignment="Center"
+                               Margin="16,0,0,0" />
+                        </Grid>
+                    </Border>
+
+
+
+
+                </StackPanel>
 
         </Grid>
 
 
+     <!-- HEADER -->
+            <Grid Grid.Row="2" 
+         HorizontalAlignment="Stretch"
+         Margin="0">
+
+                <Border x:ConnectionId='13' x:Name="SplitPage"
+                        Margin="30"
+                         HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                    >
+
+                    <TextBlock
+                   Text="Decide what works for you at anytime"
+                   FontSize="30"
+                   FontWeight="SemiBold"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                        />
+
+                </Border>
+
+            </Grid>
 
 
-       
-            <Grid Grid.Row="2" RowDefinitions="*,*"
+
+            <Grid Grid.Row="3" RowDefinitions="*,*,*"
                   ColumnDefinitions="*,*,*"
                   HorizontalAlignment="Stretch"
                   Margin="40,0,0,0">
-
 
 
                 <Border x:ConnectionId='3'

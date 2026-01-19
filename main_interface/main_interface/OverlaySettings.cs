@@ -18,6 +18,11 @@ namespace main_interface
         // Color gradients 
         public static bool MonitorColorFixEnabled = false;
 
+
+        public static bool HighStrengthEnabled = false;
+        public static bool MediumStrengthEnabled = false;
+        public static bool LowStrengthEnabled = false;
+
         public static bool DimScreenEnabled = false;
         public static bool DyslexiaEnabled = false;
         public static bool LightSensitiveEnabled = false;
@@ -41,6 +46,9 @@ namespace main_interface
 
         public static bool BackgroundProcessActiveEnabled = false;
         public static bool SyncActiveEnabled = false;
+
+
+
 
 
     }

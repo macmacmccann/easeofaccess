@@ -18,6 +18,11 @@
 					<Value>App.xbf</Value>
 				</Candidate>
 			</NamedResource>
+			<NamedResource name="AssistantControlPanel.xbf" uri="ms-resource://main_interface/Files/AssistantControlPanel.xbf">
+				<Candidate type="Path">
+					<Value>AssistantControlPanel.xbf</Value>
+				</Candidate>
+			</NamedResource>
 			<NamedResource name="ControlPanelOverlay.xbf" uri="ms-resource://main_interface/Files/ControlPanelOverlay.xbf">
 				<Candidate type="Path">
 					<Value>ControlPanelOverlay.xbf</Value>
@@ -100,6 +105,11 @@
 			</NamedResource>
 			<ResourceMapSubtree name="Assets">
 				<ResourceMapSubtree name="gifs">
+					<NamedResource name="Monitor.jpg" uri="ms-resource://main_interface/Files/Assets/gifs/Monitor.jpg">
+						<Candidate type="Path">
+							<Value>Assets\gifs\Monitor.jpg</Value>
+						</Candidate>
+					</NamedResource>
 					<NamedResource name="Mouseless.gif" uri="ms-resource://main_interface/Files/Assets/gifs/Mouseless.gif">
 						<Candidate type="Path">
 							<Value>Assets\gifs\Mouseless.gif</Value>
