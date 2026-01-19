@@ -248,6 +248,13 @@ namespace main_interface
                     ContentFrame.Navigate(typeof(ReprogramKeysControlPanel));
                     break;
 
+                case "Assistant":
+                    ContentFrame.Navigate(typeof(AssistantControlPanel));
+                    break;
+                case "TerminalControl":
+                    ContentFrame.Navigate(typeof(TerminalControlPanel));
+                    break;
+
 
 
                 case "about":

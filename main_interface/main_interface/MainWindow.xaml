@@ -31,9 +31,8 @@
                 <NavigationViewItem Content="Mouseless" Icon="TouchPointer" Tag="Mouseless"/>
                 <NavigationViewItem Content="Tiling Manager" Icon= "GoToStart" Tag="TilingManager"/>
                 <NavigationViewItem Content="Key Control" Icon="Link" Tag="ReprogramKeys"/>
-
-                <NavigationViewItem Content="Assistant" Icon="Help" Tag="ReprogramKeys"/>
-                <NavigationViewItem Content="About" Icon="Help" Tag="About"/>
+                <NavigationViewItem Content="Terminal Control" Icon="Link" Tag="TerminalControl"/>
+                <NavigationViewItem Content="Assistant" Icon="Help" Tag="Assistant"/>
             </NavigationView.MenuItems>
 
             <Frame x:Name="ContentFrame"/>

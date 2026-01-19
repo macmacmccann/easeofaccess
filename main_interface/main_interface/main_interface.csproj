@@ -12,6 +12,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="About.xaml" />
+    <None Remove="Assistant.xaml" />
     <None Remove="AssistantControlPanel.xaml" />
     <None Remove="ControlPanelOverlay.xaml" />
     <None Remove="ControlPanelVisuals.xaml" />
@@ -83,6 +84,12 @@
   <ItemGroup>
     <Folder Include="Assets\gifs\" />
     <Folder Include="NewFolder\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Assistant.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
