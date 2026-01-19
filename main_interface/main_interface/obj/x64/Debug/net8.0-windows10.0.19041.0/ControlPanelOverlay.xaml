@@ -67,14 +67,14 @@
 
             <StackPanel Grid.Column="0" Spacing="8">
                 <TextBlock
-                    Text="Snap your windows "
+                    Text="Write Commands in a flash"
                     FontSize="20"
                     Opacity="0.7"
                     VerticalAlignment="Top" />
 
                 <!-- gif -->
 
-                <Image Source="/Assets/gifs/TilingManager.gif" />
+                <Image Source="/Assets/gifs/QuickCommands.gif" />
 
                 <!-- -->
 

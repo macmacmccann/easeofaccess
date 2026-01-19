@@ -149,3 +149,13 @@ C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\AssistantControlPanel.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\Assets\gifs\Monitor.jpg
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\Assets\gifs\Monitor.jpg
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\TerminalAssistant.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\TerminalControlPanel.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\Assets\gifs\ReProgramKeys.gif
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\Assets\gifs\Terminal.gif
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\TerminalAssistant.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\TerminalControlPanel.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\Assets\gifs\ReProgramKeys.gif
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\Assets\gifs\Terminal.gif
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\Assets\gifs\QuickCommands.gif
+C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\bin\x64\Debug\main_interface\Assets\gifs\QuickCommands.gif

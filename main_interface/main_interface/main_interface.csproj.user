@@ -8,6 +8,12 @@
     <None Update="App.xaml">
       <SubType>Designer</SubType>
     </None>
+    <Page Update="TerminalControlPanel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="TerminalAssistant.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="AssistantControlPanel.xaml">
       <SubType>Designer</SubType>
     </Page>

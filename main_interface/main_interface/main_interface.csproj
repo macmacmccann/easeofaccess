@@ -24,6 +24,8 @@
     <None Remove="ReprogramKeysControlPanel.xaml" />
     <None Remove="SettingsControlPanel.xaml" />
     <None Remove="SpotlightPage.xaml" />
+    <None Remove="TerminalAssistant.xaml" />
+    <None Remove="TerminalControlPanel.xaml" />
     <None Remove="TilingManager.xaml" />
     <None Remove="TilingManagerControlPanel.xaml" />
   </ItemGroup>
@@ -81,6 +83,18 @@
   <ItemGroup>
     <Folder Include="Assets\gifs\" />
     <Folder Include="NewFolder\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="TerminalControlPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="TerminalAssistant.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

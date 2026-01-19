@@ -93,6 +93,16 @@
 					<Value>SpotlightWindow.xbf</Value>
 				</Candidate>
 			</NamedResource>
+			<NamedResource name="TerminalAssistant.xbf" uri="ms-resource://main_interface/Files/TerminalAssistant.xbf">
+				<Candidate type="Path">
+					<Value>TerminalAssistant.xbf</Value>
+				</Candidate>
+			</NamedResource>
+			<NamedResource name="TerminalControlPanel.xbf" uri="ms-resource://main_interface/Files/TerminalControlPanel.xbf">
+				<Candidate type="Path">
+					<Value>TerminalControlPanel.xbf</Value>
+				</Candidate>
+			</NamedResource>
 			<NamedResource name="TilingManager.xbf" uri="ms-resource://main_interface/Files/TilingManager.xbf">
 				<Candidate type="Path">
 					<Value>TilingManager.xbf</Value>
@@ -113,6 +123,21 @@
 					<NamedResource name="Mouseless.gif" uri="ms-resource://main_interface/Files/Assets/gifs/Mouseless.gif">
 						<Candidate type="Path">
 							<Value>Assets\gifs\Mouseless.gif</Value>
+						</Candidate>
+					</NamedResource>
+					<NamedResource name="QuickCommands.gif" uri="ms-resource://main_interface/Files/Assets/gifs/QuickCommands.gif">
+						<Candidate type="Path">
+							<Value>Assets\gifs\QuickCommands.gif</Value>
+						</Candidate>
+					</NamedResource>
+					<NamedResource name="ReProgramKeys.gif" uri="ms-resource://main_interface/Files/Assets/gifs/ReProgramKeys.gif">
+						<Candidate type="Path">
+							<Value>Assets\gifs\ReProgramKeys.gif</Value>
+						</Candidate>
+					</NamedResource>
+					<NamedResource name="Terminal.gif" uri="ms-resource://main_interface/Files/Assets/gifs/Terminal.gif">
+						<Candidate type="Path">
+							<Value>Assets\gifs\Terminal.gif</Value>
 						</Candidate>
 					</NamedResource>
 					<NamedResource name="TilingManager.gif" uri="ms-resource://main_interface/Files/Assets/gifs/TilingManager.gif">

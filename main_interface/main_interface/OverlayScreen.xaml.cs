@@ -17,9 +17,10 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using WinRT.Interop; // This allows access to the underlying hwnd of winui window 
-
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml.Media.Animation;
+
+
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -62,8 +63,10 @@ namespace main_interface
             Activate(); // Create a native window(hwnd) for this object !
             HideFromTaskbar();
             SetOverlayStyle(); // Attach a win32 message listener to this window 
+            EnableAcrylic();
             //EnableBlur();
             LoadCommands();
+            MoveOffScreen();
             // EnableClickThrough();
             ApplySettings();
 
@@ -160,7 +163,7 @@ namespace main_interface
             SetWindowLong(hwnd, -16, style & ~0x00C00000); // remove titlebar 
                     }
 
-
+        // Margins important 
         void EnableBlur()
         {
             var hwnd = WindowNative.GetWindowHandle(this);

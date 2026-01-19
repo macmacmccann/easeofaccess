@@ -1,5 +1,8 @@
 Assets\gifs\Monitor.jpg
 Assets\gifs\Mouseless.gif
+Assets\gifs\QuickCommands.gif
+Assets\gifs\ReProgramKeys.gif
+Assets\gifs\Terminal.gif
 Assets\gifs\TilingManager.gif
 Assets\Images\WindowIcon.ico
 About.xbf
@@ -20,5 +23,7 @@ ReprogramKeysControlPanel.xbf
 SettingsControlPanel.xbf
 SpotlightPage.xbf
 SpotlightWindow.xbf
+TerminalAssistant.xbf
+TerminalControlPanel.xbf
 TilingManager.xbf
 TilingManagerControlPanel.xbf

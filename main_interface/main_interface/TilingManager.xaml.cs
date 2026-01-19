@@ -32,6 +32,7 @@ namespace main_interface
         public TilingManager()
         {
             InitializeComponent();
+            MoveOffScreen();
             //TilePrimaryMonitor();
             GetTileableWindows();
             TilePrimaryMonitorWindows();
@@ -73,6 +74,20 @@ namespace main_interface
 
         // Primary monitor default constant non negative code 
         const uint MONITOR_DEFAULTTOPRIMARY = 1;
+
+
+        void MoveOffScreen()
+        {
+            var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
+
+            SetWindowPos(
+                hwnd,
+                IntPtr.Zero, // dont change index when your hiding
+                -2000, -2000, // x and y screen postions 
+                0, 0,// width heigh 
+                0x0040); // Dont activate the window 
+
+        }
 
 
         int CountWindowsOnPrimaryMonitorTest()
