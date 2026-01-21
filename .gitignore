@@ -1,16 +1,11 @@
 main_interface/bin/
 main_interface/obj/
 main_interface/.vs/
+
+# Ignore build output everywhere
+**/bin/
+**/obj/
+
+# Visual Studio
 .vs/
 **/.vs/
-
-# Build outputs
-**/obj/
-**/*.cache
-**/*.suo
-**/*.user
-**/*.pdb
-*.pri.xml
-*.xbf
-*.g.cs
-*.g.i.cs
