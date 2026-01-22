@@ -31,14 +31,23 @@ public sealed partial class MouselessControlPanel : Page
     public MouselessControlPanel()
     {
         InitializeComponent();
-        HeaderColour(null, null);
+
+        Headertop.BackgroundTransition = new BrushTransition() { Duration = TimeSpan.FromMilliseconds(300) };
+        HeaderColour(Headertop);
+
+        // Keep the page alive / no duplicates upon nav switch by caching / reflected states preserved in ui 
+        this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+    }
+  
+
+    public void HeaderColour(Border targetBorder)
+    {
+        var Onbrush = new SolidColorBrush(Color.FromArgb(200, 34, 197, 94));
+        var Offbrush = new SolidColorBrush(Color.FromArgb(150, 100, 116, 139));
+        // shorthand if statement 
+        targetBorder.Background = OverlaySettings.MouselessEnabled ? Onbrush : Offbrush;
     }
 
-    public void HeaderColour(object sender, RoutedEventArgs e)
-    {
-        var yellowbrush = new SolidColorBrush(Color.FromArgb(30, 255, 200, 0));
-        Headertop.Background = yellowbrush;
-    }
 
     private void MouselessToggle_Toggled(object sender, RoutedEventArgs e)
     {
@@ -47,6 +56,8 @@ public sealed partial class MouselessControlPanel : Page
 
         // feedback change to the boolean that mouseless window changes state to 
         OverlaySettings.MouselessEnabled = enabledOrNot;
+        // Change the header colour 
+        HeaderColour(Headertop);
 
         // if (false)
         if (!enabledOrNot) // if its off ( meaning im turning it on ) 
@@ -57,6 +68,7 @@ public sealed partial class MouselessControlPanel : Page
                 _mouselesswindow.Close();
                 // remove the reference dont just close the ui 
                 _mouselesswindow = null;
+                HeaderColour(Headertop);
             }
             //Dont call the code below of 'ON' logic 
             return;

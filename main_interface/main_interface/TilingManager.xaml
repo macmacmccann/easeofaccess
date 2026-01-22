@@ -15,5 +15,10 @@
 
     <Grid>
 
-    </Grid>
+        <Grid.Background>
+        <ImageBrush ImageSource="/Assets/Images/TilingManager.PNG" 
+                    Stretch="UniformToFill" />
+    </Grid.Background>
+        </Grid>
+
 </Window>

@@ -26,5 +26,19 @@ public sealed partial class ReprogramKeysControlPanel : Page
     public ReprogramKeysControlPanel()
     {
         InitializeComponent();
+
+        // Keep the page alive / no duplicates upon nav switch by caching / reflected states preserved in ui 
+        this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
     }
+
+    /*
+
+    public void HeaderColour(object sender, RoutedEventArgs e)
+    {
+        var Onbrush = new SolidColorBrush(Color.FromArgb(200, 34, 197, 94));
+        var Offbrush = new SolidColorBrush(Color.FromArgb(150, 100, 116, 139));
+        // shorthand if statement 
+        Headertop.Background = OverlaySettings.MouselessEnabled ? Onbrush : Offbrush;
+    }
+    */
 }

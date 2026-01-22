@@ -30,6 +30,10 @@ public sealed partial class SettingsControlPanel : Page
     public SettingsControlPanel()
     {
         InitializeComponent();
+
+
+        // Keep the page alive / no duplicates upon nav switch by caching / reflected states preserved in ui 
+        this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
     }
 
 

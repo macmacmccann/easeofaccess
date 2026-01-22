@@ -33,7 +33,12 @@ public sealed partial class ControlPanelVisuals : Page
     public ControlPanelVisuals()
     {
         InitializeComponent();
-        HeaderColour(null, null);
+
+        Headertop.BackgroundTransition = new BrushTransition() { Duration = TimeSpan.FromMilliseconds(300) };
+        HeaderColour(Headertop);
+
+        // Keep the page alive / no duplicates upon nav switch by caching / reflected states preserved in ui 
+        this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
 
     }
 
@@ -43,9 +48,20 @@ public sealed partial class ControlPanelVisuals : Page
     private void MonitorColorFixEnabledToggled(object sender, RoutedEventArgs e)
     {
         OverlaySettings.MonitorColorFixEnabled = MonitorColorFixEnabledToggle.IsOn;
+        HeaderColour(Headertop);
 
-UpdateOverlayState();
+        UpdateOverlayState();
     }
+
+
+    public void HeaderColour(Border targetBorder)
+    {
+        var Onbrush = new SolidColorBrush(Color.FromArgb(200, 34, 197, 94));
+        var Offbrush = new SolidColorBrush(Color.FromArgb(150, 100, 116, 139));
+        // shorthand if statement 
+        targetBorder.Background = OverlaySettings.MonitorColorFixEnabled ? Onbrush : Offbrush;
+    }
+
 
 
 
@@ -144,33 +160,6 @@ UpdateOverlayState();
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void HeaderColour(object sender, RoutedEventArgs e)
-    {
-        var yellowbrush = new SolidColorBrush(Color.FromArgb(30, 255, 200, 0));
-        Headertop.Background = yellowbrush;
-        SplitPage.Background = yellowbrush;
-    }
 
 
 

@@ -52,6 +52,9 @@
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\App.xbf">
       <PackagePath>App.xbf</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\Assistant.xbf">
+      <PackagePath>Assistant.xbf</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\AssistantControlPanel.xbf">
       <PackagePath>AssistantControlPanel.xbf</PackagePath>
     </AppxPackagedFile>
@@ -126,6 +129,9 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\Assets\gifs\TilingManager.gif">
       <PackagePath>Assets\gifs\TilingManager.gif</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\Assets\Images\TilingManager.PNG">
+      <PackagePath>Assets\Images\TilingManager.PNG</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\Assets\Images\WindowIcon.ico">
       <PackagePath>Assets\Images\WindowIcon.ico</PackagePath>
@@ -379,6 +385,9 @@
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\Account.xbf">
       <PackagePath>main_interface\Account.xbf</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\Assistant.xbf">
+      <PackagePath>main_interface\Assistant.xbf</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\AssistantControlPanel.xbf">
       <PackagePath>main_interface\AssistantControlPanel.xbf</PackagePath>
     </AppxPackagedFile>
@@ -453,6 +462,9 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\Assets\gifs\TilingManager.gif">
       <PackagePath>main_interface\Assets\gifs\TilingManager.gif</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\Assets\Images\TilingManager.PNG">
+      <PackagePath>main_interface\Assets\Images\TilingManager.PNG</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\markm\College\easeofaccess\main_interface\main_interface\Assets\Images\WindowIcon.ico">
       <PackagePath>main_interface\Assets\Images\WindowIcon.ico</PackagePath>

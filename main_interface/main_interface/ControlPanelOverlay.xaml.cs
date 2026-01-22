@@ -30,18 +30,28 @@ public sealed partial class ControlPanelOverlay : Page
     public ControlPanelOverlay()
     {
         InitializeComponent();
-        HeaderColour(null, null);
+
+        Headertop.BackgroundTransition = new BrushTransition() { Duration = TimeSpan.FromMilliseconds(300) };
+        HeaderColour(Headertop);
+
+
+        // Keep the page alive / no duplicates upon nav switch by caching / reflected states preserved in ui 
+        this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+    }
+    public void HeaderColour(Border targetBorder)
+    {
+        var Onbrush = new SolidColorBrush(Color.FromArgb(200, 34, 197, 94));
+        var Offbrush = new SolidColorBrush(Color.FromArgb(150, 100, 116, 139));
+        // shorthand if statement 
+        targetBorder.Background = OverlaySettings.OverlayEnabled ? Onbrush : Offbrush;
     }
 
-    public void HeaderColour(object sender, RoutedEventArgs e)
-    {
-        var yellowbrush = new SolidColorBrush(Color.FromArgb(30, 255, 200, 0));
-        Headertop.Background = yellowbrush;
-    }
 
     private void OverlayToggle_Toggled(object sender, RoutedEventArgs e)
     {
         OverlaySettings.OverlayEnabled = OverlayEnabledToggle.IsOn;
+        HeaderColour(Headertop);
+
         OverlayScreen.Instance.ApplySettings();
     }
 

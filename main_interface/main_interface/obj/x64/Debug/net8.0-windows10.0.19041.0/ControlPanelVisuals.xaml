@@ -1,0 +1,356 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="main_interface.ControlPanelVisuals"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:main_interface"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+
+
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+
+        <Grid RowDefinitions="0.2*,*,Auto,Auto">
+
+        <!-- HEADER -->
+        <Border x:ConnectionId='2' x:Name="Headertop">
+
+
+            <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Top"  Height="120" Padding="16" Margin="24,24,0,0">
+                <StackPanel Spacing="4">
+
+                    <TextBlock
+                        Text="Enable Monitor Control"
+                        FontSize="30"
+                        FontWeight="SemiBold" />
+
+                    <TextBlock
+                        Text="Use your monitor to build a better relationship with your eyes and your brian"
+                        FontSize="14"
+                        Opacity="0.7" />
+                </StackPanel>
+
+
+
+                <ToggleSwitch x:ConnectionId='20' 
+         
+                    
+                        x:Name="MonitorColorFixEnabledToggle"
+                        OffContent="Off"
+                        OnContent="On"
+                                                                
+                        Grid.Column="1"
+                        FontSize="16"
+                        MinHeight="48"
+                        Padding="4"
+                        VerticalAlignment="Center"
+                                                              
+                                                            
+
+                        >
+
+                    <ToggleSwitch.RenderTransform>
+                        <ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
+                    </ToggleSwitch.RenderTransform>
+                </ToggleSwitch>
+
+
+            </StackPanel>
+
+        </Border>
+        <!-- END OF HEADER -->
+
+        <!-- COL 1: GIF -->
+
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" Padding="16" Margin="24,24,0,0">
+
+            <StackPanel Grid.Column="0" Spacing="8">
+                <TextBlock
+                    Text="Access controls you cant usually"
+                    FontSize="20"
+                    Opacity="0.7"
+                    VerticalAlignment="Top" />
+
+                <!-- gif -->
+
+                <Image Source="/Assets/gifs/Monitor.jpg" />
+
+                <!-- -->
+
+
+
+            </StackPanel>
+
+            <!-- COL 2: FEATURES -->
+
+            <StackPanel Grid.Column="1" Spacing="8">
+                <TextBlock
+                    Grid.Column="1"
+                    Text="Features"
+                    FontSize="20"
+                    Opacity="0.7"
+                    VerticalAlignment="Top" />
+
+                <!-- toggles -->
+
+
+                    <!-- NICE TOGGLE BAR BORDER WRAPPED -->
+                    <Border x:ConnectionId='14' Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"                                       
+                                                >
+                        <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                        <Grid ColumnDefinitions="*,Auto">
+
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="High Intensity" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                                <TextBlock Text="Proven set intensity for effective support" FontSize="12" Opacity="0.9" Foreground="White" />
+                            </StackPanel>
+
+                            <!-- GRID COL 2 TOGGLE -->
+                            <ToggleSwitch x:ConnectionId='19' 
+                                Grid.Column="1"
+                                 x:Name="HighStrengthToggle"
+                               Header="Apply"
+                               OffContent="Disabled"
+                               OnContent="Enabled"
+                                                                    
+                                VerticalAlignment="Center"
+                                Margin="16,0,0,0" />
+                        </Grid>
+                    </Border>
+
+
+
+                    <!-- NICE TOGGLE BAR BORDER WRAPPED -->
+                    <Border x:ConnectionId='15' Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"                                       
+                                       >
+                        <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                        <Grid ColumnDefinitions="*,Auto">
+
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="Medium Intensity" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                                <TextBlock Text="Meet in the middle" FontSize="12" Opacity="0.9" Foreground="White" />
+                            </StackPanel>
+
+                            <!-- GRID COL 2 TOGGLE -->
+                            <ToggleSwitch x:ConnectionId='18' 
+                               Grid.Column="1"
+                                x:Name="MediumStrengthToggle"
+                              Header="Medium Speed"
+                              OffContent="Disabled"
+                              OnContent="Enabled"
+                                                                     
+                               VerticalAlignment="Center"
+                               Margin="16,0,0,0" />
+                        </Grid>
+                    </Border>
+
+
+
+                    <!-- NICE TOGGLE BAR BORDER WRAPPED -->
+                    <Border x:ConnectionId='16' Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"                                       
+                                       >
+                        <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                        <Grid ColumnDefinitions="*,Auto">
+
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="Low Intensity" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                                <TextBlock Text="Introduce a light colour shift" FontSize="12" Opacity="0.9" Foreground="White" />
+                            </StackPanel>
+
+                            <!-- GRID COL 2 TOGGLE -->
+                            <ToggleSwitch x:ConnectionId='17' 
+                               Grid.Column="1"
+                                x:Name="LowStrengthToggle"
+                              Header="Slow Speed"
+                              OffContent="Disabled"
+                              OnContent="Enabled"
+                                                                  
+                               VerticalAlignment="Center"
+                               Margin="16,0,0,0" />
+                        </Grid>
+                    </Border>
+
+
+
+
+                </StackPanel>
+
+        </Grid>
+
+
+     <!-- HEADER -->
+            <Grid Grid.Row="2" 
+         HorizontalAlignment="Stretch"
+         Margin="0">
+
+                <Border x:ConnectionId='13' x:Name="SplitPage"
+                        Margin="30"
+                         HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                    >
+
+                    <TextBlock
+                   Text="Decide what works for you at anytime"
+                   FontSize="30"
+                   FontWeight="SemiBold"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                        />
+
+                </Border>
+
+            </Grid>
+
+
+
+            <Grid Grid.Row="3" RowDefinitions="*,*,*"
+                  ColumnDefinitions="*,*,*"
+                  HorizontalAlignment="Stretch"
+                  Margin="40,0,0,0">
+
+
+                <Border x:ConnectionId='3'
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"                                       
+                                                        >
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock Text="Dim Screen" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Late Night Work" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+                        <ToggleSwitch x:ConnectionId='12'
+                    Grid.Column="1"
+                    x:Name="DimScreenEnabledToggle"
+                    Header="Apply"
+                    OffContent="Disabled"
+                    OnContent="Enabled"
+                                                      />
+                    </Grid>
+                </Border>
+
+
+                <Border x:ConnectionId='4'
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"                                       
+                                                        >
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Top" Spacing="4">
+                            <TextBlock Text="Dyslexia Support" FontSize="16" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Prevent exitability" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+                        <ToggleSwitch x:ConnectionId='11'
+                        Grid.Column="1"
+                        x:Name="DyslexiaEnabledToggle"
+                        Header="Apply"
+                        OffContent="Disabled"
+                        OnContent="Enabled"
+                                                         />
+                    </Grid>
+                </Border>
+
+
+                <Border x:ConnectionId='5'
+                   Grid.Row="0"
+                   Grid.Column="2"
+                   Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"                                       
+                                                       >
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Top" Spacing="4">
+                            <TextBlock Text="Photophobia / Insomnia " FontSize="16" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Disable High Wavelength" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+                        <ToggleSwitch x:ConnectionId='10'
+                       Grid.Column="1"
+                       x:Name="LightSensitiveEnabledToggle"
+                       Header="Apply"
+                       OffContent="Disabled"
+                       OnContent="Enabled"
+                                                              />
+                    </Grid>
+                </Border>
+
+                <Border x:ConnectionId='6'
+                   Grid.Row="1"
+                   Grid.Column="0"
+                   Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"                                       
+                                                       >
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Top" Spacing="4">
+                            <TextBlock Text="Migraine Control" FontSize="16" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Help relax your brain" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+                        <ToggleSwitch x:ConnectionId='9'
+                      Grid.Column="1"
+                      x:Name="MigraineEnabledToggle"
+                      Header="Apply"
+                      OffContent="Disabled"
+                      OnContent="Enabled"
+                                                       />
+
+                    </Grid>
+                </Border>
+
+                <Border x:ConnectionId='7'
+                   Grid.Row="1"
+                   Grid.Column="1"
+                   Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"                                       
+                                                       >
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Top" Spacing="4">
+                            <TextBlock Text="Visual Processing " FontSize="16" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Tint to help process correct shapes" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+                        <ToggleSwitch x:ConnectionId='8'                 
+                                Grid.Row="1"
+                                Grid.Column="1"
+                              x:Name="VisualProcessingEnabledToggle"
+                              Header="Apply"
+                              OffContent="Disabled"
+                              OnContent="Enabled"
+                                                                       />
+                    </Grid>
+                </Border>
+
+
+
+            </Grid>
+
+
+
+
+
+
+
+    </Grid>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </ScrollViewer>
+
+</Page>
+

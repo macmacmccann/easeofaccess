@@ -7,6 +7,7 @@ C:\Users\markm\.nuget\packages\microsoft.web.webview2\1.0.3179.45\lib\Microsoft.
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\About.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\Account.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\App.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\Assistant.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\AssistantControlPanel.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\ControlPanelOverlay.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\ControlPanelVisuals.xbf
@@ -32,6 +33,7 @@ C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\Assets\gifs\ReProgramKeys.gif
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\Assets\gifs\Terminal.gif
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\Assets\gifs\TilingManager.gif
+C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\Assets\Images\TilingManager.PNG
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\Assets\Images\WindowIcon.ico
 C:\Program Files (x86)\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.UniversalCRT.Debug\10.0.19041.0\Redist\Debug\x64\ucrtbased.dll
 C:\Users\markm\College\easeofaccess\main_interface\main_interface (Package)\Images\SplashScreen.scale-200.png
@@ -114,6 +116,7 @@ C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\App.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\About.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\Account.xbf
+C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\Assistant.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\AssistantControlPanel.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\ControlPanelOverlay.xbf
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\ControlPanelVisuals.xbf
@@ -139,6 +142,7 @@ C:\Users\markm\College\easeofaccess\main_interface\main_interface\Assets\gifs\Qu
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\Assets\gifs\ReProgramKeys.gif
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\Assets\gifs\Terminal.gif
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\Assets\gifs\TilingManager.gif
+C:\Users\markm\College\easeofaccess\main_interface\main_interface\Assets\Images\TilingManager.PNG
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\Assets\Images\WindowIcon.ico
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\obj\x64\Debug\net8.0-windows10.0.19041.0\apphost.exe
 C:\Users\markm\College\easeofaccess\main_interface\main_interface\bin\x64\Debug\net8.0-windows10.0.19041.0\main_interface.runtimeconfig.json

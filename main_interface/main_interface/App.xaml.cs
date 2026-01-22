@@ -33,7 +33,9 @@ namespace main_interface
     {
         private MySplashScreen splash;
 
-        private Window? _window;
+       // private Window? _window;
+
+        public MainWindow main_window { get; private set; }
 
 
         const int HOTKEY_ID = 9000; //hotkey id so when windows sends it back to us 
@@ -82,9 +84,9 @@ namespace main_interface
             {
                 splash.DispatcherQueue.TryEnqueue(() =>
                 {
-                    _window = new MainWindow(); // then actually go onto main window  - first init to an instance of such 
-                    _window.Activate();
-                    var hwnd = WindowNative.GetWindowHandle(_window); // Extacts the win32 hwnd from the winui window 
+                    main_window = new MainWindow(); // then actually go onto main window  - first init to an instance of such 
+                    main_window.Activate();
+                    var hwnd = WindowNative.GetWindowHandle(main_window); // Extacts the win32 hwnd from the winui window 
                     RegisterHotKey(hwnd, HOTKEY_ID, MOD_CONTROL | MOD_SHIFT, VK_V); // 
                                                                                     // hwnd window to notify
                                                                                     // idenfiier for this hotkey

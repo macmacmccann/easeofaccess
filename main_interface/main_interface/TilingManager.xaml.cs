@@ -18,6 +18,8 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using WinRT.Interop;
+using Microsoft.UI.Dispatching;
+
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -29,13 +31,71 @@ namespace main_interface
     /// </summary>
     public sealed partial class TilingManager : Window
     {
-        public TilingManager()
+
+
+        DesktopAcrylicBackdrop acrylic; // Dont garbage collect / global / exists in lifecycle of whole class not just a method
+
+
+        // SINGLETON PATTERN 
+        // accessable throughout the whole app .GetInstance
+        // forces only one instance 
+        public static TilingManager _instanceTilingManager; // mamed dif as instance could be any window singleton instance
+       
+        
+        // wait when this runs on mainwindow im making one - this should be a check if its creating simply boolean returen true 
+        public static TilingManager GetInstance()
+        {
+            if (_instanceTilingManager  == null || _instanceTilingManager.AppWindow == null)
+            {
+                _instanceTilingManager = new TilingManager();
+
+            }
+            return _instanceTilingManager;  
+        }
+
+        public static bool Exists()
+        {
+            return _instanceTilingManager != null && _instanceTilingManager.AppWindow != null;
+        }
+        public static void Destroy()
+        {
+            if (_instanceTilingManager != null)
+            {
+                _instanceTilingManager.Close();
+                _instanceTilingManager = null;
+            }
+            
+        }
+
+
+        // Its private you cant make a new one without singleton constructor GetInstance()
+        private TilingManager()
         {
             InitializeComponent();
-            MoveOffScreen();
+            _instanceTilingManager = this; // Save this instance to the static variable ! Singleton needs to track 
+            const int WS_EX_NOACTIVATE = 0x08000000;
+            var hwnd = WindowNative.GetWindowHandle(this);
+
+            int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+            exStyle |= WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW;
+            SetWindowLong(hwnd, GWL_EXSTYLE, exStyle);
+
+
+            //this.Activated += TilingManager_Activated;
+
+            EnableAcrylic();
+            HideFromTaskbar();
+           // ShowOnScreen();
+            //MoveOffScreen();
             //TilePrimaryMonitor();
             GetTileableWindows();
             TilePrimaryMonitorWindows();
+
+
+            //Clean up when closed -> shorthand lamnda version 
+            //Long hand would bbe this.Closed += OnWindowClosed -> OnWindowClose(sender event ) instance = null 
+            this.Closed += (s, e) => _instanceTilingManager = null; // ( sender event )
+            // So now toggle off = exists() =false ,No held reference when i close window 
         }
 
 
@@ -76,7 +136,7 @@ namespace main_interface
         const uint MONITOR_DEFAULTTOPRIMARY = 1;
 
 
-        void MoveOffScreen()
+        public void MoveOffScreen()
         {
             var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
 
@@ -84,9 +144,108 @@ namespace main_interface
                 hwnd,
                 IntPtr.Zero, // dont change index when your hiding
                 -2000, -2000, // x and y screen postions 
-                0, 0,// width heigh 
-                0x0040); // Dont activate the window 
+                width, height,// width heigh 
+                0x0040 | 0x0001); // Dont activate the window 
 
+        }
+
+
+       
+
+
+        [DllImport("user32.dll")]
+        static extern int GetSystemMetrics(int nIndex);
+
+        const int SM_CXSCREEN = 0; // width of primary monitor
+        const int SM_CYSCREEN = 1; // height of primary monitor
+        int width = GetSystemMetrics(SM_CXSCREEN);
+        int height = GetSystemMetrics(SM_CYSCREEN);
+
+
+        // Logic happens when i activate / click window 
+        private void TilingManager_Activated(object sender,WindowActivatedEventArgs e)
+        {
+            DispatcherQueue.GetForCurrentThread().TryEnqueue(() =>
+            {
+
+
+                // Window is being activated, push it back to bottom
+                var hwnd = WindowNative.GetWindowHandle(this);
+                SetWindowPos(
+                    hwnd,
+                    HWND_BOTTOM,
+                    0, 0,
+                    width, height,
+                    0x0040);
+            });
+
+        }
+
+        //Declare constants 
+        static readonly IntPtr HWND_NOTTOPMOST = new IntPtr(-2);
+        static readonly IntPtr HWND_TOPMOST = new IntPtr(-1); // Special value telling windows " keep this above all otheres 
+        const uint SWP_NOMOVE = 0x0002; // Dont move window 
+        const uint SWP_NOSIZE = 0X0001; // Dont change window size 
+        const uint SWP_NOACTIVATE = 0x0010; // Dont activate
+        private static readonly IntPtr HWND_BOTTOM = new IntPtr(1); // z index but at back 
+
+        public void ShowOnScreen()
+        {
+
+            var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
+
+
+            SetWindowPos(
+                hwnd,
+                HWND_BOTTOM, // always a background
+                0, 0, // x and y screen postions 
+                width, height, // width heigh 
+               SWP_NOACTIVATE);
+        }
+
+
+
+
+
+
+
+        [DllImport("user32.dll")]
+        static extern int GetWindowLong(IntPtr hWnd, int nIndex); // Read the windows current attributes please
+
+        [DllImport("user32.dll")]
+        static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong); // Modify the window attributes as stated above 
+
+        [DllImport("user32.dll")]
+        static extern bool SetWindowPos(IntPtr hWnd, int HwnInsertAfter, int X, int Y, int cs, int cy, uint uFlags);    // declaration of parameters for simply sizing of window (impleneted above)
+        const int GWL_EXSTYLE = -20;
+        const int WS_EX_TRANSPARENT = 0x00000020;
+        const int WS_EX_LAYERED = 0x00080000;
+
+        const int WS_EX_TOOLWINDOW = 0x80; // This is a tool window not a window on the taskbar
+        const int WS_EX_APPWINDOW = 0x40000; // Nomral app window definition ( going to take it away in style below ) 
+        void HideFromTaskbar()
+        {
+            var hwnd = WindowNative.GetWindowHandle(this);
+
+            int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE); // declare what iv already coded in terms of style in the scope of this method
+
+            exStyle &= ~WS_EX_APPWINDOW; // from style remove "this is an app window 
+            exStyle |= WS_EX_TOOLWINDOW; // from style add "this is a toolbar window "
+
+            SetWindowLong(hwnd, GWL_EXSTYLE, exStyle); // Apply these mods to the window 
+
+
+
+        }
+
+
+
+        void EnableAcrylic()
+        {
+            //if (!DesktopAcrylicBackdrop.IsSupported())
+            //  return; // null check
+            acrylic = new DesktopAcrylicBackdrop();
+            this.SystemBackdrop = acrylic;
         }
 
 
@@ -163,15 +322,7 @@ namespace main_interface
 
 
 
-        [DllImport("user32.dll")]
-        static extern int GetSystemMetrics(int nIndex);
-
-        const int SM_CXSCREEN = 0; // width of primary monitor
-        const int SM_CYSCREEN = 1; // height of primary monitor
-        int width = GetSystemMetrics(SM_CXSCREEN);
-        int height = GetSystemMetrics(SM_CYSCREEN);
-
-
+ 
 
         [DllImport("user32.dll")]
         private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags);

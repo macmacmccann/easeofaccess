@@ -113,6 +113,7 @@ public sealed partial class SpotlightWindow : Window
         int width = GetSystemMetrics(SM_CXSCREEN);
         int height = GetSystemMetrics(SM_CYSCREEN);
 
+
     public void ShowOnScreen()
     {
 
@@ -120,7 +121,7 @@ public sealed partial class SpotlightWindow : Window
        
         SetWindowPos(
             hwnd,
-            IntPtr.Zero, // dont change the index i set on onTop
+            IntPtr.Zero, // Dont change x index i set in OnTop()
             0,0, // x and y screen postions 
             width,height, // width heigh 
         0x0040);

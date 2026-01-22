@@ -348,6 +348,19 @@ public sealed partial class Mouseless : Window
         {
             speed = 20;
         }
+        // if windows tells us to skip process 
+        if (nCode < 0)
+        {
+
+            return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);
+        }
+
+        if(!OverlaySettings.MouselessEnabled)
+        {
+            // diabled - do nothing pass the event on 
+            return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);
+
+        }
         if (nCode >=0)
         {
             // Convert raw pointer to usable struct we made 

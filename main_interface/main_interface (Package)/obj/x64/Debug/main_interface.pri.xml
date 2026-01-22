@@ -18,6 +18,11 @@
 					<Value>App.xbf</Value>
 				</Candidate>
 			</NamedResource>
+			<NamedResource name="Assistant.xbf" uri="ms-resource://main_interface/Files/Assistant.xbf">
+				<Candidate type="Path">
+					<Value>Assistant.xbf</Value>
+				</Candidate>
+			</NamedResource>
 			<NamedResource name="AssistantControlPanel.xbf" uri="ms-resource://main_interface/Files/AssistantControlPanel.xbf">
 				<Candidate type="Path">
 					<Value>AssistantControlPanel.xbf</Value>
@@ -147,6 +152,11 @@
 					</NamedResource>
 				</ResourceMapSubtree>
 				<ResourceMapSubtree name="Images">
+					<NamedResource name="TilingManager.PNG" uri="ms-resource://main_interface/Files/Assets/Images/TilingManager.PNG">
+						<Candidate type="Path">
+							<Value>Assets\Images\TilingManager.PNG</Value>
+						</Candidate>
+					</NamedResource>
 					<NamedResource name="WindowIcon.ico" uri="ms-resource://main_interface/Files/Assets/Images/WindowIcon.ico">
 						<Candidate type="Path">
 							<Value>Assets\Images\WindowIcon.ico</Value>

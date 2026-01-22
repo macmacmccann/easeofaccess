@@ -25,6 +25,9 @@
                         Text="Automatically arranges windows for you"
                         FontSize="14"
                         Opacity="0.7" />
+
+                    <Button x:Name="MinimizeButton" Content="Enter focus mode  " Click="MinimizeButton_Click" />
+
                 </StackPanel>
 
 

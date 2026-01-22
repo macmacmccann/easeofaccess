@@ -1,9 +1,14 @@
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -12,14 +17,11 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Microsoft.UI.Xaml.Media.Animation;
-using Border = Microsoft.UI.Xaml.Controls.Border;
-using Microsoft.UI.Xaml.Hosting;
-using Windows.UI.Composition;
 using Windows.UI;
-using Microsoft.UI;
-using Microsoft.UI.Xaml.Media;
+using Windows.UI.Composition;
+using Border = Microsoft.UI.Xaml.Controls.Border;
 
+using Microsoft.UI.Windowing;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -40,6 +42,8 @@ namespace main_interface
         {
             InitializeComponent();
             HeaderColour(null,null);
+            // Keep the page alive / no duplicates upon nav switch by caching / reflected states preserved in ui 
+            this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
         }
 
         /*
@@ -56,23 +60,28 @@ namespace main_interface
             Headertop.Background = acrylicBrush;
         }
         */
+
         public void HeaderColour(object sender, RoutedEventArgs e)
         {
-            var yellowbrush = new SolidColorBrush(Color.FromArgb(30, 255, 200, 0));
-            Headertop.Background = yellowbrush;
+            var Onbrush = new SolidColorBrush(Color.FromArgb(200, 34, 197, 94));
+            var Offbrush = new SolidColorBrush(Color.FromArgb(150, 100, 116, 139));
+            // shorthand if statement 
+            Headertop.Background = OverlaySettings.TilingManagerEnabled? Onbrush : Offbrush;
         }
-        
-        private void TilingManagerToggle_Toggled(object sender, RoutedEventArgs e)
+
+        private void TilingManagerToggle_ToggledX(object sender, RoutedEventArgs e)
         {
           
 
             // feedback change to the boolean that mouseless window changes state to 
             OverlaySettings.TilingManagerEnabled = TilingManagerToggle.IsOn;
             EnsureWindow();
+
+
             }
 
-        /*
-        private void TilingManagerToggle_Toggledx(object sender, RoutedEventArgs e)
+
+        private void TilingManagerToggle_Toggled(object sender, RoutedEventArgs e)
         {
             // im going to read once for clarity // isOn is a getter 
             bool enabledOrNot = TilingManagerToggle.IsOn; // current state entering the method 
@@ -80,23 +89,44 @@ namespace main_interface
             // feedback change to the boolean that mouseless window changes state to 
             OverlaySettings.TilingManagerEnabled = enabledOrNot;
 
-            // if (false)
-            if (!enabledOrNot) // if its off ( meaning im turning it on ) 
+
+            if (enabledOrNot)
             {
-                // if you turnt it off delete the window 
-                if (_tilingManager != null)
-                {
-                    _tilingManager.Close();
-                    // remove the reference dont just close the ui 
-                    _tilingManager = null;
-                }
-                //Dont call the code below of 'ON' logic 
-                return;
+                EnsureWindow();
+                HeaderColour(sender, e);
+
             }
+            else
+            {
+              if  (TilingManager.Exists())
+                    {
+                    TilingManager.Destroy();
+                    HeaderColour(sender, e);
+
+
+                }
+            }
+
+
 
         }
 
-        */
+
+
+
+        public void EnsureWindow()
+        {
+
+            if (!TilingManager.Exists())
+            {
+                TilingManager.GetInstance().Activate(); // Follow singleton pattern
+            }
+            else
+            {
+                TilingManager.GetInstance().Activate(); // also activate if it does exist 
+            }
+        }
+
 
 
         private void Border_PointerEntered(object sender, PointerRoutedEventArgs e)
@@ -204,100 +234,107 @@ namespace main_interface
                 }
             }
         }
-        
 
-/*
 
-        private void Border_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            // Ensure the event sender is actually a Border
-            if (sender is Border border)
-            {
-                // Try to reuse the existing background brush
-                // This prevents recreating it every hover
-                if (border.Background is not SolidColorBrush brush)
+        /*
+
+                private void Border_PointerEntered(object sender, PointerRoutedEventArgs e)
                 {
-                    // Create a soft gold-tinted brush
-                    brush = new SolidColorBrush(Windows.UI.Color.FromArgb(80, 255, 180, 120));
+                    // Ensure the event sender is actually a Border
+                    if (sender is Border border)
+                    {
+                        // Try to reuse the existing background brush
+                        // This prevents recreating it every hover
+                        if (border.Background is not SolidColorBrush brush)
+                        {
+                            // Create a soft gold-tinted brush
+                            brush = new SolidColorBrush(Windows.UI.Color.FromArgb(80, 255, 180, 120));
 
-                    // Start fully transparent so we can fade it in
-                    brush.Opacity = 0.0;
+                            // Start fully transparent so we can fade it in
+                            brush.Opacity = 0.0;
 
-                    // Assign the brush once to the Border
-                    border.Background = brush;
+                            // Assign the brush once to the Border
+                            border.Background = brush;
+                        }
+
+                        // Define the opacity animation
+                        var fadeIn = new DoubleAnimation
+                        {
+                            // Start transparent
+                            From = 0.0,
+
+                            // End visible
+                            To = 1.0,
+
+                            // Smooth 300ms animation
+                            Duration = new Duration(TimeSpan.FromMilliseconds(400)),
+
+                            // Soft easing for natural motion
+                            EasingFunction = new CircleEase
+                            {
+                                EasingMode = EasingMode.EaseInOut
+                            }
+                        };
+
+                        // Create the storyboard container
+                        var storyboard = new Storyboard();
+
+                        // IMPORTANT: Target the BRUSH, not the Border
+                        Storyboard.SetTarget(fadeIn, brush);
+
+                        // Animate the brush's Opacity property directly
+                        Storyboard.SetTargetProperty(fadeIn, "Opacity");
+
+                        // Add the animation to the storyboard
+                        storyboard.Children.Add(fadeIn);
+
+                        // Start the animation
+                        storyboard.Begin();
+                    }
                 }
 
-                // Define the opacity animation
-                var fadeIn = new DoubleAnimation
+
+
+                private void Border_PointerExited(object sender, PointerRoutedEventArgs e)
                 {
-                    // Start transparent
-                    From = 0.0,
-
-                    // End visible
-                    To = 1.0,
-
-                    // Smooth 300ms animation
-                    Duration = new Duration(TimeSpan.FromMilliseconds(400)),
-
-                    // Soft easing for natural motion
-                    EasingFunction = new CircleEase
+                    if (sender is Border border && border.Background is SolidColorBrush brush)
                     {
-                        EasingMode = EasingMode.EaseInOut
+                        var fadeOut = new DoubleAnimation
+                        {
+                            From = brush.Opacity,
+                            To = 0.0,
+                            Duration = new Duration(TimeSpan.FromMilliseconds(250)),
+                            EasingFunction = new CircleEase { EasingMode = EasingMode.EaseInOut }
+                        };
+
+                        var storyboard = new Storyboard();
+                        Storyboard.SetTarget(fadeOut, brush);
+                        Storyboard.SetTargetProperty(fadeOut, "Opacity");
+                        storyboard.Children.Add(fadeOut);
+                        storyboard.Begin();
                     }
-                };
+                }
 
-                // Create the storyboard container
-                var storyboard = new Storyboard();
+                */
 
-                // IMPORTANT: Target the BRUSH, not the Border
-                Storyboard.SetTarget(fadeIn, brush);
 
-                // Animate the brush's Opacity property directly
-                Storyboard.SetTargetProperty(fadeIn, "Opacity");
+        // code is in mainWindow so access it 
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+        {      
+ 
 
-                // Add the animation to the storyboard
-                storyboard.Children.Add(fadeIn);
+            // get current instance 
+            var app = Application.Current as App;
 
-                // Start the animation
-                storyboard.Begin();
-            }
+            // get mainwindow safely ( public var in App.xaml.cs
+            var mainWindowInstance = app?.main_window;
+
+            // call the state transition 
+            mainWindowInstance?.ReturnToWorkspace();
         }
-
-
-
-        private void Border_PointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            if (sender is Border border && border.Background is SolidColorBrush brush)
-            {
-                var fadeOut = new DoubleAnimation
-                {
-                    From = brush.Opacity,
-                    To = 0.0,
-                    Duration = new Duration(TimeSpan.FromMilliseconds(250)),
-                    EasingFunction = new CircleEase { EasingMode = EasingMode.EaseInOut }
-                };
-
-                var storyboard = new Storyboard();
-                Storyboard.SetTarget(fadeOut, brush);
-                Storyboard.SetTargetProperty(fadeOut, "Opacity");
-                storyboard.Children.Add(fadeOut);
-                storyboard.Begin();
-            }
-        }
-
-        */
-        public void EnsureWindow()
-        {
-
-            if (_tilingManager == null)
-            {
-                _tilingManager = new TilingManager();
-                _tilingManager.Activate(); // shows the window
-
-            }
-
+   
+          
 
         }
     }
 
-}

@@ -274,8 +274,7 @@ namespace main_interface
         static readonly IntPtr HWND_TOPMOST = new IntPtr(-1); // Special value telling windows " keep this above all otheres 
         const uint SWP_NOMOVE = 0x0002; // Dont move window 
         const uint SWP_NOSIZE = 0X0001; // Dont change window size 
-        const uint SWP_NOACTIVATE = 0x0010; // Dont steal keyboard focus 
-
+        const uint SWP_NOACTIVATE = 0x0010; // Dont activate
         void AlwaysOnTop()
         {
             var hwnd = WindowNative.GetWindowHandle(this); // Get the hwnd for THIS  window 

@@ -26,5 +26,6 @@ public sealed partial class TerminalAssistant : Window
     public TerminalAssistant()
     {
         InitializeComponent();
+
     }
 }
