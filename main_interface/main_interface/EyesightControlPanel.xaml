@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="main_interface.ControlPanelVisuals"
+    x:Class="main_interface.EyesightControlPanel"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:main_interface"
@@ -63,7 +63,7 @@
         </Border>
         <!-- END OF HEADER -->
 
-        <!-- COL 1: GIF -->
+        <!-- COL 1: GIF  GRID ROW 1 OF MAIN GRID -->
 
         <Grid Grid.Row="1" ColumnDefinitions="*,*" Padding="16" Margin="24,24,0,0">
 
@@ -181,7 +181,10 @@
         </Grid>
 
 
-     <!-- HEADER -->
+            <!--  BOTTOM OF PAGE -->
+
+
+            <!-- HEADER row 2 of main grid -->
             <Grid Grid.Row="2" 
          HorizontalAlignment="Stretch"
          Margin="0">
@@ -205,6 +208,7 @@
             </Grid>
 
 
+            <!-- BOTTOM TOGGLES ROW 3 of msin grid  -->
 
             <Grid Grid.Row="3" RowDefinitions="*,*,*"
                   ColumnDefinitions="*,*,*"

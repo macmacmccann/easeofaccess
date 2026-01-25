@@ -38,14 +38,6 @@ namespace main_interface
         public MainWindow main_window { get; private set; }
 
 
-        const int HOTKEY_ID = 9000; //hotkey id so when windows sends it back to us 
-        const int MOD_CONTROL = 0x002; // win32 flag meaning the control key must be held
-        const int MOD_SHIFT = 0x0004; // win32 flag meaning the shift key must be held 
-        const int VK_V = 0x56; // Virtual Key for the letter v so meaning shift + v 
-
-        [DllImport("user32.dll")]
-        static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vk); // This tells window when this key combo is pressed notify this window 
-        // params are handle to your app window , id to actually idenify the hotkey , modifer keys eg., shift alt and virtual keys eg., a b c 
 
 
         [DllImport("user32.dll")]
@@ -79,19 +71,19 @@ namespace main_interface
             splash = new MySplashScreen();
             splash.Activate();
 
+
+
+
+
             //Startup taks ill put here first i want to stimulate delay 
-            Task.Delay(30).ContinueWith(t => // args
+            Task.Delay(3000).ContinueWith(t => // args
             {
                 splash.DispatcherQueue.TryEnqueue(() =>
                 {
                     main_window = new MainWindow(); // then actually go onto main window  - first init to an instance of such 
                     main_window.Activate();
                     var hwnd = WindowNative.GetWindowHandle(main_window); // Extacts the win32 hwnd from the winui window 
-                    RegisterHotKey(hwnd, HOTKEY_ID, MOD_CONTROL | MOD_SHIFT, VK_V); // 
-                                                                                    // hwnd window to notify
-                                                                                    // idenfiier for this hotkey
-                                                                                    // ctrl shift must be pressed 
-                                                                                    //the v key 
+
                     splash.Close();
                 });
 

@@ -75,15 +75,15 @@ public sealed partial class Mouseless : Window
 
     public void ApplySettings()
     {
-        if( OverlaySettings.SpeedFastEnabled)
+        if( StateSettings.SpeedFastEnabled)
         {
             speed = 30;
         }
-        if (OverlaySettings.SpeedMedEnabled)
+        if (StateSettings.SpeedMedEnabled)
         {
             speed = 15;
         }
-        if (OverlaySettings.SpeedSlowEnabled)
+        if (StateSettings.SpeedSlowEnabled)
         {
             speed = 10;
         }
@@ -355,7 +355,7 @@ public sealed partial class Mouseless : Window
             return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);
         }
 
-        if(!OverlaySettings.MouselessEnabled)
+        if(!StateSettings.MouselessEnabled)
         {
             // diabled - do nothing pass the event on 
             return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);

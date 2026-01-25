@@ -8,7 +8,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid RowDefinitions="0.2*,*">
+
+    <ScrollViewer>
+        <Grid RowDefinitions="0.2*,*,Auto,Auto">
 
         <Border x:Name="Headertop" Background="Transparent">
 
@@ -26,7 +28,6 @@
                         FontSize="14"
                         Opacity="0.7" />
 
-                    <Button x:Name="MinimizeButton" Content="Enter focus mode  " Click="MinimizeButton_Click" />
 
                 </StackPanel>
 
@@ -68,8 +69,6 @@
                 <Image Source="/Assets/gifs/TilingManager.gif" />
 
                 <!-- -->
-
-
 
             </StackPanel>
 
@@ -116,5 +115,69 @@ PointerExited="Border_PointerExited">
         </Grid>
 
 
-    </Grid>
+
+        <!--  BOTTOM OF PAGE -->
+
+
+        <!-- HEADER row 2 of main grid -->
+        <Grid Grid.Row="2" 
+         HorizontalAlignment="Stretch"
+         Margin="0">
+
+            <Border x:Name="SplitPage"
+                        Margin="30"
+                         HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                    >
+
+                <TextBlock
+                   Text="Decide what works for you at anytime"
+                   FontSize="30"
+                   FontWeight="SemiBold"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                        />
+
+            </Border>
+
+        </Grid>
+
+
+        <!-- BOTTOM TOGGLES ROW 3 of msin grid  -->
+
+        <Grid Grid.Row="3" RowDefinitions="*,*,*"
+                  ColumnDefinitions="*,*,*"
+                  HorizontalAlignment="Stretch"
+                  Margin="40,0,0,0">
+
+
+            <Border
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+                    PointerExited="Border_PointerExited">
+
+                <Grid ColumnDefinitions="*,*">
+
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                        <TextBlock Text="Distraction Free" Margin="0,0,0,0"></TextBlock>
+                        <TextBlock Text="Debloat windows" FontSize="12" Opacity="0.9" Foreground="White" />
+                    </StackPanel>
+
+
+                        <Button  Grid.Column ="1" x:Name="MinimizeButton" Content="Enter focus mode  " Click="MinimizeButton_Click" />
+
+                    </Grid>
+            </Border>
+
+        </Grid>
+        
+        
+        
+        
+        
+        
+        </Grid>
+        </ScrollViewer>
+
 </Page>

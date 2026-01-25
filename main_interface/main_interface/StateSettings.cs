@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace main_interface
 {
-    public static class OverlaySettings
+    public static class StateSettings
     {
+
+        // Quick Commands 
         public static bool OverlayEnabled = false;
-        public static bool AlwaysOnTopEnabled = false;
+        public static bool AlwaysOnTopEnabled = true;
         public static bool AutoPasteEnabled = false;   
         public static bool BackdropEnabled = false;
 

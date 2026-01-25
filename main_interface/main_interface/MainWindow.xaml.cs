@@ -29,15 +29,6 @@ using static System.Windows.Forms.AxHost;
 namespace main_interface
 {
 
-    delegate IntPtr SubclassProc( // What SetWindowSublass Expects 
-        IntPtr hwnd, // What window this message is for (the handle to window ) 
-        int msg, // What event happened eg., VM_KEYDOWN 
-        IntPtr wParam, // Word paramter 
-        IntPtr lParam, // Lomg parameter eg., mouse correciated x /y 
-        IntPtr uIdSubclass, // What if there is mutiple subclassers on the same hwnd (window ) this identifies 
-        IntPtr dwRefData 
-        
-        );
 
 
     public sealed partial class MainWindow : Window
@@ -46,16 +37,10 @@ namespace main_interface
      
         DesktopAcrylicBackdrop acrylic;
 
-        const int HOTKEY_ID_OVERLAY = 1; // id to identify this hotkey 
-        const uint MOD_CONTROL = 0x0002; // ctrl key modifier 
-        const uint MOD_ALT = 0x0001; // alt key modifier 
-        const uint MOD_SHIFT = 0x0004;
-        const uint VK_O = 0x4F; // virtual key code for the letter 'O'
+     
 
 
 
-
-        private SubclassProc _windowProc; // Field is in scope of MainWindow - will live as long as MainWindow does !
 
         public MainWindow()  {
             InitializeComponent();
@@ -102,35 +87,17 @@ namespace main_interface
         private WorkspaceState _state = WorkspaceState.WorkspaceActive; // enum default state " i have this app window open " 
 
 
-        //Guard flag implenetation 
-        private bool suppressNextDeActivation = false;
-        private bool _isHookUpSet = false;
         void OnActivated(object sender, WindowActivatedEventArgs e) // hwnd exists after the fact thats why is activated when window is constructred not in the construcotr 
         {
             //Only run on focus not when losing it - two different events 
-
             if (e.WindowActivationState == WindowActivationState.Deactivated)
                 return;
 
-
-
-                //thhis will run once im not unsuncribing to this method 
-                if (!_isHookUpSet)
-                {
-                    SetupHook();
-                    // Activated -= OnActivated; // ensurws it only runs once // unsunscribe so it runs everytime you click on mainW
-                    //EnableAcrylic(); // dont need its set already 
-                    EnableMica(); // windows 11 fallback 
-
-                    _isHookUpSet = true; // now never try again 
-                }
-
-
-                if (TilingManager.Exists()) // singleton design - under no circumstances many windows 
-                {
-                    TransitionTo(WorkspaceState.SettingsOpen); // State now is "you opened this app" 
-                }
+            if (TilingManager.Exists()) // singleton design - under no circumstances many windows 
+            {
+                TransitionTo(WorkspaceState.SettingsOpen); // State now is "you opened this app" 
             }
+        }
 
 
         
@@ -176,94 +143,6 @@ namespace main_interface
 
 
 
-        private void TestOverlay_Click(object sender, RoutedEventArgs e)
-        {
-            ToggleOverlay(); // Direct call
-        }
-
-        void SetupHook() // This is a win32 message listener for this window ,winUI wont cut it win32 needs to be connected for actions with the handle hwnd
-        {
-
-            var hwnd = WindowNative.GetWindowHandle(this); // Get the hwnd for THIS  window 
-
-            _windowProc = WndProc; // The delegate is not be garbage collected -
-
-            SetWindowSubclass( // Subclass needed in winui to hook into window procesdure
-                hwnd,
-                _windowProc,
-                IntPtr.Zero,
-                IntPtr.Zero 
-                );
-
-            // What is the hotkey ? Its these global variables at the top of the method im passing in = CRtl + Alt + O
-            RegisterHotKey(
-                hwnd,
-                HOTKEY_ID_OVERLAY,
-                MOD_CONTROL | MOD_ALT,
-                VK_O
-                );
-
-
-        }
-
-
-        // Windows Procedure Win32 
-        // This function is called every time windows sends a message 
-        IntPtr WndProc (IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam,IntPtr uIdSubclass,IntPtr dwRefdata)
-            // params = 1. window receiving the message 2,the type (VM_HOTKEY not VM_PAINT) 3, wparam extra info - the id of the hotkey - ,lparam extra key data , handled, if we used the message 
-        {
-
-
-            const int WM_HOTKEY = 0x0312; // Win32 message sent when a registered hotkepy is pressed
-
-            // What ill do if there is an event that i coded for something to happen 
-            if (msg == WM_HOTKEY) { // Was the event a hotkey press?
-                if (wParam.ToInt32() == HOTKEY_ID_OVERLAY) // 
-                {
-                        ToggleOverlay(); //Lets open our overlay screen
-                        return IntPtr.Zero; // tell win32 the message was handled  
-                }
-
-               
-            }
-            return DefSubclassProc(hwnd, msg, wParam, lParam);
-            // Let windows handle all other messages normally . 
-
-        }
-        
-
-        // attatch a subclass prodecure to a window 
-        [DllImport("comctl32.dll")]
-        static extern bool SetWindowSubclass(
-        IntPtr hWnd,
-        SubclassProc pfnSubclass,
-        IntPtr uIdSubclass,
-        IntPtr dwRefData
-        );
-
-
-        //attatch a call the feault window procesufre 
-        [DllImport("comctl32.dll")]
-        static extern IntPtr DefSubclassProc(
-        IntPtr hWnd,
-        int msg,
-        IntPtr wParam,
-        IntPtr lParam
-        );
-
-
-
-        // win32 import - winui does not support hotkeys (kernel event ) as its only a wrapper 
-        [DllImport("user32.dll")]
-        static extern bool RegisterHotKey(
-            IntPtr hWnd, // Window thats going to receive 
-            int id , // hotkey id 
-            uint fsModifers, // anything called moidifer means modifier key = crtl atl 
-            uint vk //  virtual key code 
-
-            );
-
-   
         void EnableMica()
         {
             if (MicaController.IsSupported())
@@ -292,12 +171,7 @@ namespace main_interface
         }
 
 
-        void ToggleOverlay() // The method that is called that runs the other pages code ( the overlay screen ) 
-        {
-            OverlayScreen.Instance.Toggle();
-        }
-
-        private SpotlightWindow _spotlightWindow;
+        private Eyesight _spotlightWindow;
       
 
 
@@ -330,11 +204,11 @@ namespace main_interface
                     break;
 
                 case "Command":
-                    ContentFrame.Navigate(typeof(ControlPanelOverlay));
+                    ContentFrame.Navigate(typeof(CommandsControlPanel));
                     break;
 
                 case "Screen":
-                    ContentFrame.Navigate(typeof(ControlPanelVisuals));
+                    ContentFrame.Navigate(typeof(EyesightControlPanel));
                     break;
 
                 case "Mouseless":

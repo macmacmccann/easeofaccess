@@ -14,13 +14,10 @@
     <None Remove="About.xaml" />
     <None Remove="Assistant.xaml" />
     <None Remove="AssistantControlPanel.xaml" />
-    <None Remove="ControlPanelOverlay.xaml" />
-    <None Remove="ControlPanelVisuals.xaml" />
     <None Remove="LoginPage.xaml" />
     <None Remove="Mouseless.xaml" />
     <None Remove="MouselessControlPanel.xaml" />
     <None Remove="MySplashScreen.xaml" />
-    <None Remove="OverlayScreen.xaml" />
     <None Remove="RegisterPage.xaml" />
     <None Remove="ReprogramKeysControlPanel.xaml" />
     <None Remove="SettingsControlPanel.xaml" />
@@ -153,25 +150,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="SpotlightWindow.xaml">
+    <Page Update="Eyesight.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="ControlPanelVisuals.xaml">
+    <Page Update="EyesightControlPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="ControlPanelOverlay.xaml">
+    <Page Update="CommandsControlPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="OverlayScreen.xaml">
+    <Page Update="Commands.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

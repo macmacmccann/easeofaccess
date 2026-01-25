@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Devices.PointOfService.Provider;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Microsoft.UI;
@@ -25,59 +24,139 @@ namespace main_interface;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class ControlPanelOverlay : Page
+public sealed partial class EyesightControlPanel : Page
 {
-    public ControlPanelOverlay()
+
+
+    private Eyesight _spotlightWindow;
+
+    public EyesightControlPanel()
     {
         InitializeComponent();
 
         Headertop.BackgroundTransition = new BrushTransition() { Duration = TimeSpan.FromMilliseconds(300) };
         HeaderColour(Headertop);
 
-
         // Keep the page alive / no duplicates upon nav switch by caching / reflected states preserved in ui 
         this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+
     }
+
+
+
+
+    private void MonitorColorFixEnabledToggled(object sender, RoutedEventArgs e)
+    {
+        StateSettings.MonitorColorFixEnabled = MonitorColorFixEnabledToggle.IsOn;
+        HeaderColour(Headertop);
+
+        UpdateOverlayState();
+    }
+
+
     public void HeaderColour(Border targetBorder)
     {
         var Onbrush = new SolidColorBrush(Color.FromArgb(200, 34, 197, 94));
         var Offbrush = new SolidColorBrush(Color.FromArgb(150, 100, 116, 139));
         // shorthand if statement 
-        targetBorder.Background = OverlaySettings.OverlayEnabled ? Onbrush : Offbrush;
+        targetBorder.Background = StateSettings.MonitorColorFixEnabled ? Onbrush : Offbrush;
     }
 
 
-    private void OverlayToggle_Toggled(object sender, RoutedEventArgs e)
-    {
-        OverlaySettings.OverlayEnabled = OverlayEnabledToggle.IsOn;
-        HeaderColour(Headertop);
 
-        OverlayScreen.Instance.ApplySettings();
+
+    private void DimScreenEnabledToggled(object sender, RoutedEventArgs e)
+    {
+        StateSettings.DimScreenEnabled = DimScreenEnabledToggle.IsOn;
+
+        UpdateOverlayState();
+
+    }
+
+    private void DyslexiaEnabledToggled(object sender, RoutedEventArgs e)
+    {
+        StateSettings.DyslexiaEnabled = DyslexiaEnabledToggle.IsOn;
+
+        UpdateOverlayState();
+
     }
 
 
-    private void AlwaysOnTopToggle_Toggled(object sender, RoutedEventArgs e)
+    private void LightSensitiveEnabledToggled(object sender, RoutedEventArgs e)
     {
-        OverlaySettings.AlwaysOnTopEnabled = AlwaysOnTopEnabledToggle.IsOn;
-        OverlayScreen.Instance.ApplySettings();
+        StateSettings.LightSensitiveEnabled = LightSensitiveEnabledToggle.IsOn;
+
+        UpdateOverlayState();
 
     }
-    private void AutoPasteToggle_Toggled(object sender, RoutedEventArgs e)
+
+    private void MigraineEnabledToggled(object sender, RoutedEventArgs e)
     {
-        OverlaySettings.AutoPasteEnabled = AutoPasteEnabledToggle.IsOn;
-        OverlayScreen.Instance.ApplySettings();
+        StateSettings.MigraineEnabled = MigraineEnabledToggle.IsOn;
+
+        UpdateOverlayState();
 
     }
-    // Not relevant enough removed 
-    /*
-    private void BackdropToggle_Toggled(object sender, RoutedEventArgs e)
+
+    private void VisualProcessingEnabledToggled(object sender, RoutedEventArgs e)
     {
-        OverlaySettings.BackdropEnabled = BackdropEnabledToggle.IsOn;
-        OverlayScreen.Instance.ApplySettings();
+        StateSettings.VisualProcessingEnabled = VisualProcessingEnabledToggle.IsOn;
+
+        UpdateOverlayState();
+
+    }
+
+    private void HighStrengthToggle_Toggled(object sender, RoutedEventArgs e)
+    {
+        StateSettings.HighStrengthEnabled = HighStrengthToggle.IsOn;
+    }
+
+    private void MediumStrengthToggle_Toggled(object sender, RoutedEventArgs e)
+    {
+        StateSettings.MediumStrengthEnabled = MediumStrengthToggle.IsOn;
+    }
+
+    private void LowStrengthToggle_Toggled(object sender, RoutedEventArgs e)
+    {
+        StateSettings.LowStrengthEnabled = LowStrengthToggle.IsOn;
+    }
+
+    public void EnsureSpotLightWindow()
+    {
+
+        if (_spotlightWindow == null)
+        {
+            _spotlightWindow = new Eyesight();
+            _spotlightWindow.Activate(); // shows the window
+
+        }
 
 
-    }*/
+    }
 
+    private void UpdateOverlayState()
+    {
+        bool shouldShow =
+      StateSettings.MonitorColorFixEnabled && (
+        StateSettings.DimScreenEnabled ||
+        StateSettings.DyslexiaEnabled ||
+        StateSettings.LightSensitiveEnabled ||
+        StateSettings.MigraineEnabled ||
+        StateSettings.VisualProcessingEnabled);
+
+        if (shouldShow)
+        {
+            EnsureSpotLightWindow();          
+            _spotlightWindow.ApplySettings(); 
+            _spotlightWindow.ShowOnScreen();  
+        }
+        else
+        {
+            _spotlightWindow?.HideSpotlight();
+        }
+
+
+    }
 
 
 
@@ -191,6 +270,10 @@ public sealed partial class ControlPanelOverlay : Page
             }
         }
     }
+
+
+
+
 
 
 

@@ -26,6 +26,8 @@ namespace main_interface
         public MySplashScreen()
         {
             InitializeComponent();
+            this.ExtendsContentIntoTitleBar = true;
+
         }
     }
 }

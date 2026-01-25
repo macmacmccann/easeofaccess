@@ -49,7 +49,7 @@ public sealed partial class SettingsControlPanel : Page
 
 
         // feedback change to the boolean that mouseless window changes state to 
-        OverlaySettings.SyncActiveEnabled = SyncActiveToggle.IsOn;
+        StateSettings.SyncActiveEnabled = SyncActiveToggle.IsOn;
     }
 
 
@@ -59,7 +59,7 @@ public sealed partial class SettingsControlPanel : Page
 
 
         // feedback change to the boolean that mouseless window changes state to 
-        OverlaySettings.BackgroundProcessActiveEnabled = BackgroundProcessActiveToggle.IsOn;
+        StateSettings.BackgroundProcessActiveEnabled = BackgroundProcessActiveToggle.IsOn;
     }
 
 

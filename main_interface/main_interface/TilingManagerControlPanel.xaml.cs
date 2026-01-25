@@ -66,7 +66,7 @@ namespace main_interface
             var Onbrush = new SolidColorBrush(Color.FromArgb(200, 34, 197, 94));
             var Offbrush = new SolidColorBrush(Color.FromArgb(150, 100, 116, 139));
             // shorthand if statement 
-            Headertop.Background = OverlaySettings.TilingManagerEnabled? Onbrush : Offbrush;
+            Headertop.Background = StateSettings.TilingManagerEnabled? Onbrush : Offbrush;
         }
 
         private void TilingManagerToggle_ToggledX(object sender, RoutedEventArgs e)
@@ -74,7 +74,7 @@ namespace main_interface
           
 
             // feedback change to the boolean that mouseless window changes state to 
-            OverlaySettings.TilingManagerEnabled = TilingManagerToggle.IsOn;
+            StateSettings.TilingManagerEnabled = TilingManagerToggle.IsOn;
             EnsureWindow();
 
 
@@ -87,7 +87,7 @@ namespace main_interface
             bool enabledOrNot = TilingManagerToggle.IsOn; // current state entering the method 
 
             // feedback change to the boolean that mouseless window changes state to 
-            OverlaySettings.TilingManagerEnabled = enabledOrNot;
+            StateSettings.TilingManagerEnabled = enabledOrNot;
 
 
             if (enabledOrNot)

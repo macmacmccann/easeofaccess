@@ -1,13 +1,19 @@
+using Microsoft.UI;
+using Microsoft.UI.Composition.SystemBackdrops;
+// Get the apps window for .Show() or Hide () 
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
@@ -17,10 +23,8 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using WinRT.Interop; // This allows access to the underlying hwnd of winui window 
-using Microsoft.UI.Composition.SystemBackdrops;
-using Microsoft.UI.Xaml.Media.Animation;
 
-
+using main_interface;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -28,12 +32,14 @@ using Microsoft.UI.Xaml.Media.Animation;
 
 namespace main_interface
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class OverlayScreen : Window
+
+
+
+
+
+    public sealed partial class Commands : Window
     {
-        private static OverlayScreen _instance;
+        private static Commands _instance;
         IntPtr _previousforground; // What is the app to paste the command grab it 
         //_previousforground = GetForegroundWindow();
 
@@ -41,12 +47,12 @@ namespace main_interface
 
 
 
-        public static OverlayScreen Instance 
+        public static Commands Instance
         { 
             get// make sure only ONE overlay window exists 
             {
                 if (_instance == null)
-                    _instance = new OverlayScreen();
+                    _instance = new Commands();
 
                 return _instance;
 
@@ -55,9 +61,12 @@ namespace main_interface
         } 
 
         bool _visible; // Track where the overlay is currently visible 
-        public OverlayScreen() // Constructor 
+        public Commands() // Constructor 
         {
             InitializeComponent(); // Load Xaml
+
+
+
             this.ExtendsContentIntoTitleBar = true;
             //EnableAcrylic();
             Activate(); // Create a native window(hwnd) for this object !
@@ -70,19 +79,240 @@ namespace main_interface
             // EnableClickThrough();
             ApplySettings();
 
+            // " Subscription" logic -> dump method into this 
+            Activated += OnActivated; // second activation - alot not fully init in this yet !
+
+             // Closed called by x or manual run - given by windows (an event)
+             // this.Close() runs it and also the added logic on OnClosed ( unregister hotkey) 
+            this.Closed += OnClosed;
+
 
         }
 
 
+
+
+        private void OnClosed(object sender, WindowEventArgs args)
+        {
+
+            var hWnd = WindowNative.GetWindowHandle(this);
+            UnregisterHotKey(hWnd, HOTKEY_ID_OVERLAY);
+            _instance = null; // Clear the singleton reference 
+
+
+        }
+
+
+
+
+        //Guard flag implenetation 
+        private bool _isHookUpSet = false;
+        void OnActivated(object sender, WindowActivatedEventArgs e) // hwnd exists after the fact thats why is activated when window is constructred not in the construcotr 
+        {
+            //thhis will run once im not unsuncribing to this method 
+            if (!_isHookUpSet)
+            {
+                //SetupHook(); old method not dynamic hardcoded keys commented below 
+                UpdateHotkey(0,0);
+                _isHookUpSet = true; // now never try again 
+            }
+
+        }
+
+        private SubclassProc _windowProc; // Field is in scope of MainWindow - will live as long as MainWindow does !
+
+        delegate IntPtr SubclassProc( // What SetWindowSublass Expects 
+        IntPtr hwnd, // What window this message is for (the handle to window ) 
+        int msg, // What event happened eg., VM_KEYDOWN 
+        IntPtr wParam, // Word paramter 
+        IntPtr lParam, // Lomg parameter eg., mouse correciated x /y 
+        IntPtr uIdSubclass, // What if there is mutiple subclassers on the same hwnd (window ) this identifies 
+        IntPtr dwRefData
+
+    );
+
+
+
+        const int HOTKEY_ID_OVERLAY = 9000; //hotkey id so when windows sends it back to us 
+
+        const int MOD_CONTROL = 0x002; // win32 flag meaning the control key must be held
+        const int MOD_SHIFT = 0x0004; // win32 flag meaning the shift key must be held 
+        const int MOD_ALT = 0x0001;  // alt 
+        const int MOD_WIN = 0x0008; // win 
+
+
+
+           
+
+        const int VK_V = 0x56; // Virtual Key for the letter v so meaning shift + v 
+        const int VK_O = 0x4F; // letter o 
+     
+
+        /*
+        void SetupHook() // This is a win32 message listener for this window ,winUI wont cut it win32 needs to be connected for actions with the handle hwnd
+        {
+
+            var hwnd = WindowNative.GetWindowHandle(this); // Get the hwnd for THIS  window 
+            _windowProc = WndProc; // The delegate is not be garbage collected -
+
+            SetWindowSubclass( // Subclass needed in winui to hook into window procesdure
+                hwnd,
+                _windowProc,
+                IntPtr.Zero,
+                IntPtr.Zero
+                );
+
+            // What is the hotkey ? Its these global variables at the top of the method im passing in = CRtl + Alt + O
+            RegisterHotKey(
+                hwnd,
+                HOTKEY_ID_OVERLAY,
+                MOD_CONTROL | MOD_ALT,
+                VK_O
+                );
+
+        }
+
+        */
+
+        public void UpdateHotkey(uint mods,uint vk)
+        {
+            var hwnd = WindowNative.GetWindowHandle(this);
+
+            if (mods != 0 | vk != 0)
+            {
+                mods = MOD_CONTROL | MOD_ALT;
+                vk = VK_O;
+            } else
+            {
+                UnregisterHotKey(hwnd, HOTKEY_ID_OVERLAY);
+            }
+            RegisterHotKey(hwnd, HOTKEY_ID_OVERLAY, mods, vk);
+        }
+
+        // Windows Procedure Win32 
+        // This function is called every time windows sends a message 
+        IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, IntPtr dwRefdata)
+        // params = 1. window receiving the message 2,the type (VM_HOTKEY not VM_PAINT) 3, wparam extra info - the id of the hotkey - ,lparam extra key data , handled, if we used the message 
+        {
+
+            const int WM_HOTKEY = 0x0312; // Win32 message sent when a registered hotkepy is pressed
+
+            // What ill do if there is an event that i coded for something to happen 
+            if (msg == WM_HOTKEY)
+            { // Was the event a hotkey press?
+                if (wParam.ToInt32() == HOTKEY_ID_OVERLAY) // 
+                {
+                    ToggleOverlay(); //Lets open our overlay screen
+                    return IntPtr.Zero; // tell win32 the message was handled  
+                }
+
+
+            }
+            return DefSubclassProc(hwnd, msg, wParam, lParam);
+            // Let windows handle all other messages normally . 
+
+        }
+
+
+
+
+
+
+        [DllImport("user32.dll")]
+        static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vk); // This tells window when this key combo is pressed notify this window 
+                                                                                         // params are handle to your app window , id to actually idenify the hotkey , modifer keys eg., sh
+
+
+
+        // attatch a subclass prodecure to a window 
+        [DllImport("comctl32.dll")]
+        static extern bool SetWindowSubclass(
+        IntPtr hWnd,
+        SubclassProc pfnSubclass,
+        IntPtr uIdSubclass,
+        IntPtr dwRefData
+        );
+
+
+        //attatch a call the feault window procesufre 
+        [DllImport("comctl32.dll")]
+        static extern IntPtr DefSubclassProc(
+        IntPtr hWnd,
+        int msg,
+        IntPtr wParam,
+        IntPtr lParam
+        );
+
+
+
+        // win32 import - winui does not support hotkeys (kernel event ) as its only a wrapper 
+        [DllImport("user32.dll")]
+        static extern bool RegisterHotKey(
+            IntPtr hWnd, // Window thats going to receive 
+            int id, // hotkey id 
+            uint fsModifers, // anything called moidifer means modifier key = crtl atl 
+            uint vk //  virtual key code 
+
+            );
+
+        [DllImport("user32.dll")]
+        static extern bool UnregisterHotKey(IntPtr hWnd, int id); // HOTKEY ID WINDOW ID 
+
+
+
+
+
+
+
+
+
+
+
+
+        // https://github.com/microsoft/WindowsAppSDK/discussions/2994
+        private AppWindow GetAppWindowForCurrentWindow()
+        {
+            IntPtr hWnd = WindowNative.GetWindowHandle(this);
+            WindowId windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
+            return AppWindow.GetFromWindowId(windowId);
+        }
+
+     
+        void ToggleOverlay() // The method that is called that runs the other pages code ( the overlay screen ) 
+        {
+            if (!StateSettings.OverlayEnabled)
+                return;
+
+
+            var appWindow = GetAppWindowForCurrentWindow();
+            if (StateSettings.OverlayEnabled)
+            {
+                appWindow?.Show();
+                // if window == null  - how to null check this window again syntax? 
+                Commands.Instance?.Toggle();
+
+            }
+
+   
+            
+        }
+
         public void ApplySettings()
         {
-            if(!OverlaySettings.OverlayEnabled)
+            if(!StateSettings.OverlayEnabled)
             {
                 MoveOffScreen();
+
+                //run event that has inherited OnClosed ( in construct) 
+                // this.Close();
+
+              //  var appWindow = GetAppWindowForCurrentWindow();
+               // appWindow.Hide();
+
                 return;
             }
      
-            if (OverlaySettings.BackdropEnabled)
+            if (StateSettings.BackdropEnabled)
             {
                 EnableAcrylic();
             }
@@ -127,7 +357,7 @@ namespace main_interface
                 400, 300, // width heigh 
                 0x0040); // Dont activate the window 
             */
-            if (OverlaySettings.AlwaysOnTopEnabled)
+            if (StateSettings.AlwaysOnTopEnabled)
             {
                 AlwaysOnTop();
             }
@@ -208,7 +438,7 @@ namespace main_interface
             SetForegroundWindow(_previousforground);
             Sleep(50);
 
-            if (OverlaySettings.AutoPasteEnabled)
+            if (StateSettings.AutoPasteEnabled)
             {
                 PasteIntoActiveApp(commandText);
             }
@@ -374,7 +604,7 @@ namespace main_interface
 
         //Actual keycode params to cope paste into an app 
         const byte VK_CONTROL = 0x11; // keycode for control 
-        const byte VK_V = 0x56; // virtual key v 
+       // const byte VK_V = 0x56; // virtual key v 
         const uint KEYEVENTF_KEYUP = 0x0002; // flag for indicating you releaed the buttons 
 
 

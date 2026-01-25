@@ -72,6 +72,8 @@ namespace main_interface
         private TilingManager()
         {
             InitializeComponent();
+            this.ExtendsContentIntoTitleBar = true;
+
             _instanceTilingManager = this; // Save this instance to the static variable ! Singleton needs to track 
             const int WS_EX_NOACTIVATE = 0x08000000;
             var hwnd = WindowNative.GetWindowHandle(this);

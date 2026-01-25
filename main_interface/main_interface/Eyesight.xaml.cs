@@ -24,10 +24,10 @@ namespace main_interface;
 /// <summary>
 /// An empty window that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class SpotlightWindow : Window
+public sealed partial class Eyesight : Window
 {
 
-    public SpotlightWindow()
+    public Eyesight()
     {
         InitializeComponent();
 
@@ -65,35 +65,35 @@ public sealed partial class SpotlightWindow : Window
     public void ApplySettings()
     {
         // Check which overlay should be active and apply it
-        if (OverlaySettings.DyslexiaEnabled)
+        if (StateSettings.DyslexiaEnabled)
         {
             MakeDyslexiaOverlay();
             ShowOnScreen();
             return;
         }
 
-        if (OverlaySettings.LightSensitiveEnabled)
+        if (StateSettings.LightSensitiveEnabled)
         {
             MakeLightSensitiveOverlay();
             ShowOnScreen();
             return;
         }
 
-        if (OverlaySettings.MigraineEnabled)
+        if (StateSettings.MigraineEnabled)
         {
             MakeMigraineOverlay();
             ShowOnScreen();
             return;
         }
 
-        if (OverlaySettings.VisualProcessingEnabled)
+        if (StateSettings.VisualProcessingEnabled)
         {
             MakeVisualProcessingOverlay();
             ShowOnScreen();
             return;
         }
 
-        if (OverlaySettings.DimScreenEnabled)
+        if (StateSettings.DimScreenEnabled)
         {
             MakeTransparentAndClickThrough();
             ShowOnScreen();

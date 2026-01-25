@@ -45,7 +45,7 @@ public sealed partial class MouselessControlPanel : Page
         var Onbrush = new SolidColorBrush(Color.FromArgb(200, 34, 197, 94));
         var Offbrush = new SolidColorBrush(Color.FromArgb(150, 100, 116, 139));
         // shorthand if statement 
-        targetBorder.Background = OverlaySettings.MouselessEnabled ? Onbrush : Offbrush;
+        targetBorder.Background = StateSettings.MouselessEnabled ? Onbrush : Offbrush;
     }
 
 
@@ -55,7 +55,7 @@ public sealed partial class MouselessControlPanel : Page
         bool enabledOrNot = MouselessToggle.IsOn; // current state entering the method 
 
         // feedback change to the boolean that mouseless window changes state to 
-        OverlaySettings.MouselessEnabled = enabledOrNot;
+        StateSettings.MouselessEnabled = enabledOrNot;
         // Change the header colour 
         HeaderColour(Headertop);
 
@@ -75,7 +75,7 @@ public sealed partial class MouselessControlPanel : Page
         }
 
         
-        OverlaySettings.MouselessEnabled = MouselessToggle.IsOn;      
+        StateSettings.MouselessEnabled = MouselessToggle.IsOn;      
         EnsureWindow();
 
       
@@ -91,7 +91,7 @@ public sealed partial class MouselessControlPanel : Page
 
         }
         
-        OverlaySettings.SpeedFastEnabled = SpeedFastToggle.IsOn;
+        StateSettings.SpeedFastEnabled = SpeedFastToggle.IsOn;
 
         //If i turned it off in other methods dont do it here 
         if (!SpeedFastToggle.IsOn)
@@ -103,9 +103,9 @@ public sealed partial class MouselessControlPanel : Page
         SpeedSlowToggle.IsOn = false;
 
         // Actual boolean values that interact with window logic 
-        OverlaySettings.SpeedFastEnabled = true;
-        OverlaySettings.SpeedMedEnabled = false;
-        OverlaySettings.SpeedSlowEnabled = false;
+        StateSettings.SpeedFastEnabled = true;
+        StateSettings.SpeedMedEnabled = false;
+        StateSettings.SpeedSlowEnabled = false;
 
 
 
@@ -126,7 +126,7 @@ public sealed partial class MouselessControlPanel : Page
             return;
 
         }
-        OverlaySettings.SpeedMedEnabled = SpeedMedToggle.IsOn;
+        StateSettings.SpeedMedEnabled = SpeedMedToggle.IsOn;
 
         //If i turned it off in other methods dont do it here 
         if (!SpeedMedToggle.IsOn)
@@ -135,9 +135,9 @@ public sealed partial class MouselessControlPanel : Page
         SpeedFastToggle.IsOn = false;
         SpeedSlowToggle.IsOn = false;
 
-        OverlaySettings.SpeedFastEnabled = false;
-        OverlaySettings.SpeedMedEnabled = true;
-        OverlaySettings.SpeedSlowEnabled = false;
+        StateSettings.SpeedFastEnabled = false;
+        StateSettings.SpeedMedEnabled = true;
+        StateSettings.SpeedSlowEnabled = false;
 
         _mouselesswindow.ApplySettings();
 
@@ -154,7 +154,7 @@ public sealed partial class MouselessControlPanel : Page
 
         }
 
-        OverlaySettings.SpeedSlowEnabled = SpeedSlowToggle.IsOn;
+        StateSettings.SpeedSlowEnabled = SpeedSlowToggle.IsOn;
 
 
         //If i turned it off in other methods dont do it here 
@@ -165,9 +165,9 @@ public sealed partial class MouselessControlPanel : Page
         SpeedFastToggle.IsOn = false;
         SpeedMedToggle.IsOn = false;
 
-        OverlaySettings.SpeedFastEnabled = false;
-        OverlaySettings.SpeedMedEnabled = false;
-        OverlaySettings.SpeedSlowEnabled = true;
+        StateSettings.SpeedFastEnabled = false;
+        StateSettings.SpeedMedEnabled = false;
+        StateSettings.SpeedSlowEnabled = true;
 
         _mouselesswindow.ApplySettings();
 

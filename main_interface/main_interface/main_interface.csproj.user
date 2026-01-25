@@ -41,16 +41,16 @@
     <Page Update="SpotlightPage.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="SpotlightWindow.xaml">
+    <Page Update="Eyesight.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="ControlPanelVisuals.xaml">
+    <Page Update="EyesightControlPanel.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="ControlPanelOverlay.xaml">
+    <Page Update="CommandsControlPanel.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="OverlayScreen.xaml">
+    <Page Update="Commands.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="RegisterPage.xaml">

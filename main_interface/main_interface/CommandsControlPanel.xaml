@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="main_interface.ControlPanelOverlay"
+    x:Class="main_interface.CommandsControlPanel"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:main_interface"
@@ -9,9 +9,10 @@
     mc:Ignorable="d">
 
 
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
 
 
-    <Grid RowDefinitions="0.2*,*">
+        <Grid RowDefinitions="0.2*,*,Auto,Auto">
 
         <!-- HEADER -->
         <Border x:Name="Headertop">
@@ -29,10 +30,19 @@
                         Text="Design your own typing history"
                         FontSize="14"
                         Opacity="0.7" />
+                    
                 </StackPanel>
 
+                <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Top"  Height="120" Padding="16" Margin="24,24,0,0">
+                    
 
-                <ToggleSwitch 
+            
+               
+                    
+                </StackPanel>
+              
+                    
+                    <ToggleSwitch 
                         x:Name="OverlayEnabledToggle"
                           OffContent="Disabled"
                           OnContent="Enabled"
@@ -160,7 +170,64 @@ PointerExited="Border_PointerExited">
         </Grid>
 
 
-    </Grid>
+
+            <!--  BOTTOM OF PAGE -->
+
+
+            <!-- HEADER row 2 of main grid -->
+            <Grid Grid.Row="2" 
+         HorizontalAlignment="Stretch"
+         Margin="0">
+
+                <Border x:Name="SplitPage"
+                        Margin="30"
+                         HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                    >
+
+                    <TextBlock
+                   Text="Decide what works for you at anytime"
+                   FontSize="30"
+                   FontWeight="SemiBold"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                        />
+
+                </Border>
+
+            </Grid>
+
+
+            <!-- BOTTOM TOGGLES ROW 3 of msin grid  -->
+
+            <Grid Grid.Row="3" RowDefinitions="*,*,*"
+                  ColumnDefinitions="*,*,*"
+                  HorizontalAlignment="Stretch"
+                  Margin="40,0,0,0">
+
+
+                <Border
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+                    PointerExited="Border_PointerExited">
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock x:Name="HotkeyText" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
+                            <TextBlock Text="Choose yourself" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+
+                        <Button Grid.Column="1" x:Name="AssignHotkey"  Content="Assign Hotkey" Click="AssignHotkey_Clicked"></Button>
+
+
+                    </Grid>
+                </Border>
+
+
+
+               
 
 
 
@@ -169,5 +236,11 @@ PointerExited="Border_PointerExited">
 
 
 
+
+
+         </Grid>
+           </Grid>
+
+    </ScrollViewer>
 
 </Page>
