@@ -14,10 +14,14 @@ using System.Collections.Generic;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Policy;
 using System.Windows.Forms;
+using System.Windows.Navigation;
+using Windows.ApplicationModel.Appointments;
 using Windows.Devices.PointOfService.Provider;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -76,7 +80,7 @@ public sealed partial class CommandsControlPanel : Page
     }
 
 
-    // not used instead  ->       commandsWindow = Commands.Instance;
+    // not used instead  ->       commandsWindow = Commands.Instance; creates if there isnt one 
 
     // hotkeys are registered in window - needs to be passed in OnHotKeyCaptured()
     public void NotCorrect_ConnectWindowToPage(Commands commandsWindowStayAliveOutsideConstructor)
@@ -150,13 +154,55 @@ public sealed partial class CommandsControlPanel : Page
 
     bool _isCapturingHotKey; // guard flag - stop when false 
 
+   
+    // event 
     private void AssignHotkey_Clicked(object sender, RoutedEventArgs e)
     {
         _isCapturingHotKey = true; // Capture mode 
         HotkeyText.Text = "Press keys...";   // Visual feedback
 
-      
     }
+    // method
+    private void GuideRedirect()
+    {
+        _isCapturingHotKey = true; // Capture mode 
+        HotkeyText.Text = "Press now to try again";   // Visual feedback
+    }
+
+ /*
+    public readonly struct HotKeyCombo
+    {
+        public readonly uint Modifiers;
+        public readonly uint VirtualKey;
+
+
+        public HotKeyCombo( uint modifiers, uint virtualKey)
+        {
+            Modifiers = modifiers;
+            VirtualKey = virtualKey;
+        }
+
+       
+        public override bool Equals(object obj)
+        {
+
+            if (obj is not HotKeyCombo)
+                return false; // not in -> can be used 
+
+            // if it is the already of already used 
+            return Modifiers == other.Modifiers && VirtualKey == other.VirtualKey;
+
+        }
+
+        public override int GetHashCode()
+        {
+                return HashCode.Combine(Modifiers, VirtualKey);
+        }
+        
+
+    } 
+
+        */
 
     
     [Flags]
@@ -217,10 +263,18 @@ public sealed partial class CommandsControlPanel : Page
             CapturedModiferKeys |= Modifiers.MOD_ALT;
         if (state(Windows.System.VirtualKey.Shift).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
             CapturedModiferKeys |= Modifiers.MOD_SHIFT;
-        if (state(Windows.System.VirtualKey.LeftWindows).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
-            CapturedModiferKeys |= Modifiers.MOD_WIN;
+        if (state(Windows.System.VirtualKey.LeftWindows).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))   
+            //CapturedModiferKeys |= Modifiers.MOD_WIN;
+        {
+            OnErrorDialogue();
+            return;
+        }
         if (state(Windows.System.VirtualKey.RightWindows).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
-            CapturedModiferKeys |= Modifiers.MOD_WIN;
+           // CapturedModiferKeys |= Modifiers.MOD_WIN;
+        {
+            OnErrorDialogue();
+            return;
+        }
 
 
         // Since this var is an enum of Mofiers i am going to cast e.Key(WindowsSystem Type) to my type 
@@ -228,8 +282,8 @@ public sealed partial class CommandsControlPanel : Page
 
 
         //uint CapturedModiferKeysUint;
-       // uint CapturedModiferKeysUint = 0000; null them for next event 
-      //  CapturedModiferKeysUint = (uint)e.Key;
+        // uint CapturedModiferKeysUint = 0000; null them for next event 
+        //  CapturedModiferKeysUint = (uint)e.Key;
         //return; // Keep capturing 
 
         // IF e.Key is a mod put show to user 
@@ -257,12 +311,21 @@ public sealed partial class CommandsControlPanel : Page
         // timestamp of attempt
         RecordHotKeyAttempt();
 
-        // Cast it to unsigned integer
-        CapturedVK = (uint)e.Key;
+        
+    
 
+        while (e.Key == 0)
+        {
+            HotkeyText.Text = "Press a letter now";
+            _isCapturingHotKey = true; // keep capturin
 
-        //Stop capturing 
-        _isCapturingHotKey = false;
+             // Cast it to unsigned integer
+            CapturedVK = (uint)e.Key;
+           
+
+        }
+   
+       
 
         //Update button to show what was pressed
         if (_isCapturingHotKey == false && CapturedVK == 0)
@@ -272,9 +335,6 @@ public sealed partial class CommandsControlPanel : Page
         }
         HotkeyText.Text = DescribeHotKey(CapturedModiferKeys,CapturedVK);
     }
-
-
-
 
 
     public DateTime lastHotkeyAttempt { get; set; }
@@ -294,6 +354,30 @@ public sealed partial class CommandsControlPanel : Page
 
 
 
+    public async void OnErrorDialogue()
+    {
+        string error_text = "\n Meta + Key could confuse you or the computer \n Ctrl or Alt have many combinations.\n Override the default os helper commands with something more useful to you ";
+        HotkeyText.Text = "Retry w/ Ctrl or Alt";
+
+        var dialog = new ContentDialog
+        {
+            Title = "Security comes first",
+            Content = error_text,
+            PrimaryButtonText = "Hit Enter ",
+            //DefaultButton = ContentDialogButton.Close,
+            DefaultButton = ContentDialogButton.Primary,
+            XamlRoot = this.Content.XamlRoot // this pages ui not some other pages 
+        };
+
+        // event not method cant just call -> shorthand -> sender event usual params for event 
+        dialog.PrimaryButtonClick += (s, e) =>
+        {
+            GuideRedirect();  
+        };
+        await dialog.ShowAsync();
+
+    }
+
     uint ModToUint;
     // By value params as just explaining to user 
     public string DescribeHotKey(Modifiers mod, uint vk)
@@ -307,7 +391,7 @@ public sealed partial class CommandsControlPanel : Page
         //if (mods & MOD_SHIFT != 0) keyschosen.Add("Shift"); & has lower precendence 
         if (mod.HasFlag(Modifiers.MOD_SHIFT))
             keyschosen.Add("Shift");
-        if (mod.HasFlag(Modifiers.MOD_WIN)) 
+        if (mod.HasFlag(Modifiers.MOD_WIN))  // Disabled 
             keyschosen.Add("Win");
 
         // uint cant be cast to string - cast it to its docuementation name 
@@ -325,7 +409,9 @@ public sealed partial class CommandsControlPanel : Page
         }
         //Cast it back to uint 
         ModToUint = (uint)CapturedModiferKeys;
-        
+
+
+
 
 
         // METHOD IS CALLED TWICE SO WILL CAL THIS METHOD TWICE RESULTING IN SHORTENING 
@@ -333,12 +419,8 @@ public sealed partial class CommandsControlPanel : Page
        if (_isCapturingHotKey == false) // finished capturing pass to window 
         {
             CheckWithStaticHashet_OnHotkeyCaptured(ModToUint, vk);
-
         }
         return string.Join (" ", keyschosen);
-
-
-       
     }
 
     // Make an instance of hashset in this class ( meaning static works on this class not instance ) 
