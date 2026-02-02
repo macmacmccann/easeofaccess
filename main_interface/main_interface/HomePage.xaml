@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Page
-    x:Class="main_interface.Account"
+<Window
+    x:Class="main_interface.HomePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:main_interface"
@@ -10,5 +10,8 @@
 
     <Grid>
 
+        <TextBlock Text="Hello, World!" FontSize="24" FontWeight="Bold" 
+           Foreground="Blue" HorizontalAlignment="Center" Margin="20"/>
+
     </Grid>
-</Page>
+</Window>

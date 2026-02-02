@@ -21,9 +21,9 @@ namespace main_interface
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class Account : Page
+    public sealed partial class HomePage : Window
     {
-        public Account()
+        public HomePage()
         {
             InitializeComponent();
         }

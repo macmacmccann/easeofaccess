@@ -22,9 +22,9 @@
                         IsPaneToggleButtonVisible="False">
 
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="Home" Icon="Home" Tag="General"/>
+                <NavigationViewItem Content="Home" Icon="Home" Tag="HomePage"/>
                 <NavigationViewItem Content="Login" Icon="Contact" Tag="LoginPage"/>
-                <NavigationViewItem Content="Account" Icon="Account" Tag="Account"/>
+                <NavigationViewItem Content="Account" Icon="Account" Tag="AccountWindow"/>
                 <NavigationViewItem Content="Register" Icon="People" Tag="RegisterPage"/>
                 <NavigationViewItem Content="Typing Control " Icon="UnSyncFolder" Tag="Command"/>
                 <NavigationViewItem Content="Ease your eyes" Icon="Target" Tag="Screen"/>

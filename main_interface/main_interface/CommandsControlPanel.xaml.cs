@@ -1,4 +1,6 @@
+using main_interface;
 using Microsoft.UI;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -9,21 +11,19 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Security.Policy;
+using System.Windows.Forms;
 using Windows.Devices.PointOfService.Provider;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
 using Windows.UI;
-
-using Microsoft.UI.Input;
-using System.Windows.Forms;
 using WinRT.Interop;
-
-using main_interface;
-using System.Drawing.Text;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -39,9 +39,15 @@ public sealed partial class CommandsControlPanel : Page
 
     private Commands commandsWindow;
 
+    public static CommandsControlPanel Instance { get; private set; }
+    public event Action<string>? HotKeyErrorOccured;
+
+
     public CommandsControlPanel()
     {
         InitializeComponent();
+        Instance = this;
+
         LoadPreferencesOnStart();
 
 
@@ -52,12 +58,28 @@ public sealed partial class CommandsControlPanel : Page
         // Keep the page alive / no duplicates upon nav switch by caching / reflected states preserved in ui 
         this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
 
+        // Create instance if there isnt one 
         commandsWindow = Commands.Instance;
+
+        HotKeyErrorOccured += OnError;
+        //  commandsWindow.HotKeyErrorOccured += Testit;
+
     }
 
 
+
+    public void Testit(string WindowMessage)
+    {
+        string error_text = WindowMessage;
+        HotkeyText.Text = error_text;
+
+    }
+
+
+    // not used instead  ->       commandsWindow = Commands.Instance;
+
     // hotkeys are registered in window - needs to be passed in OnHotKeyCaptured()
-    public void ConnectWindowToPage(Commands commandsWindowStayAliveOutsideConstructor)
+    public void NotCorrect_ConnectWindowToPage(Commands commandsWindowStayAliveOutsideConstructor)
     {
         commandsWindow = commandsWindowStayAliveOutsideConstructor;
 
@@ -81,10 +103,6 @@ public sealed partial class CommandsControlPanel : Page
         // OverlayEnabledToggle.IsOn = StateSettings.OverlayEnabled;
 
     }
-
-
-
-
 
 
     public void HeaderColour(Border targetBorder)
@@ -127,7 +145,7 @@ public sealed partial class CommandsControlPanel : Page
 
     }*/
 
-
+    
 
 
     bool _isCapturingHotKey; // guard flag - stop when false 
@@ -142,14 +160,23 @@ public sealed partial class CommandsControlPanel : Page
 
     
     [Flags]
-    public enum Modifiers
+    public enum Modifiers : uint 
     {
+
+        None = 0x0000,
+        MOD_ALT = 0x0001,
+        MOD_CONTROL = 0x0002,
+        MOD_SHIFT = 0x0004,
+        MOD_WIN = 0x0008
+        /*
         None = 0, // Binary 0000
         MOD_CONTROL = 1, // 0001  <- 1 at Bit 0
         MOD_SHIFT = 2, // 0010  <- 1 at Bit 1
                                         // CTRL + SHIFT  // 0011 Bit 3 
        MOD_ALT = 4,  // 0100  <- 1 at Bit 2
        MOD_WIN = 8    // 1000  <- 1 at Bit 3
+
+        */
     }
 
     // crtl + shift = 
@@ -216,8 +243,6 @@ public sealed partial class CommandsControlPanel : Page
 
             return; } // Keep capturing 
 
-            // Cast it to unsigned integer
-            CapturedVK = (uint)e.Key;
 
         // User wants to change it 
         if (e.Key == Windows.System.VirtualKey.Back)
@@ -228,14 +253,46 @@ public sealed partial class CommandsControlPanel : Page
             return; //Keep capturing 
         }
 
+        // if intercepted by windows for reserved action -> no way to stop too evavated 
+        // timestamp of attempt
+        RecordHotKeyAttempt();
+
+        // Cast it to unsigned integer
+        CapturedVK = (uint)e.Key;
+
 
         //Stop capturing 
         _isCapturingHotKey = false;
 
         //Update button to show what was pressed
+        if (_isCapturingHotKey == false && CapturedVK == 0)
+        {
+            HotkeyText.Text = "Reserved Combination";
+            return;
+        }
         HotkeyText.Text = DescribeHotKey(CapturedModiferKeys,CapturedVK);
+    }
+
+
+
+
+
+    public DateTime lastHotkeyAttempt { get; set; }
+
+    public void RecordHotKeyAttempt()
+    {
+        lastHotkeyAttempt = DateTime.Now;
 
     }
+
+    // window register -> back to page , wrong ,do it before even registering 
+    public void OnError(string WindowMessage)
+    {
+        string error_text = WindowMessage;
+        HotkeyText.Text = error_text;
+    }
+
+
 
     uint ModToUint;
     // By value params as just explaining to user 
@@ -254,34 +311,87 @@ public sealed partial class CommandsControlPanel : Page
             keyschosen.Add("Win");
 
         // uint cant be cast to string - cast it to its docuementation name 
-       // keyschosen.Add(((Windows.System.VirtualKey)vk).ToString());
+        // keyschosen.Add(((Windows.System.VirtualKey)vk).ToString());
 
 
         if (CapturedVK != 0)
         {
-            string KeyName = ((char)CapturedVK).ToString();
-            keyschosen.Add(KeyName);
+            //string KeyName = ((char)CapturedVK).ToString();
+            // This can work with up down left right
+            keyschosen.Add(((Windows.System.VirtualKey)vk).ToString());
+
+            //keyschosen.Add(KeyName);
 
         }
         //Cast it back to uint 
-        
         ModToUint = (uint)CapturedModiferKeys;
         
-        OnHotkeyCaptured(ModToUint, vk);
 
+
+        // METHOD IS CALLED TWICE SO WILL CAL THIS METHOD TWICE RESULTING IN SHORTENING 
+        // IF CAPTURING IN STILL HAPENING DONT CALL THIS 
+       if (_isCapturingHotKey == false) // finished capturing pass to window 
+        {
+            CheckWithStaticHashet_OnHotkeyCaptured(ModToUint, vk);
+
+        }
         return string.Join (" ", keyschosen);
 
 
        
     }
 
-    void OnHotkeyCaptured(uint modifiers, uint vk)
+    // Make an instance of hashset in this class ( meaning static works on this class not instance ) 
+    // Dont even try register eg., wins lock - thats too elevated . 
+    private static readonly HashSet<(uint mod, uint vk)> WindowsReservedKeys = new()
     {
-        commandsWindow.UpdateHotkey(modifiers, vk);
+        // win keys
+        ((uint)Modifiers.MOD_WIN, (uint)VirtualKey.L),      // win+L - lock
+        ((uint)Modifiers.MOD_WIN, (uint)VirtualKey.D),      // win+D - desktop
+        ((uint)Modifiers.MOD_WIN, (uint)VirtualKey.E),      // win+E - explorer
+        ((uint)Modifiers.MOD_WIN, (uint)VirtualKey.R),      // win+R - run
+        ((uint)Modifiers.MOD_WIN, (uint)VirtualKey.V),      // win+V - clipboard
+        // alt keys
+        ((uint)Modifiers.MOD_ALT, (uint)VirtualKey.Tab),    // alt+tab
+        ((uint)Modifiers.MOD_CONTROL | (uint)Modifiers.MOD_ALT, (uint)VirtualKey.Delete), 
+    };
+
+    
+
+     // if return =  true dont try . if false - free = register 
+    public bool IsReservedKeysCheck(uint modkey,uint vk)
+    {
+        return WindowsReservedKeys.Contains((modkey, vk));
     }
 
 
- 
+
+
+    void CheckWithStaticHashet_OnHotkeyCaptured(uint modifiers, uint vk)
+    {
+
+
+
+
+        // if true / it does have it already / Run error 
+        if (IsReservedKeysCheck(modifiers, vk))
+        {
+            HotkeyText.Text = "Reserved. Try Again";
+            return;
+
+        }
+            bool success = commandsWindow.UpdateHotkey(modifiers, vk);
+            // if not in hashset 
+        if (!success && !IsReservedKeysCheck(modifiers, vk))
+                {
+                    HotkeyText.Text = "Reserved. Try Again";
+                  }
+
+
+    }
+
+
+
 
 
     private void Border_PointerEntered(object sender, PointerRoutedEventArgs e)

@@ -62,10 +62,10 @@
     <Page Update="MySplashScreen.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Account.xaml">
+    <Page Update="AccountWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="General.xaml">
+    <Page Update="HomePage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <None Update="MainWindow.xaml">

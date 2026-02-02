@@ -37,7 +37,7 @@ namespace main_interface
      
         DesktopAcrylicBackdrop acrylic;
 
-     
+
 
 
 
@@ -54,37 +54,24 @@ namespace main_interface
             this.NavigationView.SelectionChanged += NavigationView_SelectionChanged;
             Activated += OnActivated; // we have to wait until the hwnd is created
 
-
+            // lamba shorthand -> " just ignore object sender + Event Args its an enu, conditional case - not an event 
             this.Closed += (_, __) =>
             {
-                TransitionTo(WorkspaceState.WorkspaceActive);
+                TransitionTo(State_IsAppInFocus.AppNotActive);
             };
 
-            // Lamba shorthand _ means ignore param 
+            // Lamba shorthand _ means ignore param  +=  = add to logic of windows instance of  "VisibilityChanged" 
             this.VisibilityChanged += (_, __) =>
             {
                 if (!this.Visible)
                 {
-                    TransitionTo(WorkspaceState.WorkspaceActive);
+                    TransitionTo(State_IsAppInFocus.AppNotActive);
                 }
             };
 
 
         }
 
-
-        // Background has to be non interactive
-        // so state machine to minimise upon main window active 
-        // stops one condition where you can activate it 
-        // guard flags and clauses dont work on Activate() ( interactive after this mainwindow click = loophole ) 
-        enum WorkspaceState
-        {
-            WorkspaceActive,   // " im lost focus of this app " overlay shown / this window minimized - reopen 
-            SettingsOpen,      // " iv opened this app " overlay hidden / this window open (close workspace)
-            Transition         // guard 
-        }
-
-        private WorkspaceState _state = WorkspaceState.WorkspaceActive; // enum default state " i have this app window open " 
 
 
         void OnActivated(object sender, WindowActivatedEventArgs e) // hwnd exists after the fact thats why is activated when window is constructred not in the construcotr 
@@ -95,39 +82,61 @@ namespace main_interface
 
             if (TilingManager.Exists()) // singleton design - under no circumstances many windows 
             {
-                TransitionTo(WorkspaceState.SettingsOpen); // State now is "you opened this app" 
+                TransitionTo(State_IsAppInFocus.AppActive); // State now is "you opened this app" 
             }
         }
 
 
-        
+        // State 
+        // Background has to be non interactive
+        // so state machine to minimise upon main window active 
+        // stops one condition where you can activate it 
+        // guard flags and clauses dont work on Activate() ( interactive after this mainwindow click = loophole ) 
 
+        private State_IsAppInFocus _state = State_IsAppInFocus.AppNotActive; // enum default state " i have this app window open " 
 
-        private void TransitionTo(WorkspaceState nextState)
+        enum State_IsAppInFocus
+        {
+            AppNotActive,   // " im lost focus of this app " overlay shown / this window minimized - reopen 
+            AppActive,      // " iv opened this app " overlay hidden / this window open (close workspace)
+            Transition      // 
+        }
+
+        // switch statement called on condition 
+        private void TransitionTo(State_IsAppInFocus nextState)
         {
             if (_state == nextState)
-                return; // No-op transitions are ignored
+                return; // No transitions are ignored
 
             _state = nextState;
 
             switch (_state)
-            {
-                case WorkspaceState.WorkspaceActive:
+            { 
+                case State_IsAppInFocus.AppNotActive:
                     System.Diagnostics.Debug.WriteLine("STATE : im off this app window ");
                     TilingManager.GetInstance().ShowOnScreen();
                     break;
 
-                case WorkspaceState.SettingsOpen:
-                    System.Diagnostics.Debug.WriteLine("STATE : iv opened 'settings' this app exit tiling mode ");
+                case State_IsAppInFocus.AppActive:
+
+                    
+                    System.Diagnostics.Debug.WriteLine("STATE : iv opened this app 'settings' exit tiling mode ");
                     TilingManager.GetInstance().MoveOffScreen();
+                    if ((
+                        DateTime.Now - CommandsControlPanel.Instance.lastHotkeyAttempt).TotalMilliseconds < 500)
+                    {
+                       // CommandsControlPanel.Instance.HotKeyErrorOccured?.Invoke("Reserved. Try again");
+                        CommandsControlPanel.Instance.OnError("Error indirect") ;
+                    }
+
                     break;
             }
         }
 
 
-        public void ReturnToWorkspace()
+        public void AppDeActivated()
         {
-            TransitionTo(WorkspaceState.WorkspaceActive);
+            TransitionTo(State_IsAppInFocus.AppNotActive);
 
             var appwindow = this.AppWindow;
             var presenter = appwindow.Presenter as OverlappedPresenter;
@@ -172,9 +181,8 @@ namespace main_interface
 
 
         private Eyesight _spotlightWindow;
-      
 
-
+        private AccountWindow AccountWindow_Instance_Singleton;
         private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
 
@@ -186,55 +194,78 @@ namespace main_interface
             var selectedItem = (NavigationViewItem)args.SelectedItem;
             string tag = (string)selectedItem.Tag;
 
-            switch (tag)
+
+            if(tag == "AccountWindow")
             {
-                case "general":
-                    ContentFrame.Navigate(typeof(General));
-                    break;
-                case "LoginPage":
-                    ContentFrame.Navigate(typeof(LoginPage));
-                    break;
+                if (AccountWindow_Instance_Singleton == null)
+                {
+                    var AccountWindow_Instance = new AccountWindow();
+                    AccountWindow_Instance.Activate();
+                    return; // Dont navigate 
+                }
+                if (AccountWindow_Instance_Singleton != null)
+                {
+                    AccountWindow_Instance_Singleton.Activate();
+                }
 
-                case "RegisterPage":
-                    ContentFrame.Navigate(typeof(RegisterPage));
-                    break;
+                   
+            }
+            else if (tag != "AccountWindow") { // if you moved away from window hide it 
 
-                case "account":
-                    ContentFrame.Navigate(typeof(Account));
-                    break;
-
-                case "Command":
-                    ContentFrame.Navigate(typeof(CommandsControlPanel));
-                    break;
-
-                case "Screen":
-                    ContentFrame.Navigate(typeof(EyesightControlPanel));
-                    break;
-
-                case "Mouseless":
-                    ContentFrame.Navigate(typeof(MouselessControlPanel));
-                    break;
-                case "TilingManager":
-                    ContentFrame.Navigate(typeof(TilingManagerControlPanel));
-                    break;
-                case "ReprogramKeys":
-                    ContentFrame.Navigate(typeof(ReprogramKeysControlPanel));
-                    break;
-
-                case "Assistant":
-                    ContentFrame.Navigate(typeof(AssistantControlPanel));
-                    break;
-                case "TerminalControl":
-                    ContentFrame.Navigate(typeof(TerminalControlPanel));
-                    break;
-
-
-
-                case "about":
-                    ContentFrame.Navigate(typeof(About));
-                    break;
+                if (AccountWindow_Instance_Singleton != null)
+                {
+                    AccountWindow_Instance_Singleton.MoveOffScreen();
+                }
 
             }
+
+            switch (tag)
+                {
+                    case "HomeWindow":
+                        ContentFrame.Navigate(typeof(HomePage));
+                        break;
+                    case "LoginPage":
+                        ContentFrame.Navigate(typeof(LoginPage));
+                        break;
+
+                    case "RegisterPage":
+                        ContentFrame.Navigate(typeof(RegisterPage));
+                        break;
+
+                
+
+                    case "Command":
+                        ContentFrame.Navigate(typeof(CommandsControlPanel));
+                        break;
+
+                    case "Screen":
+                        ContentFrame.Navigate(typeof(EyesightControlPanel));
+                        break;
+
+                    case "Mouseless":
+                        ContentFrame.Navigate(typeof(MouselessControlPanel));
+                        break;
+                    case "TilingManager":
+                        ContentFrame.Navigate(typeof(TilingManagerControlPanel));
+                        break;
+                    case "ReprogramKeys":
+                        ContentFrame.Navigate(typeof(ReprogramKeysControlPanel));
+                        break;
+
+                    case "Assistant":
+                        ContentFrame.Navigate(typeof(AssistantControlPanel));
+                        break;
+                    case "TerminalControl":
+                        ContentFrame.Navigate(typeof(TerminalControlPanel));
+                        break;
+
+
+
+                    case "about":
+                        ContentFrame.Navigate(typeof(About));
+                        break;
+
+                }
         }
     } //constructor ending 
 }

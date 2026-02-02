@@ -25,6 +25,7 @@ using Windows.Foundation.Collections;
 using WinRT.Interop; // This allows access to the underlying hwnd of winui window 
 
 using main_interface;
+using System.Drawing.Text;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -45,7 +46,7 @@ namespace main_interface
 
         DesktopAcrylicBackdrop acrylic;
 
-
+   
 
         public static Commands Instance
         { 
@@ -53,6 +54,7 @@ namespace main_interface
             {
                 if (_instance == null)
                     _instance = new Commands();
+                    
 
                 return _instance;
 
@@ -79,6 +81,7 @@ namespace main_interface
             // EnableClickThrough();
             ApplySettings();
 
+
             // " Subscription" logic -> dump method into this 
             Activated += OnActivated; // second activation - alot not fully init in this yet !
 
@@ -103,22 +106,6 @@ namespace main_interface
         }
 
 
-
-
-        //Guard flag implenetation 
-        private bool _isHookUpSet = false;
-        void OnActivated(object sender, WindowActivatedEventArgs e) // hwnd exists after the fact thats why is activated when window is constructred not in the construcotr 
-        {
-            //thhis will run once im not unsuncribing to this method 
-            if (!_isHookUpSet)
-            {
-                //SetupHook(); old method not dynamic hardcoded keys commented below 
-                UpdateHotkey(0,0);
-                _isHookUpSet = true; // now never try again 
-            }
-
-        }
-
         private SubclassProc _windowProc; // Field is in scope of MainWindow - will live as long as MainWindow does !
 
         delegate IntPtr SubclassProc( // What SetWindowSublass Expects 
@@ -132,22 +119,63 @@ namespace main_interface
     );
 
 
+        void SetupSubclass()
+        {
+            var hwnd = WindowNative.GetWindowHandle(this);
 
-        const int HOTKEY_ID_OVERLAY = 9000; //hotkey id so when windows sends it back to us 
+            _windowProc = WndProc; // The delegate is not be garbage collected -
 
-        const int MOD_CONTROL = 0x002; // win32 flag meaning the control key must be held
-        const int MOD_SHIFT = 0x0004; // win32 flag meaning the shift key must be held 
-        const int MOD_ALT = 0x0001;  // alt 
-        const int MOD_WIN = 0x0008; // win 
+            // Atatch to message handler for this handler
+            SetWindowSubclass( // Subclass needed in winui to hook into window procesdure
+                hwnd,
+                _windowProc,
+                IntPtr.Zero,
+                IntPtr.Zero
+                );
+        }
 
 
 
-           
 
-        const int VK_V = 0x56; // Virtual Key for the letter v so meaning shift + v 
-        const int VK_O = 0x4F; // letter o 
-     
+        //Guard flag implenetation 
+        private bool _isHookUpSet = false;
+        private DateTime lastHotkeyAttempt;
+        private CommandsControlPanel controlPanelBackwardAccess;
 
+
+
+
+       private  void OnActivated(object sender, WindowActivatedEventArgs args) // hwnd exists after the fact thats why is activated when window is constructred not in the construcotr 
+        {
+            //thhis will run once im not unsuncribing to this method 
+            if (!_isHookUpSet)
+            {
+                //SetupHook(); old method not dynamic hardcoded keys commented below 
+                // UpdateHotkey(0,0);
+                SetupSubclass(); // Hook into Win32 message loops 
+                UpdateHotkey(MOD_CONTROL, VK_O);
+                _isHookUpSet = true; // now never try again 
+                                     // HotKeyErrorOccured?.Invoke("In Use. Try again");
+
+            }
+                // Elevated command choice cuts off code -> no way to override -> only after regaining focus 
+                if (args.WindowActivationState == WindowActivationState.Deactivated)
+                {
+                 
+                }
+            }
+
+        
+
+        // when window loses focus : assumed to mean "elevated command cut if off "
+        // takes a snapshot of time it in Page by commandWindow.recordAttempt() 
+        // when this window gains focus back any dif show in attempt and now =  " reserved" 
+
+
+
+
+
+        // THIS WAS THE UNDYAMIC WAY TO CREATE A HOTKEY 
         /*
         void SetupHook() // This is a win32 message listener for this window ,winUI wont cut it win32 needs to be connected for actions with the handle hwnd
         {
@@ -174,21 +202,61 @@ namespace main_interface
 
         */
 
-        public void UpdateHotkey(uint mods,uint vk)
+
+
+        const int HOTKEY_ID_OVERLAY = 9000; //hotkey id so when windows sends it back to us 
+
+        const int MOD_CONTROL = 0x002; // win32 flag meaning the control key must be held
+        const int MOD_SHIFT = 0x0004; // win32 flag meaning the shift key must be held 
+        const int MOD_ALT = 0x0001;  // alt 
+        const int MOD_WIN = 0x0008; // win 
+
+        const int VK_V = 0x56; // Virtual Key for the letter v so meaning shift + v 
+        const int VK_O = 0x4F; // letter o 
+        const int VK_8 = 0x38;
+
+        public bool UpdateHotkey(uint modkey, uint vk)
         {
             var hwnd = WindowNative.GetWindowHandle(this);
 
-            if (mods != 0 | vk != 0)
+
+            UnregisterHotKey(hwnd, HOTKEY_ID_OVERLAY);
+
+
+            /*
+            if (modkey == 0 || vk == 0)
             {
-                mods = MOD_CONTROL | MOD_ALT;
-                vk = VK_O;
-            } else
-            {
+
+                
+              //  modkey = MOD_CONTROL;
+                //vk = VK_O;
+                //RegisterHotKey(hwnd, HOTKEY_ID_OVERLAY, modkey, vk);
+                
                 UnregisterHotKey(hwnd, HOTKEY_ID_OVERLAY);
+                return; // Exit early — no hotkey is active
+
+
             }
-            RegisterHotKey(hwnd, HOTKEY_ID_OVERLAY, mods, vk);
+                 */
+
+            // UnregisterHotKey(hwnd, HOTKEY_ID_OVERLAY);
+
+            
+            // if windows returns true init keyword success  for readability 
+            bool success = RegisterHotKey(hwnd, HOTKEY_ID_OVERLAY, modkey, vk);
+            if (success) // if true 
+            {
+                return true;
+            }
+            else{
+                return false;   }
+        
+
+
         }
 
+
+        // WHEN HOTKEY IS MADE 
         // Windows Procedure Win32 
         // This function is called every time windows sends a message 
         IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, IntPtr dwRefdata)

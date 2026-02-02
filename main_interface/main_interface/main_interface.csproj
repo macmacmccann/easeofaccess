@@ -67,13 +67,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Account.xaml">
+    <Page Update="AccountWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="General.xaml">
+    <Page Update="HomePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

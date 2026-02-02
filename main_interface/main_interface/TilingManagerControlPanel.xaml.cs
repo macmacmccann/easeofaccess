@@ -321,8 +321,6 @@ namespace main_interface
         // code is in mainWindow so access it 
         private void MinimizeButton_Click(object sender, RoutedEventArgs e)
         {      
- 
-
             // get current instance 
             var app = Application.Current as App;
 
@@ -330,7 +328,7 @@ namespace main_interface
             var mainWindowInstance = app?.main_window;
 
             // call the state transition 
-            mainWindowInstance?.ReturnToWorkspace();
+            mainWindowInstance?.AppDeActivated();
         }
    
           
