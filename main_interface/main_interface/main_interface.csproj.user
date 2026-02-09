@@ -8,6 +8,12 @@
     <None Update="App.xaml">
       <SubType>Designer</SubType>
     </None>
+    <Page Update="Controls\UserControl2.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\HotKeyCaptureControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Assistant.xaml">
       <SubType>Designer</SubType>
     </Page>

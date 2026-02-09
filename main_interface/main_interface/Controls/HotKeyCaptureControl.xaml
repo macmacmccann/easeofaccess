@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="main_interface.Controls.HotKeyCaptureControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:main_interface.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+
+
+    <!-- this is all the code that is not relative - can be abstracted  -->
+    <!-- meaning injects into any col or row coz its self sustaining tile  -->
+
+    <Grid ColumnDefinitions="*,*">
+
+        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                <TextBlock x:Name="HotkeyText" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
+                <TextBlock Text="Choose yourself" FontSize="12" Opacity="0.9" Foreground="White" />
+     </StackPanel>
+
+      <Button Grid.Column="1" x:Name="AssignHotkey"  Content="Assign Hotkey" Click="AssignHotkey_Clicked"></Button>
+
+
+    </Grid>
+
+
+
+
+</UserControl>

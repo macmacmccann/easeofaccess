@@ -122,12 +122,7 @@ namespace main_interface
                     
                     System.Diagnostics.Debug.WriteLine("STATE : iv opened this app 'settings' exit tiling mode ");
                     TilingManager.GetInstance().MoveOffScreen();
-                    if ((
-                        DateTime.Now - CommandsControlPanel.Instance.lastHotkeyAttempt).TotalMilliseconds < 500)
-                    {
-                       // CommandsControlPanel.Instance.HotKeyErrorOccured?.Invoke("Reserved. Try again");
-                        CommandsControlPanel.Instance.OnError("Error indirect") ;
-                    }
+                   
 
                     break;
             }

@@ -6,7 +6,10 @@
     xmlns:local="using:main_interface"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+xmlns:controls="using:main_interface.Controls"
+
+    mc:Ignorable="d"
+    >
 
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -227,18 +230,7 @@ PointerExited="Border_PointerExited">
 
 
 
-               
-
-
-
-
-
-
-
-
-
-
-         </Grid>
+            </Grid>
            </Grid>
 
     </ScrollViewer>
