@@ -204,7 +204,7 @@ PointerExited="Border_PointerExited">
             <!-- BOTTOM TOGGLES ROW 3 of msin grid  -->
 
             <Grid Grid.Row="3" RowDefinitions="*,*,*"
-                  ColumnDefinitions="*,*,*"
+                  ColumnDefinitions="*,*"
                   HorizontalAlignment="Stretch"
                   Margin="40,0,0,0">
 
@@ -223,6 +223,25 @@ PointerExited="Border_PointerExited">
                         </StackPanel>
 
                         <Button Grid.Column="1" x:Name="AssignHotkey"  Content="Assign Hotkey" Click="AssignHotkey_Clicked"></Button>
+
+
+                    </Grid>
+                </Border>
+
+                <Border
+                     Grid.Row="0"
+                     Grid.Column="1"
+                     Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+                     PointerExited="Border_PointerExited">
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock x:Name="HotkeyText2" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
+                            <TextBlock Text="Choose yourself" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+
+                        <Button Grid.Column="1" x:Name="AssignHotkey2"  Content="Assign Hotkey" Click="AssignHotkey_Clicked"></Button>
 
 
                     </Grid>

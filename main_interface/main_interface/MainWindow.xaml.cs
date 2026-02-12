@@ -43,6 +43,7 @@ namespace main_interface
 
 
         public MainWindow()  {
+
             InitializeComponent();
 
             var appWindow = this.AppWindow;
@@ -68,8 +69,6 @@ namespace main_interface
                     TransitionTo(State_IsAppInFocus.AppNotActive);
                 }
             };
-
-
         }
 
 

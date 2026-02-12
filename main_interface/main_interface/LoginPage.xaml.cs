@@ -31,11 +31,7 @@ namespace main_interface
         {
             InitializeComponent();
 
-
-
         }
-
-
 
 
         private async void LoginButtonClicked(object sender, RoutedEventArgs e)
@@ -48,7 +44,7 @@ namespace main_interface
                 SuccessText.IsOpen = true;
                 SuccessText.Message = "Logged In Success.";
                 ErrorText.IsOpen = false;
-                //Frame.Navigate(typeof(Account));
+                Frame.Navigate(typeof(SettingsControlPanel));
             }
             else
             {

@@ -20,6 +20,7 @@ using System.Runtime.InteropServices.Marshalling;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Policy;
 using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Navigation;
 using Windows.ApplicationModel.Appointments;
 using Windows.Devices.PointOfService.Provider;
@@ -28,8 +29,12 @@ using Windows.Foundation.Collections;
 using Windows.System;
 using Windows.UI;
 using WinRT.Interop;
+using System.Diagnostics;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
+using Microsoft.UI.Xaml.Controls;
+
+using WinUITextBlock = Microsoft.UI.Xaml.Controls.TextBlock; 
 
 namespace main_interface;
 
@@ -75,7 +80,7 @@ public sealed partial class CommandsControlPanel : Page
     public void Testit(string WindowMessage)
     {
         string error_text = WindowMessage;
-        HotkeyText.Text = error_text;
+        _activeHotkeyTextBlock.Text = error_text;
 
     }
 
@@ -154,58 +159,52 @@ public sealed partial class CommandsControlPanel : Page
 
     bool _isCapturingHotKey; // guard flag - stop when false 
     bool _waitingForPrimaryKey;
-   
-    // event 
+    private TextBlock _activeHotkeyTextBlock; // Track which Textblock to update
+    private Microsoft.UI.Xaml.Controls.Button _activeButton;
+
+    //event not method 
     private void AssignHotkey_Clicked(object sender, RoutedEventArgs e)
     {
         _isCapturingHotKey = true; // Capture mode 
         _waitingForPrimaryKey = false;
-        HotkeyText.Text = "Press keys...";   // Visual feedback
         CapturedModiferKeys = Modifiers.None;
         CapturedVK = 0;
 
+
+        if (sender is Microsoft.UI.Xaml.Controls.Button button)
+        {
+
+            _activeButton = button;
+            // Determine which button was clicked and set the corresponding TextBlock
+            if (button.Name == "AssignHotkey")
+            {
+                _activeHotkeyTextBlock = HotkeyText;
+                _activeHotkeyTextBlock.Text = "Press keys...";  
+
+            }
+            else if (button.Name == "AssignHotkey2")
+            {
+                _activeHotkeyTextBlock = HotkeyText2;
+                _activeHotkeyTextBlock.Text = "Press keys..."; 
+
+
+            }
+
+        }
     }
     // method
     private void GuideRedirect()
     {
         _isCapturingHotKey = true; // Capture mode 
-        HotkeyText.Text = "Press now to try again";   // Visual feedback
+        _activeHotkeyTextBlock.Text = "Press now to try again";   // Visual feedback
+        CapturedModiferKeys = Modifiers.None;
+        CapturedVK = 0;
+        _waitingForPrimaryKey = false;
     }
 
- /*
-    public readonly struct HotKeyCombo
-    {
-        public readonly uint Modifiers;
-        public readonly uint VirtualKey;
+ 
 
-
-        public HotKeyCombo( uint modifiers, uint virtualKey)
-        {
-            Modifiers = modifiers;
-            VirtualKey = virtualKey;
-        }
-
-       
-        public override bool Equals(object obj)
-        {
-
-            if (obj is not HotKeyCombo)
-                return false; // not in -> can be used 
-
-            // if it is the already of already used 
-            return Modifiers == other.Modifiers && VirtualKey == other.VirtualKey;
-
-        }
-
-        public override int GetHashCode()
-        {
-                return HashCode.Combine(Modifiers, VirtualKey);
-        }
         
-
-    } 
-
-        */
 
     
     [Flags]
@@ -242,9 +241,16 @@ public sealed partial class CommandsControlPanel : Page
     uint CapturedVK; // captured vk eg., 1 d e 
 
 
-    public void Reset()
+    public void Stop()
     {
         _isCapturingHotKey = false;
+        _waitingForPrimaryKey = false;
+        CapturedModiferKeys = Modifiers.None; // 0000
+        CapturedVK = 0; // Reset back 
+    }
+    public void Reset()
+    {
+        _isCapturingHotKey = true;
         _waitingForPrimaryKey = false;
         CapturedModiferKeys = Modifiers.None; // 0000
         CapturedVK = 0; // Reset back 
@@ -260,47 +266,58 @@ public sealed partial class CommandsControlPanel : Page
         if (!_isCapturingHotKey)
             return false;
 
+        bool ModifiersBinary = false;
+
         // CapturedModiferKeys = 0; // Binary code 1 would mean control 
-        CapturedModiferKeys = Modifiers.None; // 0000
+        //CapturedModiferKeys = Modifiers.None; // 0000
         CapturedVK = 0; // Reset back 
 
         //Detech modifier keys current held 
         var state = Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread;
 
         // if control is 'down' meaning pressed down /activated 
-        if (state(Windows.System.VirtualKey.Control).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
+        if
+            (state(Windows.System.VirtualKey.LeftControl).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down)
+            ||
+            state(Windows.System.VirtualKey.RightControl).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
         {
             CapturedModiferKeys |= Modifiers.MOD_CONTROL;
-            return true;
+            ModifiersBinary = true;
         }
         //means              0000 = 0000 | 0001 = 0001 = Crtl key = 1 is at what poistion ?
         //3210 -> 0001 = at bit 0 
 
-        if (state(Windows.System.VirtualKey.Menu).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
+        if
+              (state(Windows.System.VirtualKey.LeftMenu).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down)
+            ||
+            state(Windows.System.VirtualKey.RightMenu).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
         {
             CapturedModiferKeys |= Modifiers.MOD_ALT;
-            return true;
+            ModifiersBinary = true;
         }
 
-        if (state(Windows.System.VirtualKey.Shift).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
+        if
+             (state(Windows.System.VirtualKey.LeftShift).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down)
+            ||
+            state(Windows.System.VirtualKey.RightShift).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
         {
             CapturedModiferKeys |= Modifiers.MOD_SHIFT;
-            return true;
+            ModifiersBinary = true;
         }
         if (state(Windows.System.VirtualKey.LeftWindows).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
         //CapturedModiferKeys |= Modifiers.MOD_WIN;
         {
-           
-            return true; 
+
+            ModifiersBinary = true;
         }
         if (state(Windows.System.VirtualKey.RightWindows).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
         // CapturedModiferKeys |= Modifiers.MOD_WIN;
         {
             OnErrorDialogue();
-            return true; 
+            ModifiersBinary = true;
         }
 
-        return false;
+        return ModifiersBinary;
 
     }
 
@@ -310,8 +327,7 @@ public sealed partial class CommandsControlPanel : Page
         if (!_isCapturingHotKey)
             return;
 
-        bool ismod = isModifierKey();
-        // Detect modifier keys
+       
 
         // still a mod but not right mod so reject after
         if (e.Key == Windows.System.VirtualKey.LeftWindows ||
@@ -322,30 +338,35 @@ public sealed partial class CommandsControlPanel : Page
 
             return;
         }
-      
 
-
-
-        // this is a vague last condition " you didnt press a mod but i dont know what you pressed " 
-        if (!ismod)
+        if (!_waitingForPrimaryKey)
         {
-            OnErrorDialogue(); // not a mod but this condition is very vague 
-            Reset();
-            return;
-        }
+            bool ismod = isModifierKey();
+            // Detect modifier keys
+
             
 
-        
+            // this is a vague last condition " you didnt press a mod but i dont know what you pressed " 
+            if (!ismod)
+            {
+                OnErrorDialogueWrongKey(); // not a mod but this condition is very vague 
+                Reset();
+                return;
+            }
+
             if (ismod)
-        {
-            HotkeyText.Text = DescribeHotKey(CapturedModiferKeys, 0) + " …";
-            _waitingForPrimaryKey = true;
-            
+            {
+                _activeHotkeyTextBlock.Text = DescribeHotKey(CapturedModiferKeys, 0) + " …";
+                _waitingForPrimaryKey = true;
+
+            }
+
+
         }
 
-
-
-
+        /*
+         
+       
         // IF e.Key is a mod put show to user 
         if (e.Key == Windows.System.VirtualKey.Control ||
        e.Key == Windows.System.VirtualKey.Shift ||
@@ -356,7 +377,7 @@ public sealed partial class CommandsControlPanel : Page
             HotkeyText.Text = DescribeHotKey(CapturedModiferKeys, 0) + "...."; // Show user modkey now 
             _waitingForPrimaryKey = true;
             return; } // Keep capturing 
-
+  */
 
         // User wants to change it 
         if (e.Key == Windows.System.VirtualKey.Back)
@@ -364,43 +385,56 @@ public sealed partial class CommandsControlPanel : Page
             CapturedModiferKeys = Modifiers.None;
             CapturedVK = 0;
             _waitingForPrimaryKey = false;
-            HotkeyText.Text = "Cleared. Press again ..";
+            _activeHotkeyTextBlock.Text = "Cleared. Press again ..";
+            Reset();
             isModifierKey();
-            return; //Keep capturing 
+            return; // Keep capturing 
         }
 
 
         if (_waitingForPrimaryKey)
         {
-            HotkeyText.Text = "Press a letter now";
+            _activeHotkeyTextBlock.Text = "Press a letter now";
 
           // Cast it to unsigned integer
              CapturedVK = (uint)e.Key;
 
+
+            if(IsVirtualKeyAModifer(e.Key))
+
+            // if u said mod on v key input 
+           
+                {
+                   // OnErrorDialogueWrongKey();
+                    //Reset();
+                    return;
+                }
+
+            
             _isCapturingHotKey = false;  // keep capturinh
             _waitingForPrimaryKey = false; // keep capturing
 
         }
+
+        uint CapturedMod = (uint)CapturedModiferKeys;
 
 
 
         //Update button to show what was pressed
         if (_isCapturingHotKey == false && _waitingForPrimaryKey == false)
         {
-             HotkeyText.Text = DescribeHotKey(CapturedModiferKeys,CapturedVK);
+
+
+
+             _activeHotkeyTextBlock.Text = DescribeHotKey(CapturedModiferKeys,CapturedVK);
 
         }
     }
 
 
-    // window register -> back to page , wrong ,do it before even registering 
-    public void OnError(string WindowMessage)
-    {
-        string error_text = WindowMessage;
-        HotkeyText.Text = error_text;
-    }
+  
 
-
+    // This method called twice 
     uint ModToUint;
     // By value params as just explaining to user 
     public string DescribeHotKey(Modifiers mod, uint vk)
@@ -421,7 +455,7 @@ public sealed partial class CommandsControlPanel : Page
         // keyschosen.Add(((Windows.System.VirtualKey)vk).ToString());
 
 
-        if (CapturedVK != 0)
+        if (vk != 0)
         {
             //string KeyName = ((char)CapturedVK).ToString();
             // This can work with up down left right
@@ -434,65 +468,71 @@ public sealed partial class CommandsControlPanel : Page
         ModToUint = (uint)CapturedModiferKeys;
 
 
-
-
-
-        // METHOD IS CALLED TWICE SO WILL CAL THIS METHOD TWICE RESULTING IN SHORTENING 
-        // IF CAPTURING IN STILL HAPENING DONT CALL THIS 
-       if (_isCapturingHotKey == false) // finished capturing pass to window 
+     
+       if (_isCapturingHotKey == false) // When finished 
         {
-            CheckWithStaticHashet_OnHotkeyCaptured(ModToUint, vk);
+
+            OnHotkeyCaptured(ModToUint, vk); // Update Hotkey to Hook in Window 
         }
         return string.Join (" ", keyschosen);
     }
 
-    // Make an instance of hashset in this class ( meaning static works on this class not instance ) 
-    // Dont even try register eg., wins lock - thats too elevated . 
-    private static readonly HashSet<(uint mod, uint vk)> WindowsReservedKeys = new()
+    void OnHotkeyCaptured(uint modifiers, uint vk)
     {
-        // win keys
-        ((uint)Modifiers.MOD_WIN, (uint)VirtualKey.L),      // win+L - lock
-        ((uint)Modifiers.MOD_WIN, (uint)VirtualKey.D),      // win+D - desktop
-        ((uint)Modifiers.MOD_WIN, (uint)VirtualKey.E),      // win+E - explorer
-        ((uint)Modifiers.MOD_WIN, (uint)VirtualKey.R),      // win+R - run
-        ((uint)Modifiers.MOD_WIN, (uint)VirtualKey.V),      // win+V - clipboard
-        // alt keys
-        ((uint)Modifiers.MOD_ALT, (uint)VirtualKey.Tab),    // alt+tab
-        ((uint)Modifiers.MOD_CONTROL | (uint)Modifiers.MOD_ALT, (uint)VirtualKey.Delete), 
-    };
 
-    
+       Debug.WriteLine($"checking combo: mod={modifiers}, vk={vk}");
 
-     // if return =  true dont try . if false - free = register 
-    public bool IsReservedKeysCheck(uint modkey,uint vk)
-    {
-        return WindowsReservedKeys.Contains((modkey, vk));
-    }
+        Debug.WriteLine($"currently taken: {string.Join(", ", TakenCombinations._taken)}");
 
-    void CheckWithStaticHashet_OnHotkeyCaptured(uint modifiers, uint vk)
-    {
-        // if true / it does have it already / Run error 
-        if (IsReservedKeysCheck(modifiers, vk))
-        {
-            HotkeyText.Text = "Reserved. Try Again";
+        if (TakenCombinations.IsTaken(modifiers, vk))
+            {
+                Debug.WriteLine("already in takencombinations");
+                OnErrorDialogue_InUse();
+                return;
+            }
+
+
+        if (_activeButton.Name == "AssignHotkey")
+            commandsWindow.UpdateHotkey(1, modifiers, vk);
+        else if (_activeButton.Name == "AssignHotkey2")
+            commandsWindow.UpdateHotkeyOther(1, modifiers, vk);
+
+
+        /*
+         * no just hard code ctrl c in taken combinations 
+            if (!commandsWindow.UpdateHotkey(1,modifiers, vk)) //1 will equal the id 
+            {
+            Debug.WriteLine("returned false when hooking in window ");
+            OnError("Reserved by other app");
             return;
+            }
 
-        }
-            bool success = commandsWindow.UpdateHotkey(modifiers, vk);
-            // if not in hashset 
-        if (!success && !IsReservedKeysCheck(modifiers, vk))
-                {
-                    HotkeyText.Text = "Reserved. Try Again";
-                  }
+            */
+
+        bool added = TakenCombinations.Add(modifiers, vk);
+
+        Debug.WriteLine($"Registered : Added to takencombinations: {added}");
+
+
+
 
 
     }
 
 
+
+
+
+    // window register -> back to page , wrong ,do it before even registering 
+    public void OnError(string WindowMessage)
+    {
+        string error_text = WindowMessage;
+        _activeHotkeyTextBlock.Text = error_text;
+    }
     public async void OnErrorDialogue()
     {
         string error_text = "\n Meta + Key could confuse you or the computer \n Ctrl or Alt have many combinations.\n Override the default os helper commands with something more useful to you ";
-        HotkeyText.Text = "Retry w/ Ctrl or Alt";
+        _activeHotkeyTextBlock.Text = "Retry w/ Ctrl or Alt";
 
         var dialog = new ContentDialog
         {
@@ -513,12 +553,49 @@ public sealed partial class CommandsControlPanel : Page
 
 
     }
+    public async void OnErrorDialogue_InUse()
+    {
+        string error_text = "Either change the taken combination to another \n Or use a different combination ";
+        _activeHotkeyTextBlock.Text = "Try Again";
+
+        var dialog = new ContentDialog
+        {
+            Title = "Your using this combination already for another function",
+            Content = error_text,
+            PrimaryButtonText = "Hit Enter ",
+            //DefaultButton = ContentDialogButton.Close,
+            DefaultButton = ContentDialogButton.Primary,
+            XamlRoot = this.Content.XamlRoot // this pages ui not some other pages 
+        };
+
+        // event not method cant just call -> shorthand -> sender event usual params for event 
+        dialog.PrimaryButtonClick += (s, e) =>
+        {
+            GuideRedirect();
+        };
+        await dialog.ShowAsync();
 
 
+    }
+
+
+
+    private bool IsVirtualKeyAModifer(Windows.System.VirtualKey key)
+    {
+        return key == Windows.System.VirtualKey.Control ||
+               key == Windows.System.VirtualKey.LeftControl ||
+               key == Windows.System.VirtualKey.RightControl ||
+               key == Windows.System.VirtualKey.Shift ||
+               key == Windows.System.VirtualKey.LeftShift ||
+               key == Windows.System.VirtualKey.RightShift ||
+               key == Windows.System.VirtualKey.Menu ||
+               key == Windows.System.VirtualKey.LeftMenu ||
+               key == Windows.System.VirtualKey.RightMenu;
+    }
     public async void OnErrorDialogueWrongKey()
     {
         string error_text = "\n You need to press a modifier key first \n Ctrl or Alt have many combinations.\n Then press a letter ";
-        HotkeyText.Text = "Retry w/ Ctrl or Alt";
+        _activeHotkeyTextBlock.Text = "Retry w/ Ctrl or Alt";
 
         var dialog = new ContentDialog
         {

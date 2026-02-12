@@ -26,6 +26,7 @@ using WinRT.Interop; // This allows access to the underlying hwnd of winui windo
 
 using main_interface;
 using System.Drawing.Text;
+using System.Diagnostics;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -153,7 +154,7 @@ namespace main_interface
                 //SetupHook(); old method not dynamic hardcoded keys commented below 
                 // UpdateHotkey(0,0);
                 SetupSubclass(); // Hook into Win32 message loops 
-                UpdateHotkey(MOD_CONTROL, VK_O);
+                UpdateHotkey(1,MOD_CONTROL, VK_O); // id set to match in method (as page doesnt know it only here does ) 
                 _isHookUpSet = true; // now never try again 
                                      // HotKeyErrorOccured?.Invoke("In Use. Try again");
 
@@ -215,45 +216,54 @@ namespace main_interface
         const int VK_O = 0x4F; // letter o 
         const int VK_8 = 0x38;
 
-        public bool UpdateHotkey(uint modkey, uint vk)
+        public bool UpdateHotkey(int id,uint modkey, uint vk)
         {
             var hwnd = WindowNative.GetWindowHandle(this);
 
+            id = HOTKEY_ID_OVERLAY; // id assigned in window as its only seen here 
+
+            var newCombo = new TakenCombinations.HotKeyCombo(modkey,vk);
+
+            TakenCombinations.RemoveById(HOTKEY_ID_OVERLAY); // the set id 
 
             UnregisterHotKey(hwnd, HOTKEY_ID_OVERLAY);
-
-
-            /*
-            if (modkey == 0 || vk == 0)
-            {
-
-                
-              //  modkey = MOD_CONTROL;
-                //vk = VK_O;
-                //RegisterHotKey(hwnd, HOTKEY_ID_OVERLAY, modkey, vk);
-                
-                UnregisterHotKey(hwnd, HOTKEY_ID_OVERLAY);
-                return; // Exit early — no hotkey is active
-
-
-            }
-                 */
-
-            // UnregisterHotKey(hwnd, HOTKEY_ID_OVERLAY);
-
             
+
+      
             // if windows returns true init keyword success  for readability 
             bool success = RegisterHotKey(hwnd, HOTKEY_ID_OVERLAY, modkey, vk);
-            if (success) // if true 
-            {
-                return true;
-            }
-            else{
-                return false;   }
-        
-
-
+         
+            TakenCombinations.Add(modkey,vk);
+            TakenCombinations._assignedCombos[id] = newCombo; // [9000] Ctrl C 
+                return success;
         }
+
+        const int HOTKEY_ID_FAKE_OTHER_FUNCTION = 8000;
+
+
+        public bool UpdateHotkeyOther(int id, uint modkey, uint vk)
+        {
+
+            var hwnd = WindowNative.GetWindowHandle(this);
+
+            id = HOTKEY_ID_FAKE_OTHER_FUNCTION; // id assigned in window as its only seen here 
+
+            var newCombo = new TakenCombinations.HotKeyCombo(modkey, vk);
+
+            TakenCombinations.RemoveById(HOTKEY_ID_FAKE_OTHER_FUNCTION); // the set id 
+
+            UnregisterHotKey(hwnd, HOTKEY_ID_FAKE_OTHER_FUNCTION);
+
+
+
+            // if windows returns true init keyword success  for readability 
+            bool success = RegisterHotKey(hwnd, HOTKEY_ID_OVERLAY, modkey, vk);
+
+            TakenCombinations.Add(modkey, vk);
+            TakenCombinations._assignedCombos[id] = newCombo; // [8000] Ctrl V 
+            return success;
+        }
+
 
 
         // WHEN HOTKEY IS MADE 
@@ -271,6 +281,11 @@ namespace main_interface
                 if (wParam.ToInt32() == HOTKEY_ID_OVERLAY) // 
                 {
                     ToggleOverlay(); //Lets open our overlay screen
+                    return IntPtr.Zero; // tell win32 the message was handled  
+                }
+                if (wParam.ToInt32() == HOTKEY_ID_FAKE_OTHER_FUNCTION) // 
+                {
+                    Debug.WriteLine("Other function called"); 
                     return IntPtr.Zero; // tell win32 the message was handled  
                 }
 
@@ -479,10 +494,10 @@ namespace main_interface
 
         void LoadCommands()
         {
-            CommandList.Items.Add("  ");
-            CommandList.Items.Add(" git status ");
-            CommandList.Items.Add(" git commmit -m");
-            CommandList.Items.Add("docker ps  ");
+         
+            CommandList.Items.Add("Get-Process |\r\n    Group-Object Name |\r\n    Sort-Object Count -Descending |\r\n    Select-Object -First 15 Name, Count");
+            CommandList.Items.Add("Get-ChildItem 'C:\\Users' -Recurse -File -ErrorAction SilentlyContinue |\r\n    Where-Object { $_.Length -gt 100MB } |\r\n    Sort-Object Length -Descending |\r\n    Select-Object -First 20 FullName, Length, LastWriteTime\r\n");
+
 
         }
 
