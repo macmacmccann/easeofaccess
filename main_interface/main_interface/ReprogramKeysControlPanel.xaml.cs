@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Windows.UI;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -29,6 +30,9 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
         // Keep the page alive / no duplicates upon nav switch by caching / reflected states preserved in ui 
         this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+
+    
+
     }
 
     /*
@@ -41,4 +45,6 @@ public sealed partial class ReprogramKeysControlPanel : Page
         Headertop.Background = OverlaySettings.MouselessEnabled ? Onbrush : Offbrush;
     }
     */
+
+
 }

@@ -25,9 +25,29 @@ namespace main_interface
     /// </summary>
     public sealed partial class AccountWindow : Window
     {
+
+        private static AccountWindow _instance;
+
+        // Singleton " if not make - if there capture on already made dont make new 
+        public static AccountWindow Instance 
+        {
+            get// make sure only ONE overlay window exists 
+            {
+                if (_instance == null)
+                    _instance = new AccountWindow();
+
+
+                return _instance;
+
+            }
+
+        }
+
+
         public AccountWindow()
         {
             InitializeComponent();
+            AlwaysOnTop();
 
             // not in constructor activated window through nav items 
         }
@@ -52,6 +72,29 @@ namespace main_interface
         }
 
 
+        //Declare constants 
+        static readonly IntPtr HWND_NOTTOPMOST = new IntPtr(-2);
+        static readonly IntPtr HWND_TOPMOST = new IntPtr(-1); // Special value telling windows " keep this above all otheres 
+        const uint SWP_NOMOVE = 0x0002; // Dont move window 
+        const uint SWP_NOSIZE = 0X0001; // Dont change window size 
+        const uint SWP_NOACTIVATE = 0x0010; // Dont activate
+
+        void AlwaysOnTop()
+        {
+            var hwnd = WindowNative.GetWindowHandle(this); // Get the hwnd for THIS  window 
+
+
+            SetWindowPos(
+                hwnd,
+                HWND_TOPMOST, // Keep it on top var in docuemntation 
+                100, 100, // x and y screen postions 
+                400, 300, // width heigh 
+                SWP_NOACTIVATE
+                // SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE // Keep position and size dont steal focus 
+                );
+
+
+        }
 
         // Win32 function to reposition windows . 
         [DllImport("user32.dll")]

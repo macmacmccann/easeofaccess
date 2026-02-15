@@ -3,6 +3,9 @@ using Microsoft.UI;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+// To learn more about WinUI, the WinUI project structure,
+// and more about our project templates, see: http://aka.ms/winui-project-info.
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Hosting;
@@ -11,6 +14,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
@@ -19,6 +23,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Policy;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Navigation;
@@ -29,14 +34,13 @@ using Windows.Foundation.Collections;
 using Windows.System;
 using Windows.UI;
 using WinRT.Interop;
-using System.Diagnostics;
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using Application = Microsoft.UI.Xaml.Application;
+using WinUITextBlock = Microsoft.UI.Xaml.Controls.TextBlock;
+
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-
-using WinUITextBlock = Microsoft.UI.Xaml.Controls.TextBlock; 
-
 namespace main_interface;
+using static DesignGlobalCode;
 
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
@@ -44,6 +48,7 @@ namespace main_interface;
 public sealed partial class CommandsControlPanel : Page
 {
 
+    private Modifiers CapturedModiferKeys; // not uint casting problem its cast to None in enum method below 
 
 
     private Commands commandsWindow;
@@ -56,12 +61,19 @@ public sealed partial class CommandsControlPanel : Page
     {
         InitializeComponent();
         Instance = this;
-
         LoadPreferencesOnStart();
 
 
+        _ = DesignGlobalCode.FadeInAsync(RootGrid);
+
+
+
+   
         Headertop.BackgroundTransition = new BrushTransition() { Duration = TimeSpan.FromMilliseconds(300) };
-        HeaderColour(Headertop);
+        DesignGlobalCode.HeaderColour(Headertop);
+
+
+
         this.KeyDown += EventOfKeyPressedDown; // subscribe to this method on any key down on page 
 
         // Keep the page alive / no duplicates upon nav switch by caching / reflected states preserved in ui 
@@ -73,26 +85,45 @@ public sealed partial class CommandsControlPanel : Page
         HotKeyErrorOccured += OnError;
         //  commandsWindow.HotKeyErrorOccured += Testit;
 
+
+        TipsConstructor();
+
+
+
+
+
+
     }
 
 
-
-    public void Testit(string WindowMessage)
+    private void Border_PointerEntered(object sender, PointerRoutedEventArgs e)
     {
-        string error_text = WindowMessage;
-        _activeHotkeyTextBlock.Text = error_text;
+        DesignGlobalCode.Border_PointerEntered(sender, e);
 
     }
 
-
-    // not used instead  ->       commandsWindow = Commands.Instance; creates if there isnt one 
-
-    // hotkeys are registered in window - needs to be passed in OnHotKeyCaptured()
-    public void NotCorrect_ConnectWindowToPage(Commands commandsWindowStayAliveOutsideConstructor)
+    private void Border_PointerExited(object sender, PointerRoutedEventArgs e) 
     {
-        commandsWindow = commandsWindowStayAliveOutsideConstructor;
+        DesignGlobalCode.Border_PointerExited(sender, e);
 
     }
+
+    private void TipsConstructor()
+    {
+        // Icon "says" in xaml 
+        TipIcon1.PointerEntered += (s, e) => TipContent1.IsOpen = true;
+        //  TipIcon1.PointerExited += (s, e) => TipContent1.IsOpen = false;
+
+        TipIcon1.Background = new SolidColorBrush(Color.FromArgb(200, 34, 197, 94));
+
+        TipContent1.IsLightDismissEnabled = false;
+        TipContent1.Title = "This button creates a keyboard shortcut";
+        TipContent1.Subtitle = "Press a base key eg., Ctrl or Alt or Shift " +
+            "\n Then a letter";
+        TipContent1.CloseButtonContent = "Got it!";
+        TipContent1.CloseButtonStyle = (Style)Application.Current.Resources["AccentButtonStyle"];
+    }
+
 
 
     private void LoadPreferencesOnStart()
@@ -114,19 +145,12 @@ public sealed partial class CommandsControlPanel : Page
     }
 
 
-    public void HeaderColour(Border targetBorder)
-    {
-        var Onbrush = new SolidColorBrush(Color.FromArgb(200, 34, 197, 94));
-        var Offbrush = new SolidColorBrush(Color.FromArgb(150, 100, 116, 139));
-        // shorthand if statement 
-        targetBorder.Background = StateSettings.OverlayEnabled ? Onbrush : Offbrush;
-    }
 
 
     private void OverlayToggle_Toggled(object sender, RoutedEventArgs e)
     {
         StateSettings.OverlayEnabled = OverlayEnabledToggle.IsOn;
-        HeaderColour(Headertop);
+        DesignGlobalCode.HeaderColour(Headertop);
 
         Commands.Instance.ApplySettings();
     }
@@ -154,7 +178,10 @@ public sealed partial class CommandsControlPanel : Page
 
     }*/
 
-    
+    private TakenCombinations.HotKeyCombo? ComboPreviousNoId;
+    private uint LastMod;
+    private uint LastVK;
+
 
 
     bool _isCapturingHotKey; // guard flag - stop when false 
@@ -163,12 +190,13 @@ public sealed partial class CommandsControlPanel : Page
     private Microsoft.UI.Xaml.Controls.Button _activeButton;
 
     //event not method 
-    private void AssignHotkey_Clicked(object sender, RoutedEventArgs e)
+    private async void AssignHotkey_Clicked(object sender, RoutedEventArgs e)
     {
         _isCapturingHotKey = true; // Capture mode 
         _waitingForPrimaryKey = false;
         CapturedModiferKeys = Modifiers.None;
         CapturedVK = 0;
+
 
 
         if (sender is Microsoft.UI.Xaml.Controls.Button button)
@@ -185,7 +213,7 @@ public sealed partial class CommandsControlPanel : Page
             else if (button.Name == "AssignHotkey2")
             {
                 _activeHotkeyTextBlock = HotkeyText2;
-                _activeHotkeyTextBlock.Text = "Press keys..."; 
+                _activeHotkeyTextBlock.Text = "Press keys...";
 
 
             }
@@ -202,41 +230,12 @@ public sealed partial class CommandsControlPanel : Page
         _waitingForPrimaryKey = false;
     }
 
- 
 
-        
 
-    
-    [Flags]
-    public enum Modifiers : uint 
-    {
 
-        None = 0x0000,
-        MOD_ALT = 0x0001,
-        MOD_CONTROL = 0x0002,
-        MOD_SHIFT = 0x0004,
-        MOD_WIN = 0x0008
-        /*
-        None = 0, // Binary 0000
-        MOD_CONTROL = 1, // 0001  <- 1 at Bit 0
-        MOD_SHIFT = 2, // 0010  <- 1 at Bit 1
-                                        // CTRL + SHIFT  // 0011 Bit 3 
-       MOD_ALT = 4,  // 0100  <- 1 at Bit 2
-       MOD_WIN = 8    // 1000  <- 1 at Bit 3
 
-        */
-    }
 
-    // crtl + shift = 
 
-    // 0001 / crtl
-    // 0010 / shift
-
-    // 0011 / added
-    // 8421 / binary exponential 
-    // 0021 = 3  == control + shift 
-
-    private Modifiers CapturedModiferKeys; // not uint casting problem its cast to None in enum method below 
     //uint CapturedModiferKeys;  //positive int  wrong cast 
     uint CapturedVK; // captured vk eg., 1 d e 
 
@@ -254,6 +253,7 @@ public sealed partial class CommandsControlPanel : Page
         _waitingForPrimaryKey = false;
         CapturedModiferKeys = Modifiers.None; // 0000
         CapturedVK = 0; // Reset back 
+        atLeastOneModFirst = 0;
     }
 
 
@@ -269,8 +269,8 @@ public sealed partial class CommandsControlPanel : Page
         bool ModifiersBinary = false;
 
         // CapturedModiferKeys = 0; // Binary code 1 would mean control 
-        //CapturedModiferKeys = Modifiers.None; // 0000
-        CapturedVK = 0; // Reset back 
+     //   CapturedModiferKeys = Modifiers.None; // 0000
+       // CapturedVK = 0; // Reset back 
 
         //Detech modifier keys current held 
         var state = Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread;
@@ -316,18 +316,19 @@ public sealed partial class CommandsControlPanel : Page
             OnErrorDialogue();
             ModifiersBinary = true;
         }
-
         return ModifiersBinary;
 
     }
 
-    private void EventOfKeyPressedDown(object sender, KeyRoutedEventArgs e)
+
+
+    int atLeastOneModFirst = 0;
+
+    private async void EventOfKeyPressedDown(object sender, KeyRoutedEventArgs e)
     {
 
         if (!_isCapturingHotKey)
             return;
-
-       
 
         // still a mod but not right mod so reject after
         if (e.Key == Windows.System.VirtualKey.LeftWindows ||
@@ -335,26 +336,94 @@ public sealed partial class CommandsControlPanel : Page
         {
             OnErrorDialogue();
             Reset();
-
             return;
         }
 
+
+
+        bool isCurrentKeyModifier = (e.Key == Windows.System.VirtualKey.Control ||
+                                  e.Key == Windows.System.VirtualKey.Shift ||
+                                  e.Key == Windows.System.VirtualKey.Menu ||
+                                  e.Key == Windows.System.VirtualKey.LeftControl ||
+                                  e.Key == Windows.System.VirtualKey.RightControl ||
+                                  e.Key == Windows.System.VirtualKey.LeftShift ||
+                                  e.Key == Windows.System.VirtualKey.RightShift ||
+                                  e.Key == Windows.System.VirtualKey.LeftMenu ||
+                                  e.Key == Windows.System.VirtualKey.RightMenu);
+
+
+
+        // if you press a letter and no mod first 
+        if (!isCurrentKeyModifier && atLeastOneModFirst == 0)
+        {
+            OnErrorDialogueWrongKey();
+            Reset();
+            return;
+
+        }
+
+        // Enough mods now press a letter 
+        if (atLeastOneModFirst == 2)
+        {
+            _waitingForPrimaryKey = true;
+            _activeHotkeyTextBlock.Text = "Press a letter now";
+
+
+        }
+
+        // If ignored and then pressed a mod again after 
+        if (isCurrentKeyModifier && atLeastOneModFirst == 2)
+        {
+            OnErrorDialogueWrongKey();
+            atLeastOneModFirst = 0;
+            //  _activeHotkeyTextBlock.Text = "Press a letter now";
+            return;
+
+
+        }
+
+
+        // Logic not waiting for letter 
+
+        
         if (!_waitingForPrimaryKey)
         {
-            bool ismod = isModifierKey();
+          
+            bool ismodKey = isModifierKey();
             // Detect modifier keys
 
-            
+            if (isCurrentKeyModifier)
+            {
+                atLeastOneModFirst += 1;
+                // Enough mods now press a letter 
+                if (atLeastOneModFirst == 2)
+                {
+                    _waitingForPrimaryKey = true;
+                    _activeHotkeyTextBlock.Text = "Press a letter now";
+
+
+                }
+                else
+                {
+
+                    _activeHotkeyTextBlock.Text = DescribeHotKey(CapturedModiferKeys, 0) + " + …";
+                return; // if a modifer then keep capturing mods 
+                }
+
+            }
+
 
             // this is a vague last condition " you didnt press a mod but i dont know what you pressed " 
-            if (!ismod)
+            if (!ismodKey)
             {
-                OnErrorDialogueWrongKey(); // not a mod but this condition is very vague 
-                Reset();
+               // OnErrorDialogueWrongKey
+               // (); // not a mod but this condition is very vague 
+                //Reset();
+                _waitingForPrimaryKey = true;
                 return;
             }
 
-            if (ismod)
+            if (!isCurrentKeyModifier)
             {
                 _activeHotkeyTextBlock.Text = DescribeHotKey(CapturedModiferKeys, 0) + " …";
                 _waitingForPrimaryKey = true;
@@ -364,20 +433,7 @@ public sealed partial class CommandsControlPanel : Page
 
         }
 
-        /*
-         
-       
-        // IF e.Key is a mod put show to user 
-        if (e.Key == Windows.System.VirtualKey.Control ||
-       e.Key == Windows.System.VirtualKey.Shift ||
-       e.Key == Windows.System.VirtualKey.Menu ||
-       e.Key == Windows.System.VirtualKey.LeftWindows ||
-       e.Key == Windows.System.VirtualKey.RightWindows)
-        {
-            HotkeyText.Text = DescribeHotKey(CapturedModiferKeys, 0) + "...."; // Show user modkey now 
-            _waitingForPrimaryKey = true;
-            return; } // Keep capturing 
-  */
+     
 
         // User wants to change it 
         if (e.Key == Windows.System.VirtualKey.Back)
@@ -423,12 +479,11 @@ public sealed partial class CommandsControlPanel : Page
         //Update button to show what was pressed
         if (_isCapturingHotKey == false && _waitingForPrimaryKey == false)
         {
-
-
-
              _activeHotkeyTextBlock.Text = DescribeHotKey(CapturedModiferKeys,CapturedVK);
+            await OnHotkeyCaptured(CapturedModiferKeys, CapturedVK);
 
         }
+        atLeastOneModFirst = 0;
     }
 
 
@@ -441,7 +496,9 @@ public sealed partial class CommandsControlPanel : Page
     {
         List<string> keyschosen = new List<string>();
 
-        if (mod.HasFlag(Modifiers.MOD_CONTROL)) 
+
+
+        if (mod.HasFlag(Modifiers.MOD_CONTROL) )
             keyschosen.Add("Ctrl");
         if (mod.HasFlag(Modifiers.MOD_ALT))
             keyschosen.Add("Alt");
@@ -468,16 +525,76 @@ public sealed partial class CommandsControlPanel : Page
         ModToUint = (uint)CapturedModiferKeys;
 
 
-     
+     /*
        if (_isCapturingHotKey == false) // When finished 
         {
 
-            OnHotkeyCaptured(ModToUint, vk); // Update Hotkey to Hook in Window 
+            OnHotkeyCaptured(CapturedModiferKeys, vk); // Update Hotkey to Hook in Window 
         }
+        //ComboPreviousNoId = new TakenCombinations.HotKeyCombo(ModToUint, vk);
+        */
         return string.Join (" ", keyschosen);
     }
 
-    void OnHotkeyCaptured(uint modifiers, uint vk)
+
+    private const int HOTKEY_ID_1 = 1;
+    private const int HOTKEY_ID_2 = 2;
+    private const int HOTKEY_ID_OVERLAY = 9000;
+    private const int HOTKEY_ID_FAKE_OTHER_FUNCTION = 8000;
+    private const int HOT_DEFAULT_ERROR = 101010;
+    private async Task OnHotkeyCaptured(Modifiers modifiers, uint vk)  // Changed from uint to Modifiers
+    {
+        Debug.WriteLine($"checking combo: mod={modifiers}, vk={vk}");
+        Debug.WriteLine($"currently taken: {string.Join(", ", TakenCombinations._taken)}");
+
+        // Determine which hotkey ID based on active button
+        //  int hotkeyId = _activeButton.Name == "AssignHotkey" ? HOTKEY_ID_1 : HOTKEY_ID_2;
+
+        int hotkeyId = 0;
+        switch (_activeButton.Name)
+        {
+            case "AssignHotkey": hotkeyId = HOTKEY_ID_OVERLAY; break;
+            case "AssignHotkey2": hotkeyId = HOTKEY_ID_FAKE_OTHER_FUNCTION; break;
+            default:
+
+                OnError("BTN no xaml name");
+                Reset();
+                return;
+
+                
+
+        }
+                // Try to update
+                bool success = commandsWindow.TryUpdateHotkey(hotkeyId, modifiers, vk, out var resultingCombo);
+
+ 
+
+        if (!success)
+        {
+            Debug.WriteLine("REFUSED - already in use or registration failed");
+            await Dialogues.OnErrorDialogue_InUse(this.Content.XamlRoot, GuideRedirect);
+            // Always update UI with resulting combo
+           _activeHotkeyTextBlock.Text = DescribeHotKey((Modifiers)resultingCombo.Modifiers, resultingCombo.VirtualKey);
+        }
+        else
+        {
+            _activeHotkeyTextBlock.Text = DescribeHotKey((Modifiers)resultingCombo.Modifiers, resultingCombo.VirtualKey);
+
+            Debug.WriteLine($"SUCCESS - registered: {resultingCombo}");
+        }
+        _isCapturingHotKey = false;
+
+
+
+        // bool added = TakenCombinations.Add((uint)modifiers, vk);
+
+        //  Debug.WriteLine($"Registered : Added to takencombinations: {added}");
+
+
+    }
+
+    /*
+    private async Task OnHotkeyCapturedx(uint modifiers, uint vk)
     {
 
        Debug.WriteLine($"checking combo: mod={modifiers}, vk={vk}");
@@ -486,11 +603,30 @@ public sealed partial class CommandsControlPanel : Page
 
         if (TakenCombinations.IsTaken(modifiers, vk))
             {
-                Debug.WriteLine("already in takencombinations");
-                OnErrorDialogue_InUse();
-                return;
+              
+            //bool success = commandsWindow.TryUpdateHotkey(1, modifiers, vk);
+
+          //  DescribeHotKey(resultingCombo.Modifiers, resultingCombo.VirtualKey);
+
+
+           if (!success)
+            {
+                Debug.WriteLine("REFUSED - already in use or registration failed");
+                await Dialogues.OnErrorDialogue_InUse(this.Content.XamlRoot, GuideRedirect);
             }
 
+            // System refuses -> its taken -> User cancels -> System shows old working one 
+            Modifiers OldModToEnum = (Modifiers)LastMod;
+            //DescribeHotKey(OldModToEnum,LastVK);
+          //  DescribeHotKeyOnFailureBackToOriginal(OldModToEnum, LastVK);
+
+            return;
+            }
+
+    
+        //if successful store last mod so if error it reverts back to it - only in ui - it didnt change anyway
+        LastMod = modifiers;
+        LastVK = vk;    
 
         if (_activeButton.Name == "AssignHotkey")
             commandsWindow.UpdateHotkey(1, modifiers, vk);
@@ -500,6 +636,7 @@ public sealed partial class CommandsControlPanel : Page
 
         /*
          * no just hard code ctrl c in taken combinations 
+         * 
             if (!commandsWindow.UpdateHotkey(1,modifiers, vk)) //1 will equal the id 
             {
             Debug.WriteLine("returned false when hooking in window ");
@@ -509,15 +646,15 @@ public sealed partial class CommandsControlPanel : Page
 
             */
 
-        bool added = TakenCombinations.Add(modifiers, vk);
+    // bool added = TakenCombinations.Add(modifiers, vk);
 
-        Debug.WriteLine($"Registered : Added to takencombinations: {added}");
-
-
+    //   Debug.WriteLine($"Registered : Added to takencombinations: {added}");
 
 
 
-    }
+
+
+    //  }
 
 
 
@@ -575,10 +712,7 @@ public sealed partial class CommandsControlPanel : Page
         };
         await dialog.ShowAsync();
 
-
     }
-
-
 
     private bool IsVirtualKeyAModifer(Windows.System.VirtualKey key)
     {
@@ -617,120 +751,5 @@ public sealed partial class CommandsControlPanel : Page
 
     }
 
-    private void Border_PointerEntered(object sender, PointerRoutedEventArgs e)
-    {
-
-        if (sender is UIElement element)
-        {
-            // Get the visual backing this Border
-            var visual = ElementCompositionPreview.GetElementVisual(element);
-
-            // Create a compositor instance
-            var compositor = visual.Compositor;
-
-            // Create a scalar animation for opacity
-            var animation = compositor.CreateScalarKeyFrameAnimation();
-
-            // End fully visible
-            animation.InsertKeyFrame(1f, 1f);
-
-            // Smooth timing
-            animation.Duration = TimeSpan.FromMilliseconds(200);
-
-            // Start animation
-            visual.StartAnimation("Opacity", animation);
-
-            visual.Scale = new System.Numerics.Vector3(1.1f);
-
-            // Scale up slightly
-            var scaleAnimation = compositor.CreateVector3KeyFrameAnimation();
-            scaleAnimation.InsertKeyFrame(1f, new System.Numerics.Vector3(1.05f)); // 5% larger
-            scaleAnimation.Duration = TimeSpan.FromMilliseconds(200);
-            visual.StartAnimation("Scale", scaleAnimation);
-
-            //if (sender is FrameworkElement element && element.GetType().GetProperty("Background"));
-            // if (sender is Control control)
-            if (sender is Border control)
-            {
-                var backgroundBrush = control.Background as SolidColorBrush;
-
-                // backgroundBrush.Color = Colors.LightBlue;
-
-                var colorAnimation = compositor.CreateColorKeyFrameAnimation();
-                // Light blue with more opacity (ARGB: Alpha, Red, Green, Blue)
-                colorAnimation.InsertKeyFrame(1f, Color.FromArgb(200, 173, 216, 230)); // Semi-transparent light blue
-                colorAnimation.Duration = TimeSpan.FromMilliseconds(300);
-                var brushVisual = ElementCompositionPreview.GetElementVisual(element);
-                brushVisual.Compositor.CreateColorKeyFrameAnimation();
-
-                if (backgroundBrush != null)
-                {
-                    backgroundBrush.Color = Color.FromArgb(50, 255, 200, 0);
-
-                }
-            }
-        }
     }
 
-
-    private void Border_PointerExited(object sender, PointerRoutedEventArgs e)
-    {
-
-
-
-        // if its any ui element // needs to casted its an object
-        if (sender is UIElement element)
-        {
-            // get the visual backing for the element 
-            var visual = ElementCompositionPreview.GetElementVisual(element);
-            //access compositor for animations 
-            var compositor = visual.Compositor;
-
-            // Create opacity docuementatyion  animation 
-            var animation = compositor.CreateScalarKeyFrameAnimation();
-            //Fade slightly on exit 
-            animation.InsertKeyFrame(1f, 0.85f);
-            //smoothlu
-            animation.Duration = TimeSpan.FromMilliseconds(250);
-
-            // Start it 
-            visual.StartAnimation("Opacity", animation);
-
-            //create a scale animation 
-            var scaleAnimation = compositor.CreateVector3KeyFrameAnimation();
-
-            // reset back to normal 
-            scaleAnimation.InsertKeyFrame(1f, new System.Numerics.Vector3(1f)); // Back to normal
-
-            // quick snap back 
-            scaleAnimation.Duration = TimeSpan.FromMilliseconds(200);
-
-            // start the scale animtion 
-            visual.StartAnimation("Scale", scaleAnimation);
-
-            if (sender is Border control)
-            {
-                var backgroundBrush = control.Background as SolidColorBrush;
-
-                backgroundBrush.Color = Colors.Transparent;
-
-
-                // Then reset to theme resource
-
-                //border.Background =
-                //   Application.Current.Resources["CardBackgroundFillColorDefaultBrush"] as Brush;
-            }
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-}

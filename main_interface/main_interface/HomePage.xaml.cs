@@ -21,11 +21,75 @@ namespace main_interface
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class HomePage : Window
+    public sealed partial class HomePage : Page
     {
         public HomePage()
         {
             InitializeComponent();
+        }
+
+
+
+
+
+        private void Border_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            DesignGlobalCode.Border_PointerEntered(sender, e);
+
+        }
+
+        private void Border_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            DesignGlobalCode.Border_PointerExited(sender, e);
+
+        }
+
+        private void Commands_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(CommandsControlPanel));
+        }
+
+
+        private void LoginPage1_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(LoginPage));
+        }
+
+        private void LoginPage2_Click(object sender, RoutedEventArgs e)
+        {
+            // Navigate to LoginPage
+            // this.Frame.Navigate(typeof(LoginPage));
+        }
+
+        // Button click handlers
+        private void Box1_Click(object sender, RoutedEventArgs e)
+        {
+            // Add your Box 1 logic here
+        }
+
+        private void Box2_Click(object sender, RoutedEventArgs e)
+        {
+            // Add your Box 2 logic here
+        }
+
+        private void Box3_Click(object sender, RoutedEventArgs e)
+        {
+            // Add your Box 3 logic here
+        }
+
+        private void Box4_Click(object sender, RoutedEventArgs e)
+        {
+            // Add your Box 4 logic here
+        }
+
+        private void Box5_Click(object sender, RoutedEventArgs e)
+        {
+            // Add your Box 5 logic here
+        }
+
+        private void Box6_Click(object sender, RoutedEventArgs e)
+        {
+            // Add your Box 6 logic here
         }
     }
 }

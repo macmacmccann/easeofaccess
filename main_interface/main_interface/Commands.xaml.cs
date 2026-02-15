@@ -1,3 +1,4 @@
+using main_interface;
 using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
 // Get the apps window for .Show() or Hide () 
@@ -13,8 +14,10 @@ using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
 using System.Drawing.Printing;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices; // Require call to native win32 functions - dllimport 
@@ -23,10 +26,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using WinRT.Interop; // This allows access to the underlying hwnd of winui window 
-
-using main_interface;
-using System.Drawing.Text;
-using System.Diagnostics;
+using static main_interface.TakenCombinations;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -205,7 +205,7 @@ namespace main_interface
 
 
 
-        const int HOTKEY_ID_OVERLAY = 9000; //hotkey id so when windows sends it back to us 
+
 
         const int MOD_CONTROL = 0x002; // win32 flag meaning the control key must be held
         const int MOD_SHIFT = 0x0004; // win32 flag meaning the shift key must be held 
@@ -216,6 +216,61 @@ namespace main_interface
         const int VK_O = 0x4F; // letter o 
         const int VK_8 = 0x38;
 
+
+        const int HOTKEY_ID_OVERLAY = 9000; //hotkey id so when windows sends it back to us 
+        const int HOTKEY_ID_FAKE_OTHER_FUNCTION = 8000;
+        public bool TryUpdateHotkey(int id, Modifiers modkey, uint vk, out HotKeyCombo resultingCombo)
+        {
+
+            Debug.WriteLine($"ID of hotkey passed into window ={id}");
+
+         var hwnd = WindowNative.GetWindowHandle(this);
+            //id = HOTKEY_ID_OVERLAY;
+            var newCombo = new HotKeyCombo((uint)modkey, vk);
+
+            bool hasExisting = TakenCombinations._assignedCombos.TryGetValue(id, out var existingCombo);
+
+            if (hasExisting && existingCombo.Equals(newCombo))
+            {
+                Debug.WriteLine($"Trying update: ID={id}, NewCombo={newCombo}, has_existing={hasExisting}, existing={existingCombo}");
+
+                resultingCombo = existingCombo;
+                return true;
+            }
+
+            if (TakenCombinations.IsTaken((uint)modkey, vk))
+            {
+                Debug.WriteLine($"[TryUpdate] combo is taken! returning existing={existingCombo}");
+
+                resultingCombo = hasExisting ? existingCombo : default;
+                return false;
+            }
+
+            TakenCombinations.RemoveById(id);
+            UnregisterHotKey(hwnd, id);
+
+            bool success = RegisterHotKey(hwnd, id, (uint)modkey, vk);
+            if (!success)
+            {
+                if (hasExisting)
+                {
+                    RegisterHotKey(hwnd, id, Convert.ToUInt32(existingCombo.Modifiers), existingCombo.VirtualKey);
+                    TakenCombinations.Add(existingCombo.Modifiers, existingCombo.VirtualKey);
+                    TakenCombinations._assignedCombos[id] = existingCombo;
+                }
+
+                resultingCombo = hasExisting ? existingCombo : default;
+                return false;
+            }
+
+            //Now add successfull to hashsets
+            TakenCombinations.Add((uint)modkey, vk);
+            TakenCombinations._assignedCombos[id] = newCombo;
+
+            resultingCombo = newCombo;
+            return true;
+        }
+
         public bool UpdateHotkey(int id,uint modkey, uint vk)
         {
             var hwnd = WindowNative.GetWindowHandle(this);
@@ -224,45 +279,31 @@ namespace main_interface
 
             var newCombo = new TakenCombinations.HotKeyCombo(modkey,vk);
 
-            TakenCombinations.RemoveById(HOTKEY_ID_OVERLAY); // the set id 
+            // If this id already own this combo - dont change anything 
+           if (TakenCombinations._assignedCombos.TryGetValue(id, out var existing))
+                    {
+                        if (existing.Equals(newCombo))
+                            return true; // no change you inputt the same one 
+                    }
 
-            UnregisterHotKey(hwnd, HOTKEY_ID_OVERLAY);
+           // If taken by another is coded in page as userfeedback (this is a hidden window for low level hooks )
+            TakenCombinations.RemoveById(id); // the set id 
+
+            UnregisterHotKey(hwnd, id);
             
-
-      
             // if windows returns true init keyword success  for readability 
-            bool success = RegisterHotKey(hwnd, HOTKEY_ID_OVERLAY, modkey, vk);
-         
+            bool success = RegisterHotKey(hwnd, id, modkey, vk);
+
+            if (!success)
+                return false;
+            
+            // Assign to new ownership 
             TakenCombinations.Add(modkey,vk);
-            TakenCombinations._assignedCombos[id] = newCombo; // [9000] Ctrl C 
+            // Assign id to hash where old can be freed ( dont just free any key combination ) 
+            TakenCombinations._assignedCombos[id] = newCombo; // eg., [9000] Ctrl C 
                 return success;
         }
 
-        const int HOTKEY_ID_FAKE_OTHER_FUNCTION = 8000;
-
-
-        public bool UpdateHotkeyOther(int id, uint modkey, uint vk)
-        {
-
-            var hwnd = WindowNative.GetWindowHandle(this);
-
-            id = HOTKEY_ID_FAKE_OTHER_FUNCTION; // id assigned in window as its only seen here 
-
-            var newCombo = new TakenCombinations.HotKeyCombo(modkey, vk);
-
-            TakenCombinations.RemoveById(HOTKEY_ID_FAKE_OTHER_FUNCTION); // the set id 
-
-            UnregisterHotKey(hwnd, HOTKEY_ID_FAKE_OTHER_FUNCTION);
-
-
-
-            // if windows returns true init keyword success  for readability 
-            bool success = RegisterHotKey(hwnd, HOTKEY_ID_OVERLAY, modkey, vk);
-
-            TakenCombinations.Add(modkey, vk);
-            TakenCombinations._assignedCombos[id] = newCombo; // [8000] Ctrl V 
-            return success;
-        }
 
 
 
@@ -280,10 +321,11 @@ namespace main_interface
             { // Was the event a hotkey press?
                 if (wParam.ToInt32() == HOTKEY_ID_OVERLAY) // 
                 {
+                    Debug.WriteLine("Overlay Called");
                     ToggleOverlay(); //Lets open our overlay screen
                     return IntPtr.Zero; // tell win32 the message was handled  
                 }
-                if (wParam.ToInt32() == HOTKEY_ID_FAKE_OTHER_FUNCTION) // 
+                if (wParam.ToInt32() == HOTKEY_ID_FAKE_OTHER_FUNCTION)
                 {
                     Debug.WriteLine("Other function called"); 
                     return IntPtr.Zero; // tell win32 the message was handled  

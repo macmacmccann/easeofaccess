@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 xmlns:controls="using:main_interface.Controls"
 
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     >
 
@@ -15,7 +16,7 @@ xmlns:controls="using:main_interface.Controls"
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
 
 
-        <Grid RowDefinitions="0.2*,*,Auto,Auto">
+        <Grid  x:Name="RootGrid" RowDefinitions="0.2*,*,Auto,Auto">
 
         <!-- HEADER -->
         <Border x:Name="Headertop">
@@ -178,25 +179,32 @@ PointerExited="Border_PointerExited">
 
 
             <!-- HEADER row 2 of main grid -->
-            <Grid Grid.Row="2" 
-         HorizontalAlignment="Stretch"
-         Margin="0">
+            <Grid Grid.Row="2" Background="#80FAD89C" HorizontalAlignment="Stretch" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+
 
                 <Border x:Name="SplitPage"
-                        Margin="30"
-                         HorizontalAlignment="Stretch"
-                        VerticalAlignment="Center"
-                    >
+                        Grid.Column="0"
+                            Margin="30"
+                             HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center">
 
-                    <TextBlock
-                   Text="Decide what works for you at anytime"
-                   FontSize="30"
-                   FontWeight="SemiBold"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                        />
-
+                             <TextBlock
+                                
+                               Text="YOU DECIDE HOW YOUR COMPUTER BEHAVES"
+                                FontSize="22"
+                                FontWeight="SemiBold"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
                 </Border>
+
+
+                <Button Grid.Column ="1"  x:Name="TipIcon1" Content="Remind Me" Margin="0,0,70,0"/>
+                    <muxc:TeachingTip x:Name="TipContent1" Target="{x:Bind TipIcon1}"/>
 
             </Grid>
 
@@ -219,7 +227,7 @@ PointerExited="Border_PointerExited">
 
                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
                             <TextBlock x:Name="HotkeyText" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
-                            <TextBlock Text="Choose yourself" FontSize="12" Opacity="0.9" Foreground="White" />
+                            <TextBlock Text="See Commands w/" FontSize="12" Opacity="0.9" Foreground="White" />
                         </StackPanel>
 
                         <Button Grid.Column="1" x:Name="AssignHotkey"  Content="Assign Hotkey" Click="AssignHotkey_Clicked"></Button>
@@ -238,7 +246,7 @@ PointerExited="Border_PointerExited">
 
                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
                             <TextBlock x:Name="HotkeyText2" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
-                            <TextBlock Text="Choose yourself" FontSize="12" Opacity="0.9" Foreground="White" />
+                            <TextBlock Text="Save Command w/ " FontSize="12" Opacity="0.9" Foreground="White" />
                         </StackPanel>
 
                         <Button Grid.Column="1" x:Name="AssignHotkey2"  Content="Assign Hotkey" Click="AssignHotkey_Clicked"></Button>

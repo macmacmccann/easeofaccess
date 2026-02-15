@@ -12,7 +12,12 @@
 
 
     <Grid>
-        <Grid Background="#30FFFF00" />
+        <Image Source="/Assets/gifs/colorslowed.gif"
+               Stretch="UniformToFill"
+               />
+
+        <Grid x:Name ="grid2"/>
+
 
         <NavigationView x:Name="NavigationView" 
                         IsBackButtonVisible="Collapsed" 

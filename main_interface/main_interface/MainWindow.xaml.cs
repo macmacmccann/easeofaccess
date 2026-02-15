@@ -13,18 +13,20 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Windows.Controls;
 using System.Windows.Interop;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Notifications;
 using Windows.UI.ViewManagement;
 using WinRT.Interop;
 using static System.Windows.Forms.AxHost;
-
 
 namespace main_interface
 {
@@ -37,11 +39,6 @@ namespace main_interface
      
         DesktopAcrylicBackdrop acrylic;
 
-
-
-
-
-
         public MainWindow()  {
 
             InitializeComponent();
@@ -49,6 +46,9 @@ namespace main_interface
             var appWindow = this.AppWindow;
             appWindow.SetIcon("Assets/Images/WindowIcon.ico");
             this.AppWindow.Title = "Ease Of Access";
+
+          BlurBehindAppNotContent();
+          //  BlurBehindContent();
 
             this.ExtendsContentIntoTitleBar = true;
            // ContentFrame.Navigate(typeof(LoginPage)); //default Page
@@ -70,7 +70,6 @@ namespace main_interface
                 }
             };
         }
-
 
 
         void OnActivated(object sender, WindowActivatedEventArgs e) // hwnd exists after the fact thats why is activated when window is constructred not in the construcotr 
@@ -144,8 +143,7 @@ namespace main_interface
 
         }
 
-
-
+        // THIS IS FOR WINDOWS !! WITH FALLBACK FOR WINDOW 10 
         void EnableMica()
         {
             if (MicaController.IsSupported())
@@ -157,19 +155,31 @@ namespace main_interface
             }
             else
             {
-                EnableAcrylic();
+                BlurBehindAppNotContent();
             }
         }
 
+        // THIS IS FOR BLURRING IMAGE BEHIND GRID 
+        void BlurBehindContent()
+        {
+            var acrylicBrush = new AcrylicBrush
+            {
+                TintColor = Colors.Yellow,
+                TintOpacity = 0.0,
+              //  FallbackColor = Colors.White
+            };
 
-
-        void EnableAcrylic()
+    
+            grid2.Background = acrylicBrush;
+     
+        }
+        // THIS BLURES BEHIND THE APP 
+            void BlurBehindAppNotContent()
         {
             //if (!DesktopAcrylicBackdrop.IsSupported())
             //  return; // null check
             acrylic = new DesktopAcrylicBackdrop();
             this.SystemBackdrop = acrylic;
-
 
         }
 
@@ -189,33 +199,27 @@ namespace main_interface
             string tag = (string)selectedItem.Tag;
 
 
-            if(tag == "AccountWindow")
+            if (tag == "AccountWindow")
             {
                 if (AccountWindow_Instance_Singleton == null)
                 {
-                    var AccountWindow_Instance = new AccountWindow();
-                    AccountWindow_Instance.Activate();
-                    return; // Dont navigate 
+                    AccountWindow_Instance_Singleton = AccountWindow.Instance;
+                    Debug.WriteLine("AccountWindow Created");
                 }
-                if (AccountWindow_Instance_Singleton != null)
-                {
-                    AccountWindow_Instance_Singleton.Activate();
-                }
-
-                   
-            }
-            else if (tag != "AccountWindow") { // if you moved away from window hide it 
-
-                if (AccountWindow_Instance_Singleton != null)
+                AccountWindow_Instance_Singleton.Activate();
+            } else
+                if (AccountWindow_Instance_Singleton != null){
                 {
                     AccountWindow_Instance_Singleton.MoveOffScreen();
                 }
-
             }
+         
+
+            
 
             switch (tag)
                 {
-                    case "HomeWindow":
+                    case "HomePage":
                         ContentFrame.Navigate(typeof(HomePage));
                         break;
                     case "LoginPage":
