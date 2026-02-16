@@ -45,7 +45,7 @@ namespace main_interface
 
             InitializeComponent();
 
-            // Resize window on start 
+            // Resize window on start .
             IntPtr hWnd = WindowNative.GetWindowHandle(this);
             WindowId windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
             AppWindow appWindowId = AppWindow.GetFromWindowId(windowId);
