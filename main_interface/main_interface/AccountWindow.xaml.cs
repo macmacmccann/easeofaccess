@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Windows.Media.Media3D;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using WinRT.Interop;
@@ -47,7 +48,8 @@ namespace main_interface
         public AccountWindow()
         {
             InitializeComponent();
-            AlwaysOnTop();
+            SetOverlayStyle();
+            HideFromTaskbar();
 
             // not in constructor activated window through nav items 
         }
@@ -70,6 +72,53 @@ namespace main_interface
                 0x0040); // Dont activate the window 
 
         }
+   
+        public void ShowOnScreen()
+        {
+
+            var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
+
+            SetWindowPos(
+                hwnd,
+HWND_TOPMOST,
+                0, 0, // x and y screen postions 
+                2000, 1200, // width heigh 
+            0x0040);
+        }
+
+
+
+
+
+        void SetOverlayStyle() //Win32 styling - aim -> borderless and always on top needed - its a pop up not a real window 
+        {
+            var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
+            var style = GetWindowLong(hwnd, -16); // Reads current window style flags 
+
+            SetWindowLong(hwnd, -16, style & ~0x00C00000); // remove titlebar
+            ShowOnScreen();
+        }
+
+
+        const int GWL_EXSTYLE = -20;
+        const int WS_EX_TOOLWINDOW = 0x80; // This is a tool window not a window on the taskbar
+        const int WS_EX_APPWINDOW = 0x40000; // Nomral app window definition ( going to take it away in style below ) 
+        void HideFromTaskbar()
+        {
+            var hwnd = WindowNative.GetWindowHandle(this);
+
+            int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE); // declare what iv already coded in terms of style in the scope of this method
+
+            exStyle &= ~WS_EX_APPWINDOW; // from style remove "this is an app window 
+            exStyle |= WS_EX_TOOLWINDOW; // from style add "this is a toolbar window "
+
+            SetWindowLong(hwnd, GWL_EXSTYLE, exStyle); // Apply these mods to the window 
+
+
+
+        }
+
+
 
 
         //Declare constants 
@@ -79,22 +128,7 @@ namespace main_interface
         const uint SWP_NOSIZE = 0X0001; // Dont change window size 
         const uint SWP_NOACTIVATE = 0x0010; // Dont activate
 
-        void AlwaysOnTop()
-        {
-            var hwnd = WindowNative.GetWindowHandle(this); // Get the hwnd for THIS  window 
-
-
-            SetWindowPos(
-                hwnd,
-                HWND_TOPMOST, // Keep it on top var in docuemntation 
-                100, 100, // x and y screen postions 
-                400, 300, // width heigh 
-                SWP_NOACTIVATE
-                // SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE // Keep position and size dont steal focus 
-                );
-
-
-        }
+        
 
         // Win32 function to reposition windows . 
         [DllImport("user32.dll")]
@@ -112,5 +146,15 @@ namespace main_interface
 
         [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+
+
+
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowLongW")]
+        static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLongW")]
+        static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
     }
 }

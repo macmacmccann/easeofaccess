@@ -639,7 +639,7 @@ namespace main_interface
                 hwnd,
                 HWND_TOPMOST, // Keep it on top var in docuemntation 
                 100, 100, // x and y screen postions 
-                400, 300, // width heigh 
+                1200, 600, // width heigh 
                 SWP_NOACTIVATE
                // SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE // Keep position and size dont steal focus 
                 );
@@ -647,6 +647,8 @@ namespace main_interface
             FadeIn();
 
         }
+
+
 
 
         void RemoveOnTopSetToDefault()
@@ -658,7 +660,7 @@ namespace main_interface
                 HWND_NOTTOPMOST, // Declares not top like z index 
 
                    100, 100, // x and y screen postions 
-                    400, 300, // width heigh 
+                    1200, 600, // width heigh 
                     SWP_NOACTIVATE
                // SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE
                 );

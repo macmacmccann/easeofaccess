@@ -23,6 +23,7 @@ using System.Windows.Controls;
 using System.Windows.Interop;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Graphics;
 using Windows.UI.Notifications;
 using Windows.UI.ViewManagement;
 using WinRT.Interop;
@@ -36,22 +37,30 @@ namespace main_interface
     public sealed partial class MainWindow : Window
     {
 
-     
+
         DesktopAcrylicBackdrop acrylic;
 
-        public MainWindow()  {
+        public MainWindow()
+        {
 
             InitializeComponent();
+
+
+            IntPtr hWnd = WindowNative.GetWindowHandle(this);
+            WindowId windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
+            AppWindow appWindowId = AppWindow.GetFromWindowId(windowId);
+            appWindowId.Resize(new SizeInt32 { Width = 2600, Height = 1500 });
+
 
             var appWindow = this.AppWindow;
             appWindow.SetIcon("Assets/Images/WindowIcon.ico");
             this.AppWindow.Title = "Ease Of Access";
 
-          BlurBehindAppNotContent();
-          //  BlurBehindContent();
+            BlurBehindAppNotContent();
+            //  BlurBehindContent();
 
             this.ExtendsContentIntoTitleBar = true;
-           // ContentFrame.Navigate(typeof(LoginPage)); //default Page
+            // ContentFrame.Navigate(typeof(LoginPage)); //default Page
             this.NavigationView.SelectionChanged += NavigationView_SelectionChanged;
             Activated += OnActivated; // we have to wait until the hwnd is created
 
@@ -109,18 +118,19 @@ namespace main_interface
             _state = nextState;
 
             switch (_state)
-            { 
+            {
                 case State_IsAppInFocus.AppNotActive:
                     System.Diagnostics.Debug.WriteLine("STATE : im off this app window ");
                     TilingManager.GetInstance().ShowOnScreen();
+                    AccountWindow_Instance_Singleton.MoveOffScreen();
                     break;
 
                 case State_IsAppInFocus.AppActive:
 
-                    
+
                     System.Diagnostics.Debug.WriteLine("STATE : iv opened this app 'settings' exit tiling mode ");
                     TilingManager.GetInstance().MoveOffScreen();
-                   
+
 
                     break;
             }
@@ -138,7 +148,7 @@ namespace main_interface
                 presenter.Minimize();
 
             }
-           // this.AppWindow.Hide();
+            // this.AppWindow.Hide();
             System.Diagnostics.Debug.WriteLine("Clicked - now overlay is one from state machine ");
 
         }
@@ -166,15 +176,15 @@ namespace main_interface
             {
                 TintColor = Colors.Yellow,
                 TintOpacity = 0.0,
-              //  FallbackColor = Colors.White
+                //  FallbackColor = Colors.White
             };
 
-    
+
             grid2.Background = acrylicBrush;
-     
+
         }
         // THIS BLURES BEHIND THE APP 
-            void BlurBehindAppNotContent()
+        void BlurBehindAppNotContent()
         {
             //if (!DesktopAcrylicBackdrop.IsSupported())
             //  return; // null check
@@ -199,25 +209,41 @@ namespace main_interface
             string tag = (string)selectedItem.Tag;
 
 
+            if (tag != "AccountWindow")
+            {
+                if (AccountWindow_Instance_Singleton != null)
+                {
+
+                    AccountWindow_Instance_Singleton.MoveOffScreen();
+
+                }
+            }
+
+
             if (tag == "AccountWindow")
             {
                 if (AccountWindow_Instance_Singleton == null)
                 {
                     AccountWindow_Instance_Singleton = AccountWindow.Instance;
                     Debug.WriteLine("AccountWindow Created");
+                    AccountWindow_Instance_Singleton.Activate();
+
                 }
-                AccountWindow_Instance_Singleton.Activate();
-            } else
-                if (AccountWindow_Instance_Singleton != null){
+                else
                 {
-                    AccountWindow_Instance_Singleton.MoveOffScreen();
+                    if (AccountWindow_Instance_Singleton != null)
+
+                    {
+                        AccountWindow_Instance_Singleton.ShowOnScreen();
+                    }
                 }
             }
-         
 
-            
 
-            switch (tag)
+
+
+
+                switch (tag)
                 {
                     case "HomePage":
                         ContentFrame.Navigate(typeof(HomePage));
@@ -230,7 +256,7 @@ namespace main_interface
                         ContentFrame.Navigate(typeof(RegisterPage));
                         break;
 
-                
+
 
                     case "Command":
                         ContentFrame.Navigate(typeof(CommandsControlPanel));
@@ -264,6 +290,6 @@ namespace main_interface
                         break;
 
                 }
-        }
-    } //constructor ending 
-}
+            }
+        } //constructor ending 
+    }
