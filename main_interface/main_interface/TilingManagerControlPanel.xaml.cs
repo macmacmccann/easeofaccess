@@ -22,6 +22,7 @@ using Windows.UI.Composition;
 using Border = Microsoft.UI.Xaml.Controls.Border;
 
 using Microsoft.UI.Windowing;
+using System.Diagnostics;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -41,25 +42,26 @@ namespace main_interface
         public TilingManagerControlPanel()
         {
             InitializeComponent();
-            HeaderColour(null,null);
+            LoadPreferencesOnStart();
+         
             // Keep the page alive / no duplicates upon nav switch by caching / reflected states preserved in ui 
             this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+
+
+            // this.KeyDown += EventOfKeyPressedDown; // subscribe to this method on any key down on page 
+
+
+            Headertop.BackgroundTransition = new BrushTransition() { Duration = TimeSpan.FromMilliseconds(300) };
+            DesignGlobalCode.HeaderColour(Headertop);
+            TipsConstructor();
+
         }
 
-        /*
-        public void HeaderColourx(object sender, RoutedEventArgs e)
+
+        private async void AssignHotkey_Clicked(object sender, RoutedEventArgs e)
         {
-            var acrylicBrush = new Microsoft.UI.Xaml.Media.AcrylicBrush
-            {
-                TintColor = Microsoft.UI.ColorHelper.FromArgb(0, 255, 200, 0),    // Yellow tint
-                TintOpacity = 0.5,
-                TintLuminosityOpacity = 0.9,
-                FallbackColor = Microsoft.UI.ColorHelper.FromArgb(0, 255, 200, 0) // Solid yellow
-            };
-
-            Headertop.Background = acrylicBrush;
+            Debug.WriteLine("Button Clicked");
         }
-        */
 
         public void HeaderColour(object sender, RoutedEventArgs e)
         {
@@ -69,20 +71,54 @@ namespace main_interface
             Headertop.Background = StateSettings.TilingManagerEnabled? Onbrush : Offbrush;
         }
 
-        private void TilingManagerToggle_ToggledX(object sender, RoutedEventArgs e)
+
+        private void LoadPreferencesOnStart()
         {
-          
 
-            // feedback change to the boolean that mouseless window changes state to 
-            StateSettings.TilingManagerEnabled = TilingManagerToggle.IsOn;
-            EnsureWindow();
+            
+            // this sets the ui from bool 
+            TilingManagerToggle.IsOn = StateSettings.TilingManagerEnabled;
+            StackedModeToggle.IsOn = StateSettings.StackedModeEnabled;
+            ColumnModeToggle.IsOn = StateSettings.ColumnModeEnabled;
+            FocusModeToggle.IsOn = StateSettings.FocusModeEnabled;
 
 
+            // this sets the bool from the ui - tricky note 
+            //StateSettings.StackedModeEnabled = StackedModeToggle.IsOn;
+
+
+
+            // be careful infinite loop both are disabled 
+            // i put one to true so it will work 
+            if (TilingManager.Exists())
+            {
+                //TilingManager.GetInstance().ApplySettings();
+             
             }
+            // This reads from the ui so ui enforces on boolean 
+            // Usecase dev controlling ui through boolean 
+            // StateSettings.OverlayEnabled = OverlayEnabledToggle.IsOn;
+
+            // This reads from the boolean and sets the ui
+            // Usecase User controlling boolean through ui
+            // OverlayEnabledToggle.IsOn = StateSettings.OverlayEnabled;
+
+        }
+
 
 
         private void TilingManagerToggle_Toggled(object sender, RoutedEventArgs e)
         {
+
+            // You cant turn it on if you dont have one enabled
+            // For now -> but force one enabled 
+            if(!StateSettings.ColumnModeEnabled && !StateSettings.StackedModeEnabled)
+            {
+                TilingManagerToggle.IsOn = false;
+                StateSettings.TilingManagerEnabled = false;
+                return;
+            }
+
             // im going to read once for clarity // isOn is a getter 
             bool enabledOrNot = TilingManagerToggle.IsOn; // current state entering the method 
 
@@ -90,25 +126,146 @@ namespace main_interface
             StateSettings.TilingManagerEnabled = enabledOrNot;
 
 
-            if (enabledOrNot)
+            if (StateSettings.TilingManagerEnabled)
             {
                 EnsureWindow();
                 HeaderColour(sender, e);
 
             }
-            else
-            {
-              if  (TilingManager.Exists())
-                    {
+            // if you turned off logic + background window + disable toggles  
+          if (!StateSettings.TilingManagerEnabled) { 
+                if (TilingManager.Exists())
+                {
                     TilingManager.Destroy();
                     HeaderColour(sender, e);
 
 
                 }
             }
+        }
 
 
 
+        private void FocusModeToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!StateSettings.TilingManagerEnabled)
+            {
+                StateSettings.FocusModeEnabled = false;
+                FocusModeToggle.IsOn = false;
+                return;
+            }
+            StateSettings.FocusModeEnabled = FocusModeToggle.IsOn;
+
+          
+            // Focus mode button logic as when u turn on focus instantly go in 
+            var app = Application.Current as App;
+            var mainWindowInstance = app?.main_window;
+            mainWindowInstance?.AppDeActivated();
+
+            // Be careful extra toggle edge cases in state machine Mainwindow if u want to change it 
+            // Dont accidentially create it switching toggleds 
+            if (TilingManager.Exists())
+            {
+                TilingManager.GetInstance().ApplySettings();
+
+            }
+
+        }
+
+        private void StackedModeToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+
+            /*
+            // Dont do anything it disabled 
+            if (!StateSettings.TilingManagerEnabled)
+            {
+                StateSettings.StackedModeEnabled = false;
+                 StackedModeToggle.IsOn = false;
+                     return;
+             }
+            */
+            
+
+
+            StateSettings.StackedModeEnabled = StackedModeToggle.IsOn;
+
+            // if i just turned on then exit 
+            if (!StackedModeToggle.IsOn)
+                return;
+
+            // Turn off other mode 
+           
+            ColumnModeToggle.IsOn = false;
+            StateSettings.ColumnModeEnabled = false;
+
+            // Dont accidentially create it switching toggleds 
+            if (TilingManager.Exists())
+            {
+                TilingManager.GetInstance().ApplySettings();
+
+            }
+        }
+
+        private void ColumnModeToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+
+            /*
+            if (!StateSettings.TilingManagerEnabled)
+            {
+                StateSettings.ColumnModeEnabled = false;
+                ColumnModeToggle.IsOn = false;
+                return;
+            }
+            */
+   
+            StateSettings.ColumnModeEnabled = ColumnModeToggle.IsOn;
+
+            if (!ColumnModeToggle.IsOn)
+                return;
+
+            // Turn off other mode 
+        
+            StackedModeToggle.IsOn = false;  //ui 
+             StateSettings.StackedModeEnabled = false; // real value 
+
+
+            // Dont accidentially create it switching toggleds 
+            if (TilingManager.Exists())
+            {
+                TilingManager.GetInstance().ApplySettings();
+
+            }
+
+        }
+
+
+
+        private void Border_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            DesignGlobalCode.Border_PointerEntered(sender, e);
+
+        }
+
+        private void Border_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            DesignGlobalCode.Border_PointerExited(sender, e);
+
+        }
+
+        private void TipsConstructor()
+        {
+            // Icon "says" in xaml 
+            TipIcon1.PointerEntered += (s, e) => TipContent1.IsOpen = true;
+            //  TipIcon1.PointerExited += (s, e) => TipContent1.IsOpen = false;
+
+            TipIcon1.Background = new SolidColorBrush(Color.FromArgb(200, 34, 197, 94));
+
+            TipContent1.IsLightDismissEnabled = false;
+            TipContent1.Title = "This button creates a keyboard shortcut";
+            TipContent1.Subtitle = "Press a base key eg., Ctrl or Alt or Shift " +
+                "\n Then a letter";
+            TipContent1.CloseButtonContent = "Got it!";
+            TipContent1.CloseButtonStyle = (Style)Application.Current.Resources["AccentButtonStyle"];
         }
 
 
@@ -128,199 +285,24 @@ namespace main_interface
         }
 
 
-
-        private void Border_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-
-            if (sender is UIElement element)
-            {
-                // Get the visual backing this Border
-                var visual = ElementCompositionPreview.GetElementVisual(element);
-
-                // Create a compositor instance
-                var compositor = visual.Compositor;
-
-                // Create a scalar animation for opacity
-                var animation = compositor.CreateScalarKeyFrameAnimation();
-
-                // End fully visible
-                animation.InsertKeyFrame(1f, 1f);
-
-                // Smooth timing
-                animation.Duration = TimeSpan.FromMilliseconds(200);
-
-                // Start animation
-                visual.StartAnimation("Opacity", animation);
-
-                visual.Scale = new System.Numerics.Vector3(1.1f);
-
-             // Scale up slightly
-            var scaleAnimation = compositor.CreateVector3KeyFrameAnimation();
-            scaleAnimation.InsertKeyFrame(1f, new System.Numerics.Vector3(1.05f)); // 5% larger
-            scaleAnimation.Duration = TimeSpan.FromMilliseconds(200);
-            visual.StartAnimation("Scale", scaleAnimation);
-
-                //if (sender is FrameworkElement element && element.GetType().GetProperty("Background"));
-               // if (sender is Control control)
-               if (sender is Border control)
-                {
-                var backgroundBrush = control.Background as SolidColorBrush;
-
-                    // backgroundBrush.Color = Colors.LightBlue;
-
-                    var colorAnimation = compositor.CreateColorKeyFrameAnimation();
-                    // Light blue with more opacity (ARGB: Alpha, Red, Green, Blue)
-                    colorAnimation.InsertKeyFrame(1f, Color.FromArgb(200, 173, 216, 230)); // Semi-transparent light blue
-                    colorAnimation.Duration = TimeSpan.FromMilliseconds(300);
-                    var brushVisual = ElementCompositionPreview.GetElementVisual(element);
-                    brushVisual.Compositor.CreateColorKeyFrameAnimation();
-
-                    if (backgroundBrush != null)
-                    {
-                        backgroundBrush.Color = Color.FromArgb(50, 255, 200, 0);
-
-                    }
-                }
-            }
-        }
-
-        
-        private void Border_PointerExited(object sender, PointerRoutedEventArgs e)
-        {
-
-     
-      
-            // if its any ui element // needs to casted its an object
-            if (sender is UIElement element)
-            {
-                // get the visual backing for the element 
-                var visual = ElementCompositionPreview.GetElementVisual(element);
-               //access compositor for animations 
-                var compositor = visual.Compositor;
-                
-                // Create opacity docuementatyion  animation 
-                var animation = compositor.CreateScalarKeyFrameAnimation();
-                //Fade slightly on exit 
-                animation.InsertKeyFrame(1f, 0.85f);
-                //smoothlu
-                animation.Duration = TimeSpan.FromMilliseconds(250);
-
-                // Start it 
-                visual.StartAnimation("Opacity", animation);
-
-                //create a scale animation 
-                var scaleAnimation = compositor.CreateVector3KeyFrameAnimation();
-
-                // reset back to normal 
-                scaleAnimation.InsertKeyFrame(1f, new System.Numerics.Vector3(1f)); // Back to normal
-                
-                // quick snap back 
-                scaleAnimation.Duration = TimeSpan.FromMilliseconds(200);
-
-                // start the scale animtion 
-                visual.StartAnimation("Scale", scaleAnimation);
-                
-                   if (sender is Border control)
-                {                   
-                    var backgroundBrush = control.Background as SolidColorBrush;
-
-                    backgroundBrush.Color = Colors.Transparent;
-
-
-                    // Then reset to theme resource
-
-                    //border.Background =
-                    //   Application.Current.Resources["CardBackgroundFillColorDefaultBrush"] as Brush;
-                }
-            }
-        }
-
-
-        /*
-
-                private void Border_PointerEntered(object sender, PointerRoutedEventArgs e)
-                {
-                    // Ensure the event sender is actually a Border
-                    if (sender is Border border)
-                    {
-                        // Try to reuse the existing background brush
-                        // This prevents recreating it every hover
-                        if (border.Background is not SolidColorBrush brush)
-                        {
-                            // Create a soft gold-tinted brush
-                            brush = new SolidColorBrush(Windows.UI.Color.FromArgb(80, 255, 180, 120));
-
-                            // Start fully transparent so we can fade it in
-                            brush.Opacity = 0.0;
-
-                            // Assign the brush once to the Border
-                            border.Background = brush;
-                        }
-
-                        // Define the opacity animation
-                        var fadeIn = new DoubleAnimation
-                        {
-                            // Start transparent
-                            From = 0.0,
-
-                            // End visible
-                            To = 1.0,
-
-                            // Smooth 300ms animation
-                            Duration = new Duration(TimeSpan.FromMilliseconds(400)),
-
-                            // Soft easing for natural motion
-                            EasingFunction = new CircleEase
-                            {
-                                EasingMode = EasingMode.EaseInOut
-                            }
-                        };
-
-                        // Create the storyboard container
-                        var storyboard = new Storyboard();
-
-                        // IMPORTANT: Target the BRUSH, not the Border
-                        Storyboard.SetTarget(fadeIn, brush);
-
-                        // Animate the brush's Opacity property directly
-                        Storyboard.SetTargetProperty(fadeIn, "Opacity");
-
-                        // Add the animation to the storyboard
-                        storyboard.Children.Add(fadeIn);
-
-                        // Start the animation
-                        storyboard.Begin();
-                    }
-                }
-
-
-
-                private void Border_PointerExited(object sender, PointerRoutedEventArgs e)
-                {
-                    if (sender is Border border && border.Background is SolidColorBrush brush)
-                    {
-                        var fadeOut = new DoubleAnimation
-                        {
-                            From = brush.Opacity,
-                            To = 0.0,
-                            Duration = new Duration(TimeSpan.FromMilliseconds(250)),
-                            EasingFunction = new CircleEase { EasingMode = EasingMode.EaseInOut }
-                        };
-
-                        var storyboard = new Storyboard();
-                        Storyboard.SetTarget(fadeOut, brush);
-                        Storyboard.SetTargetProperty(fadeOut, "Opacity");
-                        storyboard.Children.Add(fadeOut);
-                        storyboard.Begin();
-                    }
-                }
-
-                */
-
-
         // code is in mainWindow so access it 
         private void MinimizeButton_Click(object sender, RoutedEventArgs e)
-        {      
+        {
+
+
+            // Both dont do anything if not enabled
+            if (!StateSettings.TilingManagerEnabled)
+            {
+                return;
+            }
+            if (!StateSettings.FocusModeEnabled)
+            {
+                return;
+            }
+
+
+
+
             // get current instance 
             var app = Application.Current as App;
 

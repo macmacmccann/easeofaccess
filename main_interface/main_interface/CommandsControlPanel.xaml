@@ -6,12 +6,15 @@
     xmlns:local="using:main_interface"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-xmlns:controls="using:main_interface.Controls"
-
-    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
-    >
-
+    
+    
+    
+    
+    
+    
+    xmlns:controls="using:main_interface.Controls"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
 
@@ -75,7 +78,7 @@ xmlns:controls="using:main_interface.Controls"
         </Border>
         <!-- END OF HEADER -->
 
-        <!-- COL 1: GIF -->
+        <!-- COL 1: TOP SIDE PROFILE OF PAGE  -->
 
         <Grid Grid.Row="1" ColumnDefinitions="*,*" Padding="16" Margin="24,24,0,0">
 
@@ -88,7 +91,7 @@ xmlns:controls="using:main_interface.Controls"
 
                 <!-- gif -->
 
-                <Image Source="/Assets/gifs/QuickCommands.gif" />
+                <Image Source="/Assets/Images/terminal.jpg" />
 
                 <!-- -->
 
@@ -96,7 +99,7 @@ xmlns:controls="using:main_interface.Controls"
 
             </StackPanel>
 
-            <!-- COL 2: FEATURES -->
+            <!-- COL 2: FEATURES RIGHT SIDE TOP TOGGLES  -->
 
             <StackPanel Grid.Column="1" Spacing="8">
                 <TextBlock
@@ -113,7 +116,7 @@ xmlns:controls="using:main_interface.Controls"
                 <!-- ONE TOGGLE BAR BORDER WRAPPED -->
                 <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
 PointerExited="Border_PointerExited">
-                    <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                    <!-- SUB GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
                     <Grid ColumnDefinitions="*,Auto">
 
                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
@@ -121,7 +124,7 @@ PointerExited="Border_PointerExited">
                             <TextBlock Text="Make sure it you get a pop up without distactions" FontSize="12" Opacity="0.9" Foreground="White" />
                         </StackPanel>
 
-                        <!-- GRID COL 2 TOGGLE -->
+                        <!-- SUB GRID COL 2 TOGGLE -->
                         <ToggleSwitch 
                            
                               x:Name="AlwaysOnTopEnabledToggle"
@@ -175,7 +178,7 @@ PointerExited="Border_PointerExited">
 
 
 
-            <!--  BOTTOM OF PAGE -->
+            <!-- MIDDLE PAGE BARRIER  -->
 
 
             <!-- HEADER row 2 of main grid -->

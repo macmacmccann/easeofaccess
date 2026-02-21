@@ -6,8 +6,15 @@
     xmlns:local="using:main_interface"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
-
+    mc:Ignorable="d"
+    
+    
+    
+    
+    
+    
+    xmlns:controls="using:main_interface.Controls"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
 
     <ScrollViewer>
         <Grid RowDefinitions="0.2*,*,Auto,Auto">
@@ -55,7 +62,11 @@
 
         </Border>
 
-        <Grid Grid.Row="1" ColumnDefinitions="*,*" Padding="16" Margin="24,24,0,0">
+            <!-- END OF HEADER -->
+
+            <!-- COL 1: GIF -->
+
+            <Grid Grid.Row="1" ColumnDefinitions="*,*" Padding="16" Margin="24,24,0,0">
 
             <StackPanel Grid.Column="0" Spacing="8">
                 <TextBlock
@@ -73,111 +84,197 @@
             </StackPanel>
 
 
-            <StackPanel Grid.Column="1" Spacing="8">
+
+                <!-- COL 2: FEATURES RIGHT SIDE TOP TOGGLES  -->
+
+                <StackPanel Grid.Column="1" Spacing="8">
                     <TextBlock
                     Grid.Column="1"
                     Text="Features"
                     FontSize="20"
                     Opacity="0.7"
                     VerticalAlignment="Top" />
-                    
+
                     <!-- toggles -->
 
-                
 
-                <!-- NICE TOGGLE BAR BORDER WRAPPED -->
-                <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+
+                    <!-- NICE TOGGLE BAR BORDER WRAPPED -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
 PointerExited="Border_PointerExited">
-                    <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
-                    <Grid ColumnDefinitions="*,Auto">
                         
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                            <TextBlock Text="toggl1" FontSize="14" FontWeight="SemiBold" Foreground="White" />
-                            <TextBlock Text="toggle 1 desc" FontSize="12" Opacity="0.9" Foreground="White" />
-                        </StackPanel>
                         
-                    <!-- GRID COL 2 TOGGLE -->
-                        <ToggleSwitch 
+                        <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                        <Grid ColumnDefinitions="*,*,*">
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="Distraction Free" Margin="0,0,0,0"></TextBlock>
+                                <TextBlock Text="Debloat windows" FontSize="12" Opacity="0.9" Foreground="White" />
+                            </StackPanel>
+                            <Button  Grid.Column ="1" x:Name="MinimizeButton" Content="Enter focus mode  " Click="MinimizeButton_Click" />
+
+                            <ToggleSwitch 
+                           Grid.Column="2"
+                           x:Name="FocusModeToggle"
+                           OnContent="On"
+                           OffContent="Off"
+                           VerticalAlignment="Center"
+                               Toggled="FocusModeToggle_Toggled" 
+                           Margin="16,0,0,0" />
+
+                        </Grid>
+                    </Border>
+
+                        
+                        
+                    <!-- NICE TOGGLE BAR BORDER WRAPPED -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+PointerExited="Border_PointerExited">
+                        <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                        <Grid ColumnDefinitions="*,Auto">
+
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="Stacked Mode" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                                <TextBlock Text="Automatically stack windows" FontSize="12" Opacity="0.9" Foreground="White" />
+                            </StackPanel>
+
+                            <!-- GRID COL 2 TOGGLE -->
+                            <ToggleSwitch 
                             Grid.Column="1"
-                            x:Name="TilingToggle"
+                            x:Name="StackedModeToggle"
                             OnContent="On"
                             OffContent="Off"
                             VerticalAlignment="Center"
+                                Toggled="StackedModeToggle_Toggled" 
                             Margin="16,0,0,0" />
+                        </Grid>
+                    </Border>
+                        
+                        
+
+                    <!-- NICE TOGGLE BAR BORDER WRAPPED -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+PointerExited="Border_PointerExited">
+                        <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                        <Grid ColumnDefinitions="*,Auto">
+
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="Split Mode" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                                <TextBlock Text="Split your applications horizontally" FontSize="12" Opacity="0.9" Foreground="White" />
+                            </StackPanel>
+
+                            <!-- GRID COL 2 TOGGLE -->
+                            <ToggleSwitch 
+                            Grid.Column="1"
+                            x:Name="ColumnModeToggle"
+                            OnContent="On"
+                            OffContent="Off"
+                            VerticalAlignment="Center"
+                           Toggled="ColumnModeToggle_Toggled" 
+
+                            Margin="16,0,0,0" />
+                        </Grid>
+                    </Border>
+
+
+
+
+                </StackPanel><!-- WRAPPER END OF TOP FEATURE TOGGLES  -->
+            </Grid> <!-- WRAPPER END OF TOP FEATURE TOGGLES  -->
+
+
+
+        <!-- MIDDLE PAGE BARRIER  -->
+
+            <!-- HEADER row 2 of main grid -->
+            <Grid Grid.Row="2" Background="#80FAD89C" HorizontalAlignment="Stretch" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+
+
+                <Border x:Name="SplitPage"
+               Grid.Column="0"
+                   Margin="30"
+                    HorizontalAlignment="Stretch"
+                   VerticalAlignment="Center">
+
+                    <TextBlock
+                       
+                      Text="YOU DECIDE HOW YOUR COMPUTER BEHAVES"
+                       FontSize="22"
+                       FontWeight="SemiBold"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+                </Border>
+
+
+                <Button Grid.Column ="1"  x:Name="TipIcon1" Content="Remind Me" Margin="0,0,70,0"/>
+                <muxc:TeachingTip x:Name="TipContent1" Target="{x:Bind TipIcon1}"/>
+
+            </Grid>
+
+            
+            
+
+            <!-- BOTTOM TOGGLES ROW 3 of msin grid  -->
+
+            <Grid Grid.Row="3" RowDefinitions="*,*,*"
+         ColumnDefinitions="*,*"
+         HorizontalAlignment="Stretch"
+         Margin="40,0,0,0">
+
+
+                <Border
+           Grid.Row="0"
+           Grid.Column="0"
+           Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+           PointerExited="Border_PointerExited">
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock x:Name="HotkeyText" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
+                            <TextBlock Text="Alternate Between Modes w/" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+
+                        <Button Grid.Column="1" x:Name="AssignHotkey"  Content="Assign Hotkey" Click="AssignHotkey_Clicked"></Button>
+
+
+                    </Grid>
+                </Border>
+
+                <Border
+            Grid.Row="0"
+            Grid.Column="1"
+            Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+            PointerExited="Border_PointerExited">
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock x:Name="HotkeyText2" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
+                            <TextBlock Text="Maximise current window w/ " FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+
+                        <Button Grid.Column="1" x:Name="AssignHotkey2"  Content="Assign Hotkey" Click="AssignHotkey_Clicked"></Button>
+
+
                     </Grid>
                 </Border>
 
 
 
-
-            </StackPanel>
-
-        </Grid>
+            </Grid>
 
 
 
-        <!--  BOTTOM OF PAGE -->
 
-
-        <!-- HEADER row 2 of main grid -->
-        <Grid Grid.Row="2" 
-         HorizontalAlignment="Stretch"
-         Margin="0">
-
-            <Border x:Name="SplitPage"
-                        Margin="30"
-                         HorizontalAlignment="Stretch"
-                        VerticalAlignment="Center"
-                    >
-
-                <TextBlock
-                   Text="Decide what works for you at anytime"
-                   FontSize="30"
-                   FontWeight="SemiBold"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                        />
-
-            </Border>
-
-        </Grid>
-
-
-        <!-- BOTTOM TOGGLES ROW 3 of msin grid  -->
-
-        <Grid Grid.Row="3" RowDefinitions="*,*,*"
-                  ColumnDefinitions="*,*,*"
-                  HorizontalAlignment="Stretch"
-                  Margin="40,0,0,0">
-
-
-            <Border
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
-                    PointerExited="Border_PointerExited">
-
-                <Grid ColumnDefinitions="*,*">
-
-                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                        <TextBlock Text="Distraction Free" Margin="0,0,0,0"></TextBlock>
-                        <TextBlock Text="Debloat windows" FontSize="12" Opacity="0.9" Foreground="White" />
-                    </StackPanel>
-
-
-                        <Button  Grid.Column ="1" x:Name="MinimizeButton" Content="Enter focus mode  " Click="MinimizeButton_Click" />
-
-                    </Grid>
-            </Border>
-
-        </Grid>
         
         
         
-        
-        
-        
-        </Grid>
-        </ScrollViewer>
+ </Grid>
+ </ScrollViewer>
 
 </Page>

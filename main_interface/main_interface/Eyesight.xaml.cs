@@ -15,6 +15,10 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using WinRT.Interop;
+using Microsoft.UI.Xaml.Media.Imaging;
+
+
+
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -27,6 +31,7 @@ namespace main_interface;
 public sealed partial class Eyesight : Window
 {
 
+    private static Eyesight _instance;
     public Eyesight()
     {
         InitializeComponent();
@@ -35,6 +40,9 @@ public sealed partial class Eyesight : Window
         HideFromTaskbar();
         SetOverlayStyle();
         AlwaysOnTop();
+        ApplySettings();
+
+        
         //MakeDyslexiaOverlay();
 
         //HideFromTaskbar();
@@ -48,6 +56,32 @@ public sealed partial class Eyesight : Window
 
     }
 
+
+    public static Eyesight Instance
+    {
+        get// make sure only ONE overlay window exists 
+        {
+            if (_instance == null)
+                _instance = new Eyesight();
+
+
+            return _instance;
+
+        }
+
+    }
+
+
+    public static bool Exists()
+    {
+        bool exists;
+        if (_instance == null)
+        {
+            exists = false;
+            return exists;
+        }
+        return true;
+    }
 
 
     public void ShowSpotlight()
@@ -64,9 +98,11 @@ public sealed partial class Eyesight : Window
 
     public void ApplySettings()
     {
+
         // Check which overlay should be active and apply it
         if (StateSettings.DyslexiaEnabled)
         {
+            StrengthOfOverlay();
             MakeDyslexiaOverlay();
             ShowOnScreen();
             return;
@@ -74,6 +110,7 @@ public sealed partial class Eyesight : Window
 
         if (StateSettings.LightSensitiveEnabled)
         {
+            StrengthOfOverlay();
             MakeLightSensitiveOverlay();
             ShowOnScreen();
             return;
@@ -81,20 +118,23 @@ public sealed partial class Eyesight : Window
 
         if (StateSettings.MigraineEnabled)
         {
+            StrengthOfOverlay();
             MakeMigraineOverlay();
             ShowOnScreen();
             return;
         }
 
-        if (StateSettings.VisualProcessingEnabled)
+        if (StateSettings.FireEnabled)
         {
-            MakeVisualProcessingOverlay();
+            StrengthOfOverlay();
+            FireOverlay();
             ShowOnScreen();
             return;
         }
 
         if (StateSettings.DimScreenEnabled)
         {
+            StrengthOfOverlay();
             MakeTransparentAndClickThrough();
             ShowOnScreen();
             return;
@@ -104,6 +144,29 @@ public sealed partial class Eyesight : Window
         MoveOffScreen();
     }
 
+
+    public byte strength;
+    public void StrengthOfOverlay()
+    {
+
+        if (StateSettings.HighStrengthEnabled)
+        {
+            strength = 200;
+            // dont return just check 
+        }
+
+        if (StateSettings.MediumStrengthEnabled)
+        {
+            strength = 80;
+            // dont return just check 
+        }
+
+        if (StateSettings.LowStrengthEnabled)
+        {
+            strength = 30;
+            // dont return just check 
+        }
+    }
 
     [DllImport("user32.dll")]
     static extern int GetSystemMetrics(int nIndex);
@@ -130,7 +193,7 @@ public sealed partial class Eyesight : Window
 
 
 
-    void MoveOffScreen()
+    public void MoveOffScreen()
     {
         var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
 
@@ -193,15 +256,20 @@ public sealed partial class Eyesight : Window
 
 
 
-    void TurnIntoBook()
+    public void SetWindowStyle()
     {
         var hwnd = WindowNative.GetWindowHandle(this);
-
         int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-        exStyle |= WS_EX_LAYERED; // alpha blending needed 
-        exStyle &= ~WS_EX_TRANSPARENT; // removed clithrgouh 
+        exStyle |= WS_EX_LAYERED | WS_EX_TRANSPARENT; // Add layered and transparent flags
+        SetWindowLong(hwnd, GWL_EXSTYLE, exStyle);
+    }
 
-        SetWindowLong(hwnd, GWL_EXSTYLE, exStyle); // Apply styles 
+    void TurnIntoBook()
+    {
+        SetWindowStyle();
+        var hwnd = WindowNative.GetWindowHandle(this);
+
+       // SetWindowLong(hwnd, GWL_EXSTYLE, exStyle); // Apply styles 
 
         // Optional: Set opacity (255 = opaque, 0 = fully transparent)
         SetLayeredWindowAttributes(hwnd, 0, 255, LWA_ALPHA);
@@ -211,10 +279,8 @@ public sealed partial class Eyesight : Window
 
     void MakeTransparentAndClickThrough()
     {
+        SetWindowStyle();
         var hwnd = WindowNative.GetWindowHandle(this);
-        int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-        exStyle |= WS_EX_LAYERED | WS_EX_TRANSPARENT; // Add layered and transparent flags
-        SetWindowLong(hwnd, GWL_EXSTYLE, exStyle);
 
 
         var grid = new Grid
@@ -226,18 +292,18 @@ public sealed partial class Eyesight : Window
 
         Content = grid;
 
-        // Optional: Set opacity (255 = opaque, 0 = fully transparent)
-        SetLayeredWindowAttributes(hwnd, 0, 150, LWA_ALPHA);
+        // Optional: Set opacity (param 3 255 = opaque, 0 = fully transparent)
+        // old
+         SetLayeredWindowAttributes(hwnd, 0,150, LWA_ALPHA);
+
     }
 
 
     void MakeRosePinkOverlay()
     {
 
+        SetWindowStyle();
         var hwnd = WindowNative.GetWindowHandle(this);
-        int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-        exStyle |= WS_EX_LAYERED | WS_EX_TRANSPARENT; // Add layered and transparent flags
-        SetWindowLong(hwnd, GWL_EXSTYLE, exStyle);
 
         var grid = new Grid
         {
@@ -254,15 +320,15 @@ public sealed partial class Eyesight : Window
     void MakeDyslexiaOverlay()
     {
 
+        System.Diagnostics.Debug.WriteLine("Strength", strength);
+
+        SetWindowStyle();
         var hwnd = WindowNative.GetWindowHandle(this);
-        int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-        exStyle |= WS_EX_LAYERED | WS_EX_TRANSPARENT; // Add layered and transparent flags
-        SetWindowLong(hwnd, GWL_EXSTYLE, exStyle);
 
         var grid = new Grid
         {
             Background = new SolidColorBrush(
-                Windows.UI.Color.FromArgb(255, 255, 230, 204)
+                Windows.UI.Color.FromArgb(strength, 255, 230, 204)
             )
         };
 
@@ -273,16 +339,15 @@ public sealed partial class Eyesight : Window
 
     void MakeLightSensitiveOverlay()
     {
+        System.Diagnostics.Debug.WriteLine("Strength", strength);
 
+        SetWindowStyle();
         var hwnd = WindowNative.GetWindowHandle(this);
-        int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-        exStyle |= WS_EX_LAYERED | WS_EX_TRANSPARENT; // Add layered and transparent flags
-        SetWindowLong(hwnd, GWL_EXSTYLE, exStyle);
 
         var grid = new Grid
         {
             Background = new SolidColorBrush(
-                Windows.UI.Color.FromArgb(255, 255, 229, 204)
+                Windows.UI.Color.FromArgb(strength, 255, 229, 204)
             )
         };
 
@@ -293,16 +358,15 @@ public sealed partial class Eyesight : Window
 
     void MakeMigraineOverlay()
     {
+        System.Diagnostics.Debug.WriteLine("Strength", strength);
 
+        SetWindowStyle();
         var hwnd = WindowNative.GetWindowHandle(this);
-        int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-        exStyle |= WS_EX_LAYERED | WS_EX_TRANSPARENT; // Add layered and transparent flags
-        SetWindowLong(hwnd, GWL_EXSTYLE, exStyle);
 
         var grid = new Grid
         {
             Background = new SolidColorBrush(
-                Windows.UI.Color.FromArgb(255, 255, 230, 240)
+                Windows.UI.Color.FromArgb(strength, 255, 230, 240)
             )
         };
 
@@ -311,22 +375,76 @@ public sealed partial class Eyesight : Window
         SetLayeredWindowAttributes(hwnd, 0, 180, LWA_ALPHA);
     }
 
-    void MakeVisualProcessingOverlay()
+
+    // YOU NEED TO BLUR THE IMAGE ALOT - ACRYLIC LIGHTENS THE THING 
+    void FireOverlay()
     {
+        System.Diagnostics.Debug.WriteLine("Strength", strength);
 
+        SetWindowStyle();
         var hwnd = WindowNative.GetWindowHandle(this);
-        int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-        exStyle |= WS_EX_LAYERED | WS_EX_TRANSPARENT; // Add layered and transparent flags
-        SetWindowLong(hwnd, GWL_EXSTYLE, exStyle);
 
-        var grid = new Grid
+
+        var grid = new Grid();
+
+
+        var backgroundimage = new Image
         {
-            Background = new SolidColorBrush(
-                Windows.UI.Color.FromArgb(255, 230, 243, 255)
-            )
+            Source = new BitmapImage(
+                new Uri("ms-appx:///Assets/gifs/fireblurred.gif")),
+            Opacity = 0.9,
+             Stretch = Stretch.UniformToFill
+
         };
 
-        Content = grid;
+        grid.Children.Add(backgroundimage);
+
+
+
+
+        var tintOverlay = new Rectangle
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+
+            // first p[aram controls opaque , red , green , blue 
+            // 80 as first 
+            Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(strength, 180, 60, 0))
+            //                                              ^      ^    ^   ^
+            //                                              |      |    |   blue (keep low)
+            //                                              |      |    green (low-mid for orange)
+            //                                              |      red (high)
+            //                                              opacity (0-255, ~160 = dark but tinted)
+        };
+        grid.Children.Add(tintOverlay);
+
+        /* does blur the fire but then brightens the screen stick to rec - 
+         * 
+         // Acrylic brush blurs grid behind ( the background image ) 
+        var blurOverlay = new Rectangle
+        {
+
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+
+            Fill = new Microsoft.UI.Xaml.Media.AcrylicBrush
+            {
+                TintColor = Windows.UI.Color.FromArgb(255, 255, 80, 0),  // deep orange-red
+                TintOpacity = 0.4,                                       // strong enough to glow, not opaque
+                TintLuminosityOpacity = 0.3                               // low = more blur bleed-through, warm feel
+            }
+
+        };
+        grid.Children.Add(blurOverlay);
+
+        */
+
+
+
+
+
+
+        Content = grid; // Init windows content to be this grid 
 
         SetLayeredWindowAttributes(hwnd, 0, 180, LWA_ALPHA);
     }
@@ -375,7 +493,9 @@ public sealed partial class Eyesight : Window
     [DllImport("user32.dll")]
     static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
 
-    const uint LWA_ALPHA = 0x2;
+    const uint LWA_ALPHA = 0x2; // transparentcy value 
+    const uint LWA_COLORKEY = 0x1; // Ref pixels become transparent 
+
 
 }
 

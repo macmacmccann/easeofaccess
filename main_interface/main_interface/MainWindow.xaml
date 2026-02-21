@@ -24,7 +24,11 @@
                         IsBackEnabled="False" 
                         PaneDisplayMode="Left" 
                         IsPaneOpen="True"
-                        IsPaneToggleButtonVisible="False">
+                        IsPaneToggleButtonVisible="False"
+                          ItemInvoked="NavigationView_ItemInvoked"
+              
+                        
+                        >
 
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="Home" Icon="Home" Tag="HomePage"/>

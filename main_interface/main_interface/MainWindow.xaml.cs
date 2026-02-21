@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Windows.Controls;
@@ -49,19 +51,20 @@ namespace main_interface
             IntPtr hWnd = WindowNative.GetWindowHandle(this);
             WindowId windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
             AppWindow appWindowId = AppWindow.GetFromWindowId(windowId);
-            appWindowId.Resize(new SizeInt32 { Width = 2600, Height = 1500 });
+           // appWindowId.Resize(new SizeInt32 { Width = 2600, Height = 1500 });
 
 
             var appWindow = this.AppWindow;
             appWindow.SetIcon("Assets/Images/WindowIcon.ico");
             this.AppWindow.Title = "Ease Of Access";
 
-            BlurBehindAppNotContent();
-            //  BlurBehindContent();
+            //BlurBehindAppNotContent();
+             BlurBehindContent();
 
             this.ExtendsContentIntoTitleBar = true;
             // ContentFrame.Navigate(typeof(LoginPage)); //default Page
-            this.NavigationView.SelectionChanged += NavigationView_SelectionChanged;
+            // this.NavigationView.SelectionChanged += NavigationView_SelectionChanged;
+            //this.NavigationView_ItemInvoked += NavigationView_ItemInvoked;
             Activated += OnActivated; // we have to wait until the hwnd is created
 
             // lamba shorthand -> " just ignore object sender + Event Args its an enu, conditional case - not an event 
@@ -121,21 +124,28 @@ namespace main_interface
             {
                 case State_IsAppInFocus.AppNotActive:
                     System.Diagnostics.Debug.WriteLine("STATE : im off this app window ");
-                    TilingManager.GetInstance().ShowOnScreen();
+
+                    if (TilingManager.GetInstance() != null) {
+                        if(StateSettings.TilingManagerEnabled)
+                            if(StateSettings.FocusModeEnabled)
+                                TilingManager.GetInstance().ShowOnScreen();
+                    }
+                    // else do nothing - you didnt enable 
+
+                    if (AccountWindow_Instance_Singleton != null)
+                    {
+                      
                     AccountWindow_Instance_Singleton.MoveOffScreen();
+
+                    }
                     break;
 
                 case State_IsAppInFocus.AppActive:
-
-
                     System.Diagnostics.Debug.WriteLine("STATE : iv opened this app 'settings' exit tiling mode ");
                     TilingManager.GetInstance().MoveOffScreen();
-
-
                     break;
             }
         }
-
 
         public void AppDeActivated()
         {
@@ -194,31 +204,31 @@ namespace main_interface
         }
 
 
+
+
+     
+
+
+
         private Eyesight _spotlightWindow;
 
         private AccountWindow AccountWindow_Instance_Singleton;
-        private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        private void NavigationView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
 
-            if (args.IsSettingsSelected)
+            if (args.IsSettingsInvoked)
             {
                 ContentFrame.Navigate(typeof(SettingsControlPanel));
                 return;
             }
-            var selectedItem = (NavigationViewItem)args.SelectedItem;
-            string tag = (string)selectedItem.Tag;
+        
+
+            // This fires EVERY time you click, even on the same item
+            string tag = args.InvokedItemContainer?.Tag?.ToString();
 
 
-            if (tag != "AccountWindow")
-            {
-                if (AccountWindow_Instance_Singleton != null)
-                {
-
-                    AccountWindow_Instance_Singleton.MoveOffScreen();
-
-                }
-            }
-
+            if (string.IsNullOrEmpty(tag))
+                return;
 
             if (tag == "AccountWindow")
             {
@@ -226,24 +236,29 @@ namespace main_interface
                 {
                     AccountWindow_Instance_Singleton = AccountWindow.Instance;
                     Debug.WriteLine("AccountWindow Created");
-                    AccountWindow_Instance_Singleton.Activate();
+                    //AccountWindow_Instance_Singleton.Activate();
+                    AccountWindow_Instance_Singleton.ShowOnScreen();
+                    ContentFrame.Navigate(typeof(SettingsControlPanel));
 
                 }
                 else
                 {
-                    if (AccountWindow_Instance_Singleton != null)
+                    AccountWindow_Instance_Singleton.ShowOnScreen();
+                    ContentFrame.Navigate(typeof(SettingsControlPanel));
 
-                    {
-                        AccountWindow_Instance_Singleton.ShowOnScreen();
-                    }
                 }
+                return;
+            }
+
+            // If we get here, tag is NOT "AccountWindow"
+            if (AccountWindow_Instance_Singleton != null)
+            {
+                AccountWindow_Instance_Singleton.MoveOffScreen();
             }
 
 
 
-
-
-                switch (tag)
+            switch (tag)
                 {
                     case "HomePage":
                         ContentFrame.Navigate(typeof(HomePage));

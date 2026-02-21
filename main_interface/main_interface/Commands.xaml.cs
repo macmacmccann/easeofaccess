@@ -63,6 +63,19 @@ namespace main_interface
         
         } 
 
+
+        public static bool Exists()
+        {
+            bool exists;
+            if (_instance == null)
+            {
+                exists = false;
+                return exists;
+            }
+            return true;
+        }
+
+
         bool _visible; // Track where the overlay is currently visible 
         public Commands() // Constructor 
         {
@@ -84,7 +97,7 @@ namespace main_interface
 
 
             // " Subscription" logic -> dump method into this 
-            Activated += OnActivated; // second activation - alot not fully init in this yet !
+            Activated += OnActivated;
 
              // Closed called by x or manual run - given by windows (an event)
              // this.Close() runs it and also the added logic on OnClosed ( unregister hotkey) 
@@ -101,6 +114,8 @@ namespace main_interface
 
             var hWnd = WindowNative.GetWindowHandle(this);
             UnregisterHotKey(hWnd, HOTKEY_ID_OVERLAY);
+            UnregisterHotKey(hWnd, HOTKEY_ID_FAKE_OTHER_FUNCTION);
+
             _instance = null; // Clear the singleton reference 
 
 
@@ -140,8 +155,7 @@ namespace main_interface
 
         //Guard flag implenetation 
         private bool _isHookUpSet = false;
-        private DateTime lastHotkeyAttempt;
-        private CommandsControlPanel controlPanelBackwardAccess;
+
 
 
 
@@ -262,7 +276,6 @@ namespace main_interface
                 resultingCombo = hasExisting ? existingCombo : default;
                 return false;
             }
-
             //Now add successfull to hashsets
             TakenCombinations.Add((uint)modkey, vk);
             TakenCombinations._assignedCombos[id] = newCombo;
@@ -347,8 +360,6 @@ namespace main_interface
         static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vk); // This tells window when this key combo is pressed notify this window 
                                                                                          // params are handle to your app window , id to actually idenify the hotkey , modifer keys eg., sh
 
-
-
         // attatch a subclass prodecure to a window 
         [DllImport("comctl32.dll")]
         static extern bool SetWindowSubclass(
@@ -358,7 +369,6 @@ namespace main_interface
         IntPtr dwRefData
         );
 
-
         //attatch a call the feault window procesufre 
         [DllImport("comctl32.dll")]
         static extern IntPtr DefSubclassProc(
@@ -367,8 +377,6 @@ namespace main_interface
         IntPtr wParam,
         IntPtr lParam
         );
-
-
 
         // win32 import - winui does not support hotkeys (kernel event ) as its only a wrapper 
         [DllImport("user32.dll")]
@@ -382,6 +390,7 @@ namespace main_interface
 
         [DllImport("user32.dll")]
         static extern bool UnregisterHotKey(IntPtr hWnd, int id); // HOTKEY ID WINDOW ID 
+
 
 
 
@@ -469,7 +478,7 @@ namespace main_interface
         DispatcherTimer _animationTimer;
         double _opacity;
 
-        void ShowOnScreen()
+        void ShowOnScreen() // Always on top is show on screen here 
         {
 
 
@@ -514,7 +523,6 @@ namespace main_interface
         {
             var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
             var style = GetWindowLong(hwnd, -16); // Reads current window style flags 
-            
             SetWindowLong(hwnd, -16, style & ~0x00C00000); // remove titlebar 
                     }
 

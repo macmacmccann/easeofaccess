@@ -8,7 +8,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid RowDefinitions="Auto,*,Auto">
+<Grid>
+        <Image Source="/Assets/gifs/Account.gif"
+            Stretch="UniformToFill"></Image>
+    <Grid x:Name="maingrid" RowDefinitions="Auto,*,Auto">
+
+
+      
+           
         <!-- Header -->
         <TextBlock 
             Text="Settings"
@@ -142,4 +149,6 @@
 
 
     </Grid>
+
+ </Grid>
 </Page>

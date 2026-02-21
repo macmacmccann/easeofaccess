@@ -23,13 +23,13 @@ namespace main_interface
 
         public static bool HighStrengthEnabled = false;
         public static bool MediumStrengthEnabled = false;
-        public static bool LowStrengthEnabled = false;
+        public static bool LowStrengthEnabled = true;
 
         public static bool DimScreenEnabled = false;
         public static bool DyslexiaEnabled = false;
         public static bool LightSensitiveEnabled = false;
         public static bool MigraineEnabled = false;
-        public static bool VisualProcessingEnabled = false;
+        public static bool FireEnabled = false;
 
 
         // Mouseless Toggles 
@@ -42,6 +42,9 @@ namespace main_interface
         // Tiling Manager
 
         public static bool TilingManagerEnabled = false;
+        public static bool FocusModeEnabled = false;
+        public static bool StackedModeEnabled = false;
+        public static bool ColumnModeEnabled = true;
 
 
         //Settings Page

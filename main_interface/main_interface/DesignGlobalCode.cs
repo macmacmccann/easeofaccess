@@ -207,18 +207,35 @@ namespace main_interface
                     //   Application.Current.Resources["CardBackgroundFillColorDefaultBrush"] as Brush;
                 }
             }
+        }
 
 
 
+            // THIS IS FOR BLURRING IMAGE BEHIND GRID 
+            public static void BlurBehindContent(Microsoft.UI.Xaml.Controls.Grid grid)
+            {
+                var acrylicBrush = new AcrylicBrush
+                {
+                    TintColor = Colors.Yellow,
+                    TintOpacity = 0.0,
+                    //  FallbackColor = Colors.White
+                };
 
 
+                grid.Background = acrylicBrush;
 
+            }
+            // THIS BLURES BEHIND THE APP 
+           public static  void BlurBehindAppNotContent(Window window)
+            {
+                //if (!DesktopAcrylicBackdrop.IsSupported())
+                //  return; // null check
+                var acrylic = new DesktopAcrylicBackdrop();
+                window.SystemBackdrop = acrylic;
 
-
-
+            }
 
 
 
         }
     }
-}

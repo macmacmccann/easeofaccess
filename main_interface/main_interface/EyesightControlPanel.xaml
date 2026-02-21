@@ -6,9 +6,12 @@
     xmlns:local="using:main_interface"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
 
 
+
+    xmlns:controls="using:main_interface.Controls"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
 
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -181,32 +184,41 @@
         </Grid>
 
 
-            <!--  BOTTOM OF PAGE -->
+         
 
+
+            <!-- MIDDLE PAGE BARRIER  -->
 
             <!-- HEADER row 2 of main grid -->
-            <Grid Grid.Row="2" 
-         HorizontalAlignment="Stretch"
-         Margin="0">
+            <Grid Grid.Row="2" Background="#80FAD89C" HorizontalAlignment="Stretch" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+
 
                 <Border x:Name="SplitPage"
-                        Margin="30"
-                         HorizontalAlignment="Stretch"
-                        VerticalAlignment="Center"
-                    >
+            Grid.Column="0"
+                Margin="30"
+                 HorizontalAlignment="Stretch"
+                VerticalAlignment="Center">
 
                     <TextBlock
-                   Text="Decide what works for you at anytime"
-                   FontSize="30"
-                   FontWeight="SemiBold"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                        />
-
+                    
+                   Text="YOU DECIDE HOW YOUR COMPUTER BEHAVES"
+                    FontSize="22"
+                    FontWeight="SemiBold"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" />
                 </Border>
 
-            </Grid>
 
+                <Button Grid.Column ="1"  x:Name="TipIcon1" Content="Remind Me" Margin="0,0,70,0"/>
+                <muxc:TeachingTip x:Name="TipContent1" Target="{x:Bind TipIcon1}"/>
+
+            </Grid>
+   <!--  BOTTOM OF PAGE -->
 
             <!-- BOTTOM TOGGLES ROW 3 of msin grid  -->
 
@@ -316,17 +328,17 @@
                     <Grid ColumnDefinitions="*,*">
 
                         <StackPanel Grid.Column="0" VerticalAlignment="Top" Spacing="4">
-                            <TextBlock Text="Visual Processing " FontSize="16" FontWeight="SemiBold" Foreground="White" />
-                            <TextBlock Text="Tint to help process correct shapes" FontSize="12" Opacity="0.9" Foreground="White" />
+                            <TextBlock Text="Anxiety Relief" FontSize="16" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Relax your nervous system " FontSize="12" Opacity="0.9" Foreground="White" />
                         </StackPanel>
                         <ToggleSwitch                 
                                 Grid.Row="1"
                                 Grid.Column="1"
-                              x:Name="VisualProcessingEnabledToggle"
+                              x:Name="FireEnabledToggle"
                               Header="Apply"
                               OffContent="Disabled"
                               OnContent="Enabled"
-                              Toggled="VisualProcessingEnabledToggled" />
+                              Toggled="FireEnabledToggled" />
                     </Grid>
                 </Border>
 

@@ -132,8 +132,11 @@ public sealed partial class CommandsControlPanel : Page
         OverlayEnabledToggle.IsOn = StateSettings.OverlayEnabled;
         AlwaysOnTopEnabledToggle.IsOn = StateSettings.AlwaysOnTopEnabled;
         AutoPasteEnabledToggle.IsOn = StateSettings.AutoPasteEnabled;
-       Commands.Instance.ApplySettings();
 
+        
+        if (Commands.Exists()) {
+            Commands.Instance.ApplySettings();
+        }
         // This reads from the ui so ui enforces on boolean 
         // Usecase dev controlling ui through boolean 
        // StateSettings.OverlayEnabled = OverlayEnabledToggle.IsOn;
