@@ -17,9 +17,11 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics;
+using Windows.Graphics.Printing.Workflow;
 using Windows.UI.WindowManagement;
 using WinRT.Interop;
 using static main_interface.TakenCombinations;
@@ -76,7 +78,8 @@ namespace main_interface
             //TilePrimaryMonitor();
             GetTileableWindows();
             TilePrimaryMonitorWindows();
-     
+       
+
             // " Subscription" logic -> dump method into this 
             Activated += OnActivated; 
 
@@ -86,9 +89,77 @@ namespace main_interface
 
 
         }
+
+        public void ActivateWindowListenerHook()
+        {
+
+
+            //http://www.jose.it-berater.org/oleacc/functions/setwineventhook.htm
+            _winEventDelegate = OnWinEvent;
+            _winEventHook = SetWinEventHook(
+                EVENT_OBJECT_DESTROY,  // min event " when a window is destroyed : activate"
+                EVENT_OBJECT_SHOW,     // max event - covers show, hide, destroy
+                IntPtr.Zero,
+                _winEventDelegate, // Call this when requirements met (  _winEventDelegate = OnWinEvent; )
+                0,   // processes - 0 means all "monitor all windows form the whole cpu " 
+                0,   // all threads
+                WINEVENT_OUTOFCONTEXT // run callback in this app not target window 
+            );
+
+        }
+
         //Delegate required by enumerate windows to reveive the window handle 
         delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
 
+
+        [DllImport("user32.dll")]
+        static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax, IntPtr hmodWinEventProc,
+        WinEventDelegate lpfnWinEventProc, uint idProcess, uint idThread, uint dwFlags);
+
+        // Delegate -> in constructor 
+        private IntPtr _winEventHook;
+ 
+
+
+        delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hWnd,
+             int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
+
+        private WinEventDelegate _winEventDelegate; // must hold reference or GC will collect it
+
+
+        //In constructor   _winEventDelegate = OnWinEvent;
+        // Im only using one param idObject = window 
+        private void OnWinEvent(IntPtr hWinEventHook,
+            uint eventType, // id of event 
+            IntPtr hWnd, // handle of window 
+            int idObject, // window
+            int idChild, // sub objects in the window - not needed 
+            uint dwEventThread, // thread
+            uint dwmsEventTime) 
+        {
+            // "Im listening to see if its a window i dont care about its subcomponents "
+            if (idObject != 0) return;
+
+            // Bug Fix : Apps opening go on and off during opening - just wait until its fully loaded
+            DispatcherQueue.TryEnqueue(async () =>
+            {
+                await Task.Delay(300);
+                TilePrimaryMonitorWindows();
+            });
+        }
+
+
+
+
+
+
+        [DllImport("user32.dll")]
+        static extern bool UnhookWinEvent(IntPtr hWinEventHook);
+
+        const uint EVENT_OBJECT_SHOW = 0x8002;
+        const uint EVENT_OBJECT_HIDE = 0x8003;
+        const uint EVENT_OBJECT_DESTROY = 0x8001;
+        const uint WINEVENT_OUTOFCONTEXT = 0x0000;
 
 
 
@@ -219,59 +290,13 @@ namespace main_interface
             acrylic = new DesktopAcrylicBackdrop();
             this.SystemBackdrop = acrylic;
         }
-        int CountWindowsOnPrimaryMonitorTest()
-        {
-            // List of window handles of int ptr 
-            List<IntPtr> windows = new List<IntPtr>();
-            // 
-            IntPtr primaryMonitor =
-                MonitorFromPoint(
-                    // struct for this extern dll i made 
-                    new Win32Point
-                    {
-                        X = 0,
-                        Y = 0
-                    },
-                    MONITOR_DEFAULTTOPRIMARY
-                    );
-            // Now enumerate over every top level window 
-            // following the import 
-            EnumWindows((hWnd, lParam) =>
-            {
-                // skip windows that are not visible using import 
-                if (!IsWindowVisible(hWnd))
-                    return true; // continue dont exit 
-                // Also skip windows with no title eg., background apps 
-                // implementing import 
-                if (GetWindowTextLength(hWnd) == 0)
-                    return true;
-                // Get the monitor this window is on - but testing so primary 
-                IntPtr WindowIsInMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTOPRIMARY);
-                //Only count monitors on the primary window 
-                if (WindowIsInMonitor == primaryMonitor)
-                {
-                    windows.Add(hWnd);
-                }
-                return true;
-            }, IntPtr.Zero);
-            // Returb how many windows i found
-            Debug.WriteLine("\n");
-            Debug.WriteLine($"Counted filtered windows:{windows.Count}");
-            Debug.WriteLine("\n");
-            return windows.Count;
-        }
-        void TilePrimaryMonitor()
-        {
-            int windowCount = CountWindowsOnPrimaryMonitorTest();
-            if (windowCount == 0)
-                return;
-            int screenWidth = GetSystemMetrics(SM_CXSCREEN);
-            int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-            int tileWidth = screenWidth / screenHeight;
-            System.Diagnostics.Debug.WriteLine(
-      $"Found {windowCount} windows, each width = {tileWidth}"
-  );
-        }
+     
+     
+        
+
+
+
+
         [DllImport("user32.dll")]
         private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags);
         // I want to make it so i can see the titles on debug 
@@ -296,8 +321,13 @@ namespace main_interface
         class VirtualDesktopManager { }
         private IVirtualDesktopManager _virtualDesktopManager =
     (IVirtualDesktopManager)new VirtualDesktopManager();
-        // MANY FILTERS IF I WANT IT TILED OR NOT 
-        List<IntPtr> GetTileableWindows()
+
+   
+     
+
+
+          //  Returns hwnd - lots of filtering here 
+            List<IntPtr> GetTileableWindows()
         {
             // List to stor all windows that are visible or not tool windows 
             List<IntPtr> windows = new List<IntPtr>();
@@ -370,10 +400,36 @@ namespace main_interface
             GetWindowText(hWnd, builder, builder.Capacity);
             return builder.ToString();
         }
+
+
+        public List<IntPtr> ListFullyFilteredWindows(List<IntPtr> windows)
+        {
+           
+
+            EnumWindows((hWnd, lParam) =>
+            {
+                string title = GetWindowTitle(hWnd);
+                Debug.WriteLine($"Fully filtered windows HWND= {hWnd.ToInt64():X} | TITLE=\"{title}\"");
+                return true;
+            }, IntPtr.Zero);
+
+            nowFiltered += 1;
+            return windows;
+
+
+        }
+
+        // guard flag stop recursive loop run method only once 
+        int nowFiltered = 1;
         void TilePrimaryMonitorWindows()
         {
             List<IntPtr> windows = GetTileableWindows();
             if (windows.Count == 0) return;
+
+           // ListFullyFilteredWindows(windows);
+
+            
+         
 
             // Get monitor from your own app window
             IntPtr hMonitor = MonitorFromWindow( WindowNative.GetWindowHandle(this),0x00000002 // MONITOR_DEFAULTTONEAREST
@@ -400,18 +456,22 @@ namespace main_interface
             int tileWidth = workWidth / windows.Count;
             int tileHeight = workHeight / windows.Count;
 
-            StackWindows(windows, workWidth, workHeight, tileHeight, tileWidth);
+      
 
-            /*
+            const uint SWP_NOACTIVATE = 0x0010;
+      
+
+
+            
             if (StateSettings.ColumnModeEnabled)
             {
-                ColumnWindows(windows, workWidth, workHeight, tileHeight, tileWidth);
+                ColumnWindows(windows, workWidth, workHeight, tileHeight, tileWidth, workX, workY);
             }
             if (StateSettings.StackedModeEnabled)
             {
-                StackWindows(windows, workWidth, workHeight, tileHeight, tileWidth);
+                StackWindows(windows, workWidth, workHeight, tileHeight, tileWidth, workX,workY);
             }
-            */
+            
 
         }
 
@@ -420,26 +480,33 @@ namespace main_interface
        , int workWidth,
        int workHeight,
        int TileHeight,
-       int TileWidth
+       int TileWidth,
+       int workX,
+       int workY
        )
         {
             // Now didivde by amount of filtered windows 
-           
+
+
+            int tileWidth = workWidth / windows.Count;
+            int tileHeight = workHeight / windows.Count;
 
 
             const uint SWP_NOACTIVATE = 0x0010;
             for (int i = 0; i < windows.Count; i++)
             {
+                string title = GetWindowTitle(windows[i]);
+                Debug.WriteLine($"Actively gridding Window {i}: HWND={windows[i].ToInt64():X}, Title=\"{title}\"");
+
                 // Restore if minimized before repositioning
                 ShowWindow(windows[i], 9); // SW_RESTORE = 9
                 SetWindowPos(
                     windows[i],
-                    IntPtr.Zero, // hwnd top or bottom 
-
-                    (i * TileHeight), // workx + ( i * tileWidth ) = eg., monitor 2 push tiling to start on mon 2 eg., 1000 dpi to left 
-                    0, // Primary monitor left work y = 0,0 on monitor 1 
-                    TileWidth, // whole work area 
-                    TileHeight,
+                    IntPtr.Zero,
+                    workX, // x position  workx + ( i * tileWidth ) = eg., monitor 2 push tiling to start on mon 2 eg., 1000 dpi to left 
+                    workY + (i * tileHeight), // y position Primary monitor left worky 0,0 on monitor 1 
+                    workWidth, // x size span the whole width of monitor 
+                    tileHeight, // y size 
                     SWP_NOACTIVATE
                 );
             }
@@ -451,7 +518,10 @@ namespace main_interface
          , int workWidth,
          int workHeight,
          int TileHeight,
-         int TileWidth
+         int TileWidth,
+         int workX,
+         int workY
+            
          )
         {
             // Now didivde by amount of filtered windows 
@@ -461,18 +531,22 @@ namespace main_interface
             const uint SWP_NOACTIVATE = 0x0010;
             for (int i = 0; i < windows.Count; i++)
             {
+                string title = GetWindowTitle(windows[i]);
+                Debug.WriteLine($"Actively gridding Window {i}: HWND={windows[i].ToInt64():X}, Title=\"{title}\"");
+
                 // Restore if minimized before repositioning
                 ShowWindow(windows[i], 9); // SW_RESTORE = 9
                 SetWindowPos(
                     windows[i],
                     IntPtr.Zero,
-                    (i * TileHeight), // workx + ( i * tileWidth ) = eg., monitor 2 push tiling to start on mon 2 eg., 1000 dpi to left 
-                    0, // Primary monitor left worky 0,0 on monitor 1 
-                    workWidth, // span the whole width of monitor 
-                    workHeight,
+                    workX + (i * tileWidth), // x position  workx + ( i * tileWidth ) = eg., monitor 2 push tiling to start on mon 2 eg., 1000 dpi to left 
+                    workY, // y position Primary monitor left worky 0,0 on monitor 1 
+                    tileWidth, // x size span the whole width of monitor 
+                    workHeight, // y size 
                     SWP_NOACTIVATE
                 );
             }
+
         }
 
         public void ReturntoMaxedAfterClosing()
@@ -517,9 +591,9 @@ namespace main_interface
                 SetWindowPos(
                     windows[i],
                     IntPtr.Zero,
-                    (i * tileWidth),
+                    workX,
                     workY,
-                    tileWidth,
+                    workWidth,
                     workHeight,
                     SWP_NOACTIVATE
                 );
@@ -593,6 +667,52 @@ namespace main_interface
 
 
 
+
+
+        // Switch between modes with registered hotkey 1 
+        public enum ProgressState
+        {
+            StepOne,
+            StepTwo
+        }
+
+
+        private ProgressState currentState = ProgressState.StepOne;
+
+        public void ProgressWhatIsOn()
+        {
+            var allStates = (ProgressState[])Enum.GetValues(typeof(ProgressState));
+
+
+            // modulus reverts back to ) works perfectly 
+            int nextIndex = ((int)currentState + 1) % allStates.Length;
+
+          
+            currentState = allStates[nextIndex];
+
+            Debug.WriteLine($"Current State: {currentState}");
+
+            switch (currentState)
+            {
+                case ProgressState.StepOne:
+                    TilingManagerControlPanel._tilingControlPanelPage.GlobalStackedToggle();
+                    break;
+
+                case ProgressState.StepTwo:
+                    TilingManagerControlPanel._tilingControlPanelPage.GlobalColumnToggle();
+                    break;
+
+          
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+
+        }
+
+
+
+
         // HOOKS 
 
         private SubclassProc _windowProc; // Field is in scope of MainWindow - will live as long as MainWindow does !
@@ -650,13 +770,13 @@ namespace main_interface
            
                 if (wParam.ToInt32() == HOTKEY_ID_OVERLAY) // 
                 {
-                    Debug.WriteLine("Overlay Called");
-                   // DisableMouseToBackground(); //Lets open our overlay screen
+                    Debug.WriteLine("Alternating Modes On tiling manager");
+                    ProgressWhatIsOn();
                     return IntPtr.Zero; // tell win32 the message was handled  
                 }
                 if (wParam.ToInt32() == HOTKEY_ID_FAKE_OTHER_FUNCTION)
                 {
-                    Debug.WriteLine("Other function called");
+                    Debug.WriteLine("Other function called on tiling manager");
                     return IntPtr.Zero; // tell win32 the message was handled  
                 }
 
@@ -769,6 +889,18 @@ namespace main_interface
 
 
 
+        public void TurnOffHooks()
+        {
+
+            var hWnd = WindowNative.GetWindowHandle(this);
+            UnregisterHotKey(hWnd, HOTKEY_ID_OVERLAY);
+            UnregisterHotKey(hWnd, HOTKEY_ID_FAKE_OTHER_FUNCTION);
+
+            if (_winEventHook != IntPtr.Zero)
+                UnhookWinEvent(_winEventHook);
+
+            _instanceTilingManager = null; // Clear the singleton reference 
+        }
 
         private void OnClosed(object sender, WindowEventArgs args)
         {
@@ -777,10 +909,20 @@ namespace main_interface
             UnregisterHotKey(hWnd, HOTKEY_ID_OVERLAY);
             UnregisterHotKey(hWnd, HOTKEY_ID_FAKE_OTHER_FUNCTION);
 
+            if (_winEventHook != IntPtr.Zero)
+                UnhookWinEvent(_winEventHook);
+
             _instanceTilingManager = null; // Clear the singleton reference 
 
 
         }
+
+
+            
+            
+        
+
+
 
 
 

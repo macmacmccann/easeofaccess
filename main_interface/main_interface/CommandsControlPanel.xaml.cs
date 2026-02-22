@@ -181,9 +181,6 @@ public sealed partial class CommandsControlPanel : Page
 
     }*/
 
-    private TakenCombinations.HotKeyCombo? ComboPreviousNoId;
-    private uint LastMod;
-    private uint LastVK;
 
 
 

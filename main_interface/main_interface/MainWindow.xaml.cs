@@ -66,6 +66,7 @@ namespace main_interface
             // this.NavigationView.SelectionChanged += NavigationView_SelectionChanged;
             //this.NavigationView_ItemInvoked += NavigationView_ItemInvoked;
             Activated += OnActivated; // we have to wait until the hwnd is created
+            Closed += OnClosed;
 
             // lamba shorthand -> " just ignore object sender + Event Args its an enu, conditional case - not an event 
             this.Closed += (_, __) =>
@@ -81,6 +82,19 @@ namespace main_interface
                     TransitionTo(State_IsAppInFocus.AppNotActive);
                 }
             };
+        }
+
+        private void OnClosed(object sender, WindowEventArgs args)
+        {
+
+            // if main window closed make sure 
+            // if tiling manager exists
+            // run 
+            if (TilingManager.Exists()) // if it does exist 
+            {
+                // return the instance here and then reset windows to normal size 
+                TilingManager.GetInstance().ReturntoMaxedAfterClosing();
+            }
         }
 
 
