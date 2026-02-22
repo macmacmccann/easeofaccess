@@ -400,8 +400,9 @@ namespace main_interface
             int tileWidth = workWidth / windows.Count;
             int tileHeight = workHeight / windows.Count;
 
+            StackWindows(windows, workWidth, workHeight, tileHeight, tileWidth);
 
-
+            /*
             if (StateSettings.ColumnModeEnabled)
             {
                 ColumnWindows(windows, workWidth, workHeight, tileHeight, tileWidth);
@@ -410,6 +411,7 @@ namespace main_interface
             {
                 StackWindows(windows, workWidth, workHeight, tileHeight, tileWidth);
             }
+            */
 
         }
 

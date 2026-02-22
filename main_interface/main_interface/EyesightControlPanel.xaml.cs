@@ -100,7 +100,11 @@ public sealed partial class EyesightControlPanel : Page
         StateSettings.DyslexiaEnabled ||
         StateSettings.LightSensitiveEnabled ||
         StateSettings.MigraineEnabled ||
-        StateSettings.FireEnabled);
+        StateSettings.FireEnabled)
+        && (StateSettings.HighStrengthEnabled ||
+        StateSettings.MediumStrengthEnabled ||
+        StateSettings.LowStrengthEnabled);
+        
 
         Debug.WriteLine($" Its enabled and something is chosen:  {OnAndSomethingChosen}");
 
@@ -278,6 +282,9 @@ public sealed partial class EyesightControlPanel : Page
     {
         StateSettings.HighStrengthEnabled = HighStrengthToggle.IsOn;
 
+        if (!StateSettings.HighStrengthEnabled)
+        { IsIt_On_And_Something_Chosen(); }
+
         if (!HighStrengthToggle.IsOn) 
             return;
 
@@ -287,7 +294,7 @@ public sealed partial class EyesightControlPanel : Page
         StateSettings.LowStrengthEnabled = false;
 
         if (StateSettings.MonitorColorFixEnabled)
-        {Eyesight.Instance.ApplySettings(); } // Instance will create if not one 
+        { IsIt_On_And_Something_Chosen(); } 
      
 
     }
@@ -295,6 +302,10 @@ public sealed partial class EyesightControlPanel : Page
     private void MediumStrengthToggle_Toggled(object sender, RoutedEventArgs e)
     {
         StateSettings.MediumStrengthEnabled = MediumStrengthToggle.IsOn;
+
+        if (!StateSettings.MediumStrengthEnabled)
+        { IsIt_On_And_Something_Chosen(); }
+
 
         if (!MediumStrengthToggle.IsOn)
             return;
@@ -306,7 +317,7 @@ public sealed partial class EyesightControlPanel : Page
         StateSettings.LowStrengthEnabled = false;
 
         if (StateSettings.MonitorColorFixEnabled)
-        { Eyesight.Instance.ApplySettings(); } // Instance will create if not one 
+        { IsIt_On_And_Something_Chosen(); } // Instance will create if not one 
 
 
     }
@@ -314,6 +325,10 @@ public sealed partial class EyesightControlPanel : Page
     private void LowStrengthToggle_Toggled(object sender, RoutedEventArgs e)
     {
         StateSettings.LowStrengthEnabled = LowStrengthToggle.IsOn;
+
+        if (!StateSettings.LowStrengthEnabled)
+        { IsIt_On_And_Something_Chosen(); }
+
 
         if (!LowStrengthToggle.IsOn)
             return;
@@ -325,7 +340,7 @@ public sealed partial class EyesightControlPanel : Page
         StateSettings.MediumStrengthEnabled = false;
 
         if (StateSettings.MonitorColorFixEnabled)
-        { Eyesight.Instance.ApplySettings(); } // Instance will create if not one 
+        { IsIt_On_And_Something_Chosen(); } // Instance will create if not one 
 
 
     }
