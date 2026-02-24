@@ -775,7 +775,15 @@ namespace main_interface
             if (!success)
             {
                 Debug.WriteLine("REFUSED - already in use or registration failed");
-                await Dialogues.OnErrorDialogue_InUse(this.Content.XamlRoot, GuideRedirect);
+                bool confirmed = await Dialogues.OnErrorDialogue_InUse(this.XamlRoot);
+                if (confirmed)
+                {
+                    GuideRedirect();
+                    return;
+                }
+
+
+
                 // Always update UI with resulting combo
                 _activeHotkeyTextBlock.Text = DescribeHotKey((Modifiers)resultingCombo.Modifiers, resultingCombo.VirtualKey);
             }

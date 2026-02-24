@@ -11,15 +11,16 @@ namespace main_interface
     {
 
           
-    public static async Task OnErrorDialogue_InUse(Microsoft.UI.Xaml.XamlRoot xamlRoot,
-        System.Action onPrimaryClick)
+    public static async Task<bool> OnErrorDialogue_InUse(Microsoft.UI.Xaml.XamlRoot xamlRoot)
+
+
+
         {
             string error_text =
 
                  "\n Add functionality safely dont rewrite it" +
                 "\n Try choose another combination" +
                 "\n Or cancel and revert back to default ";
-          ///  _activeHotkeyTextBlock.Text = "Try Again";
 
             var dialog = new ContentDialog
             {
@@ -31,15 +32,18 @@ namespace main_interface
                 DefaultButton = ContentDialogButton.Primary,
                 XamlRoot = xamlRoot // this pages ui not some other pages 
             };
+            var result = await dialog.ShowAsync();
+
 
             // event not method cant just call -> shorthand -> sender event usual params for event 
-            dialog.PrimaryButtonClick += (s, e) => onPrimaryClick();
-            dialog.CloseButtonClick += (s, e) => { }; // do nothing 
+            
+            //dialog.PrimaryButtonClick += (s, e) => onPrimaryClick(); // returns TRUE if primary button clicked 
+            return result == ContentDialogResult.Primary; // true = hit enter, false = cancel
 
 
 
 
-            await dialog.ShowAsync();
+
 
         }
 
