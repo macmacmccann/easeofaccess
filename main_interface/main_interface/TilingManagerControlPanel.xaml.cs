@@ -153,8 +153,9 @@ namespace main_interface
                     // var tm -> getinstance would just create another one if i said getinstance twice in a row 
                     var tm = TilingManager.GetInstance();
                     tm.ReturntoMaxedAfterClosing();
-                    tm.TurnOffHooks();
-                  
+                   
+                    tm.RemoveSubclass(); // Stops double creation accidentally - delete it when done !
+                   tm.TurnOffHooks();
                     HeaderColour(sender, e);
 
 

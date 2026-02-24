@@ -169,7 +169,7 @@ namespace main_interface
         {
 
             var hWnd = WindowNative.GetWindowHandle(this);
-            UnregisterHotKey(hWnd, HOTKEY_ID_OVERLAY);
+            UnregisterHotKey(hWnd, HOTKEY_ID_OVERLAY); // THESE SHOULD BE DONE AFTER REMOVING SUBCLASS 
             UnregisterHotKey(hWnd, HOTKEY_ID_FAKE_OTHER_FUNCTION);
 
             if (_winEventHook != IntPtr.Zero)
@@ -178,7 +178,7 @@ namespace main_interface
             _winEventDelegate = null; // Global delegate aswell
 
 
-          //  _instanceTilingManager = null; // Clear the singleton reference 
+            _instanceTilingManager = null; // Clear the singleton reference 
         }
 
         private void OnClosed(object sender, WindowEventArgs args)
@@ -187,6 +187,7 @@ namespace main_interface
             var hWnd = WindowNative.GetWindowHandle(this);
             UnregisterHotKey(hWnd, HOTKEY_ID_OVERLAY);
             UnregisterHotKey(hWnd, HOTKEY_ID_FAKE_OTHER_FUNCTION);
+
 
             if (_winEventHook != IntPtr.Zero)
                 UnhookWinEvent(_winEventHook);
@@ -209,7 +210,7 @@ namespace main_interface
 
         private void OnActivated(object sender, WindowActivatedEventArgs args) // hwnd exists after the fact thats why is activated when window is constructred not in the construcotr 
         {
-            MoveOffScreen();
+          //  MoveOffScreen();
             //thhis will run once im not unsuncribing to this method 
             if (!_isHookUpSet)
             {
@@ -770,6 +771,26 @@ namespace main_interface
 
     );
 
+        [DllImport("comctl32.dll")]
+        static extern bool RemoveWindowSubclass(IntPtr hWnd,
+            SubclassProc pfnSubclass,
+            IntPtr uIdSubclass); // Id of this subclass - mines just not id'ed
+
+        // Make the window again without doing this = 2 subclasses firing 
+        // Unregister hooks after Turnoffhooks()
+        public void RemoveSubclass()
+        {
+            if (_windowProc != null)
+            {
+                var hwnd = WindowNative.GetWindowHandle(this);
+                RemoveWindowSubclass(hwnd, _windowProc, (IntPtr)SUBCLASS_ID_MAIN); // window , delegate, id of subclass 
+                _windowProc = null;
+            }
+        }
+        // Just an id for this sublcass 
+        // It wont mess another window up but if i have another subclass in this window 
+        private const int SUBCLASS_ID_MAIN = 1;
+
         void SetupSubclass()
         {
             var hwnd = WindowNative.GetWindowHandle(this);
@@ -780,8 +801,8 @@ namespace main_interface
             SetWindowSubclass( // Subclass needed in winui to hook into window procesdure
                 hwnd,
                 _windowProc,
-                IntPtr.Zero,
-                IntPtr.Zero
+                (IntPtr)SUBCLASS_ID_MAIN, // id = 1 
+                IntPtr.Zero // extra data eg., object dont need
                 );
         }
 
