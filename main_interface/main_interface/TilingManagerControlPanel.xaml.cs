@@ -135,7 +135,7 @@ namespace main_interface
             if (StateSettings.TilingManagerEnabled)
             {
                 // if i turn it on but its already created or not (getinstance)
-          
+                    
                     TilingManager.GetInstance().ApplySettings();
                      TilingManager.GetInstance().ActivateWindowListenerHook();
 
@@ -145,14 +145,16 @@ namespace main_interface
                 
               
 
-            
+       
             // if you turned off logic + background window + disable toggles  
           if (!StateSettings.TilingManagerEnabled) { 
                 if (TilingManager.Exists())
                 {
-                    TilingManager.GetInstance().ReturntoMaxedAfterClosing();
-                    TilingManager.GetInstance().TurnOffHooks();
-                    TilingManager.Destroy();
+                    // var tm -> getinstance would just create another one if i said getinstance twice in a row 
+                    var tm = TilingManager.GetInstance();
+                    tm.ReturntoMaxedAfterClosing();
+                    tm.TurnOffHooks();
+                  
                     HeaderColour(sender, e);
 
 

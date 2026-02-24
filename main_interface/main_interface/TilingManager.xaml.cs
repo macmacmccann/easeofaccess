@@ -163,6 +163,48 @@ namespace main_interface
 
 
 
+
+
+        public void TurnOffHooks()
+        {
+
+            var hWnd = WindowNative.GetWindowHandle(this);
+            UnregisterHotKey(hWnd, HOTKEY_ID_OVERLAY);
+            UnregisterHotKey(hWnd, HOTKEY_ID_FAKE_OTHER_FUNCTION);
+
+            if (_winEventHook != IntPtr.Zero)
+                UnhookWinEvent(_winEventHook);
+            _winEventHook = IntPtr.Zero; // clear delegate
+            _winEventDelegate = null; // Global delegate aswell
+
+
+          //  _instanceTilingManager = null; // Clear the singleton reference 
+        }
+
+        private void OnClosed(object sender, WindowEventArgs args)
+        {
+
+            var hWnd = WindowNative.GetWindowHandle(this);
+            UnregisterHotKey(hWnd, HOTKEY_ID_OVERLAY);
+            UnregisterHotKey(hWnd, HOTKEY_ID_FAKE_OTHER_FUNCTION);
+
+            if (_winEventHook != IntPtr.Zero)
+                UnhookWinEvent(_winEventHook);
+
+            _instanceTilingManager = null; // Clear the singleton reference 
+
+
+        }
+
+
+
+
+
+
+
+
+
+
         private bool _isHookUpSet = false;
 
         private void OnActivated(object sender, WindowActivatedEventArgs args) // hwnd exists after the fact thats why is activated when window is constructred not in the construcotr 
@@ -889,34 +931,6 @@ namespace main_interface
         }
 
 
-
-        public void TurnOffHooks()
-        {
-
-            var hWnd = WindowNative.GetWindowHandle(this);
-            UnregisterHotKey(hWnd, HOTKEY_ID_OVERLAY);
-            UnregisterHotKey(hWnd, HOTKEY_ID_FAKE_OTHER_FUNCTION);
-
-            if (_winEventHook != IntPtr.Zero)
-                UnhookWinEvent(_winEventHook);
-
-            _instanceTilingManager = null; // Clear the singleton reference 
-        }
-
-        private void OnClosed(object sender, WindowEventArgs args)
-        {
-
-            var hWnd = WindowNative.GetWindowHandle(this);
-            UnregisterHotKey(hWnd, HOTKEY_ID_OVERLAY);
-            UnregisterHotKey(hWnd, HOTKEY_ID_FAKE_OTHER_FUNCTION);
-
-            if (_winEventHook != IntPtr.Zero)
-                UnhookWinEvent(_winEventHook);
-
-            _instanceTilingManager = null; // Clear the singleton reference 
-
-
-        }
 
 
             
