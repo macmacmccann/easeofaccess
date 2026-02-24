@@ -579,6 +579,8 @@ public sealed partial class CommandsControlPanel : Page
             bool confirmed = await Dialogues.OnErrorDialogue_InUse(this.XamlRoot);
             if (confirmed)
             {
+                // Only if awauit returns true do you exit out of this and try again 
+
                 GuideRedirect();
                 return;
             }

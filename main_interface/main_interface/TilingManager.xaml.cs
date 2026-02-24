@@ -269,6 +269,7 @@ namespace main_interface
         const uint SWP_NOSIZE = 0X0001; // Dont change window size 
         const uint SWP_NOACTIVATE = 0x0010; // Dont activate
         private static readonly IntPtr HWND_BOTTOM = new IntPtr(1); // z index but at back 
+
         void SetOverlayStyle() //Win32 styling - aim -> borderless and always on top needed - its a pop up not a real window 
         {
             var presenter = OverlappedPresenter.CreateForContextMenu();

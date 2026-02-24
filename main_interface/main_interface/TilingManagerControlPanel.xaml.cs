@@ -40,7 +40,6 @@ namespace main_interface
 
         private Modifiers CapturedModiferKeys; // not uint casting problem its cast to None in enum method below 
 
-        TilingManager _tilingManager;
         public event Action<string>? HotKeyErrorOccured;
 
 
@@ -57,7 +56,7 @@ namespace main_interface
             // Hotkey constructions 
             this.KeyDown += EventOfKeyPressedDown; // subscribe to this method on any key down on page 
             HotKeyErrorOccured += OnError;
-           _tilingManager = TilingManager.GetInstance();
+           //_tilingManager = TilingManager.GetInstance(); NO im constructing making it -> toggles should 
 
 
 
@@ -96,9 +95,9 @@ namespace main_interface
 
             // be careful infinite loop both are disabled 
             // i put one to true so it will work 
-            if (TilingManager.Exists())
+            if (StateSettings.TilingManagerEnabled)
             {
-                //TilingManager.GetInstance().ApplySettings();
+                TilingManager.GetInstance().ApplySettings();
              
             }
             // This reads from the ui so ui enforces on boolean 
@@ -132,14 +131,21 @@ namespace main_interface
             StateSettings.TilingManagerEnabled = enabledOrNot;
 
 
+            // If i turn it on 
             if (StateSettings.TilingManagerEnabled)
             {
-                EnsureWindow();
-                // Only activate the listener if enabled 
-                TilingManager.GetInstance().ActivateWindowListenerHook();
-                HeaderColour(sender, e);
+                // if i turn it on but its already created or not (getinstance)
+          
+                    TilingManager.GetInstance().ApplySettings();
+                     TilingManager.GetInstance().ActivateWindowListenerHook();
 
-            }
+                     HeaderColour(sender, e);
+
+             }
+                
+              
+
+            
             // if you turned off logic + background window + disable toggles  
           if (!StateSettings.TilingManagerEnabled) { 
                 if (TilingManager.Exists())
@@ -183,6 +189,11 @@ namespace main_interface
         }
 
 
+        private void StackedModeToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            GlobalStackedToggle();
+            return;
+        }
 
         // I changed as i cant call events anywhere , used in window 
         public void GlobalStackedToggle()
@@ -193,10 +204,18 @@ namespace main_interface
             if (!StackedModeToggle.IsOn)
                 return;
 
-            // Turn off other mode 
 
+
+            // Turn off other mode when turning on 
             ColumnModeToggle.IsOn = false;
             StateSettings.ColumnModeEnabled = false;
+
+            //Turn on other mode when turning off 
+            if (!StateSettings.StackedModeEnabled)
+            {
+                ColumnModeToggle.IsOn = true;
+                StateSettings.ColumnModeEnabled = true;
+            }
 
             // Dont accidentially create it switching toggleds 
             if (TilingManager.Exists())
@@ -204,6 +223,14 @@ namespace main_interface
                 TilingManager.GetInstance().ApplySettings();
 
             }
+        }
+
+        // Event filtered to method -> as it can be called best of both worls 
+        private void ColumnModeToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            GlobalColumnToggle();
+            return;
+
         }
 
         // I changed as i cant call events anywhere , used in window 
@@ -221,44 +248,13 @@ namespace main_interface
             StateSettings.StackedModeEnabled = false; // real value 
 
 
-            // Dont accidentially create it switching toggleds 
-            if (TilingManager.Exists())
+            //Turn on other mode when turning off 
+            if (!StateSettings.ColumnModeEnabled)
             {
-                TilingManager.GetInstance().ApplySettings();
-
-            }
-        }
-
-
-
-        private void StackedModeToggle_Toggled(object sender, RoutedEventArgs e)
-        {
-
-            GlobalStackedToggle();
-            return;
-
-            /*
-            // Dont do anything it disabled 
-            if (!StateSettings.TilingManagerEnabled)
-            {
+                StackedModeToggle.IsOn = false;
                 StateSettings.StackedModeEnabled = false;
-                 StackedModeToggle.IsOn = false;
-                     return;
-             }
-            */
-            
+            }
 
-
-            StateSettings.StackedModeEnabled = StackedModeToggle.IsOn;
-
-            // if i just turned on then exit 
-            if (!StackedModeToggle.IsOn)
-                return;
-
-            // Turn off other mode 
-           
-            ColumnModeToggle.IsOn = false;
-            StateSettings.ColumnModeEnabled = false;
 
             // Dont accidentially create it switching toggleds 
             if (TilingManager.Exists())
@@ -268,40 +264,10 @@ namespace main_interface
             }
         }
 
-        private void ColumnModeToggle_Toggled(object sender, RoutedEventArgs e)
-        {
 
-            GlobalColumnToggle();
-            return;
-            /*
-            if (!StateSettings.TilingManagerEnabled)
-            {
-                StateSettings.ColumnModeEnabled = false;
-                ColumnModeToggle.IsOn = false;
-                return;
-            }
-            */
+
    
-            StateSettings.ColumnModeEnabled = ColumnModeToggle.IsOn;
-
-            if (!ColumnModeToggle.IsOn)
-                return;
-
-            // Turn off other mode 
-        
-            StackedModeToggle.IsOn = false;  //ui 
-             StateSettings.StackedModeEnabled = false; // real value 
-
-
-            // Dont accidentially create it switching toggleds 
-            if (TilingManager.Exists())
-            {
-                TilingManager.GetInstance().ApplySettings();
-
-            }
-
-        }
-
+  
 
 
         private void Border_PointerEntered(object sender, PointerRoutedEventArgs e)
@@ -341,6 +307,7 @@ namespace main_interface
             if (!TilingManager.Exists())
             {
                 TilingManager.GetInstance().Activate(); // Follow singleton pattern
+                
             }
             else
             {
@@ -768,12 +735,15 @@ namespace main_interface
 
             }
             // Try to update
-            bool success = _tilingManager.TryUpdateHotkey(hotkeyId, modifiers, vk, out var resultingCombo);
+
+
+            bool success = TilingManager.GetInstance().TryUpdateHotkey(hotkeyId, modifiers, vk, out var resultingCombo);
 
 
 
             if (!success)
             {
+                // Only if awauit returns true do you exit out of this and try again 
                 Debug.WriteLine("REFUSED - already in use or registration failed");
                 bool confirmed = await Dialogues.OnErrorDialogue_InUse(this.XamlRoot);
                 if (confirmed)
