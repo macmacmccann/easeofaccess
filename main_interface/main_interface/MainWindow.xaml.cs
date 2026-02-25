@@ -93,7 +93,14 @@ namespace main_interface
             if (TilingManager.Exists()) // if it does exist 
             {
                 // return the instance here and then reset windows to normal size 
-                TilingManager.GetInstance().ReturntoMaxedAfterClosing();
+
+
+                var tm = TilingManager.GetInstance();
+                tm.ReturntoMaxedAfterClosing();
+                tm.RemoveSubclass(); // Stops double creation accidentally - delete it when done !
+                tm.TurnOffHooks();
+
+                tm.Destroy();
             }
         }
 
@@ -139,9 +146,11 @@ namespace main_interface
                 case State_IsAppInFocus.AppNotActive:
                     System.Diagnostics.Debug.WriteLine("STATE : im off this app window ");
 
-                    if (TilingManager.GetInstance() != null) {
-                        if(StateSettings.TilingManagerEnabled)
-                            if(StateSettings.FocusModeEnabled)
+
+                    if (TilingManager.Exists()) {
+                        if (StateSettings.TilingManagerEnabled)
+                            if (StateSettings.FocusModeEnabled)
+                               
                                 TilingManager.GetInstance().ShowOnScreen();
                     }
                     // else do nothing - you didnt enable 

@@ -97,6 +97,8 @@ namespace main_interface
             // i put one to true so it will work 
             if (StateSettings.TilingManagerEnabled)
             {
+                Debug.WriteLine("Loading preferences, window created  ");
+
                 TilingManager.GetInstance().ApplySettings();
              
             }
@@ -130,14 +132,39 @@ namespace main_interface
             // feedback change to the boolean that mouseless window changes state to 
             StateSettings.TilingManagerEnabled = enabledOrNot;
 
+            //Now its set to on or off 
+
+
+            // if you turned off logic + background window + disable toggles  
+            if (!StateSettings.TilingManagerEnabled)
+            {
+                if (TilingManager.Exists())
+                {
+                    // var tm -> getinstance would just create another one if i said getinstance twice in a row 
+                    var tm = TilingManager.GetInstance();
+                    tm.ReturntoMaxedAfterClosing();
+                    tm.RemoveSubclass(); // Stops double creation accidentally - delete it when done !
+                    tm.TurnOffHooks();
+             
+                    tm.Destroy();
+                    bool exists = TilingManager.Exists();
+                    Debug.WriteLine(exists);
+
+                    HeaderColour(sender, e);
+
+
+                }
+            }
 
             // If i turn it on 
-            if (StateSettings.TilingManagerEnabled)
+            else if (StateSettings.TilingManagerEnabled)
             {
                 // if i turn it on but its already created or not (getinstance)
-                    
-                    TilingManager.GetInstance().ApplySettings();
-                     TilingManager.GetInstance().ActivateWindowListenerHook();
+
+                var tm = TilingManager.GetInstance();
+
+                    tm.ApplySettings();
+                    tm.ActivateWindowListenerHook();
 
                      HeaderColour(sender, e);
 
@@ -145,22 +172,6 @@ namespace main_interface
                 
               
 
-       
-            // if you turned off logic + background window + disable toggles  
-          if (!StateSettings.TilingManagerEnabled) { 
-                if (TilingManager.Exists())
-                {
-                    // var tm -> getinstance would just create another one if i said getinstance twice in a row 
-                    var tm = TilingManager.GetInstance();
-                    tm.ReturntoMaxedAfterClosing();
-                   
-                    tm.RemoveSubclass(); // Stops double creation accidentally - delete it when done !
-                   tm.TurnOffHooks();
-                    HeaderColour(sender, e);
-
-
-                }
-            }
         }
 
 

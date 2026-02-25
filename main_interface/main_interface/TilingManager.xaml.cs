@@ -53,7 +53,7 @@ namespace main_interface
         {
             return _instanceTilingManager != null && _instanceTilingManager.AppWindow != null;
         }
-        public static void Destroy()
+        public void Destroy()
         {
             if (_instanceTilingManager != null)
             {
@@ -69,6 +69,9 @@ namespace main_interface
             this.ExtendsContentIntoTitleBar = true;
             _instanceTilingManager = this; // Save this instance to the static variable ! Singleton needs to track 
 
+            Debug.WriteLine("Tiling window created right now ");
+            Debug.WriteLine(Environment.StackTrace);
+
             ApplySettings();
             ConstructOverlay();
 
@@ -83,7 +86,6 @@ namespace main_interface
             // " Subscription" logic -> dump method into this 
             Activated += OnActivated; 
 
-            this.Closed += OnClosed;
 
 
 
@@ -105,7 +107,6 @@ namespace main_interface
                 0,   // all threads
                 WINEVENT_OUTOFCONTEXT // run callback in this app not target window 
             );
-
         }
 
         //Delegate required by enumerate windows to reveive the window handle 
@@ -178,24 +179,10 @@ namespace main_interface
             _winEventDelegate = null; // Global delegate aswell
 
 
-            _instanceTilingManager = null; // Clear the singleton reference 
+            //_instanceTilingManager = null; // Clear the singleton reference 
         }
 
-        private void OnClosed(object sender, WindowEventArgs args)
-        {
-
-            var hWnd = WindowNative.GetWindowHandle(this);
-            UnregisterHotKey(hWnd, HOTKEY_ID_OVERLAY);
-            UnregisterHotKey(hWnd, HOTKEY_ID_FAKE_OTHER_FUNCTION);
-
-
-            if (_winEventHook != IntPtr.Zero)
-                UnhookWinEvent(_winEventHook);
-
-            _instanceTilingManager = null; // Clear the singleton reference 
-
-
-        }
+       
 
 
 
@@ -262,6 +249,19 @@ namespace main_interface
                 MoveOffScreen();
                 // dont return cuts off method 
             }
+
+            if (StateSettings.TilingManagerEnabled)
+            {
+                GetTileableWindows();
+                TilePrimaryMonitorWindows();
+            }
+            if (!StateSettings.TilingManagerEnabled)
+            {
+    
+            }
+
+
+
 
         }
         public void MoveOffScreen()
@@ -642,6 +642,9 @@ namespace main_interface
                     SWP_NOACTIVATE
                 );
             }
+
+   
+      
         }
 
 
