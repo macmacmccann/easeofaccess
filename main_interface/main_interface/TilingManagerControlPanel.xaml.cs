@@ -203,26 +203,37 @@ namespace main_interface
         }
 
 
+
         private void StackedModeToggle_Toggled(object sender, RoutedEventArgs e)
         {
             GlobalStackedToggle();
             return;
         }
 
+        //Used to hardcode a toggle shift instead of clicking (which that method reads )
+        public void Stacked_SetStateAndToggle_DontRead()
+        {
+
+            StackedModeToggle.IsOn = true;
+            StateSettings.StackedModeEnabled = true;
+            GlobalStackedToggle();
+
+        }
+
         // I changed as i cant call events anywhere , used in window 
         public void GlobalStackedToggle()
         {
+            // boolean set to taggle state 
             StateSettings.StackedModeEnabled = StackedModeToggle.IsOn;
 
-            // if i just turned on then exit 
+      
+           // if i just turned on then exit 
             if (!StackedModeToggle.IsOn)
                 return;
 
 
 
-            // Turn off other mode when turning on 
-            ColumnModeToggle.IsOn = false;
-            StateSettings.ColumnModeEnabled = false;
+    
 
             //Turn on other mode when turning off 
             if (!StateSettings.StackedModeEnabled)
@@ -230,10 +241,18 @@ namespace main_interface
                 ColumnModeToggle.IsOn = true;
                 StateSettings.ColumnModeEnabled = true;
             }
+            else if (StateSettings.StackedModeEnabled)
+            {
+                // Turn off other mode when turning on 
+                ColumnModeToggle.IsOn = false;
+                StateSettings.ColumnModeEnabled = false;
+            }
 
             // Dont accidentially create it switching toggleds 
             if (TilingManager.Exists())
-            {
+            {          
+                Debug.WriteLine($"(should be ) stackedmode on : {StateSettings.StackedModeEnabled}");
+
                 TilingManager.GetInstance().ApplySettings();
 
             }
@@ -247,32 +266,45 @@ namespace main_interface
 
         }
 
+        //Used to hardcode a toggle shift instead of clicking (which that method reads )
+        public void Column_SetStateAndToggle_DontRead()
+        {
+
+            ColumnModeToggle.IsOn = true;
+            StateSettings.ColumnModeEnabled = true;
+            GlobalColumnToggle();
+
+        }
+
         // I changed as i cant call events anywhere , used in window 
         public void GlobalColumnToggle()
         {
-
+            // boolean reads toggle state set it to such 
             StateSettings.ColumnModeEnabled = ColumnModeToggle.IsOn;
 
             if (!ColumnModeToggle.IsOn)
                 return;
 
-            // Turn off other mode 
-
-            StackedModeToggle.IsOn = false;  //ui 
-            StateSettings.StackedModeEnabled = false; // real value 
 
 
             //Turn on other mode when turning off 
             if (!StateSettings.ColumnModeEnabled)
             {
-                StackedModeToggle.IsOn = false;
-                StateSettings.StackedModeEnabled = false;
+                StackedModeToggle.IsOn = true;
+                StateSettings.StackedModeEnabled = true;
+            }else if (StateSettings.ColumnModeEnabled)
+            {
+                // Turn off other mode 
+                StackedModeToggle.IsOn = false;  //ui 
+                StateSettings.StackedModeEnabled = false; // real value 
             }
 
 
             // Dont accidentially create it switching toggleds 
             if (TilingManager.Exists())
             {
+                Debug.WriteLine($"(should be) Column mode on : {StateSettings.ColumnModeEnabled}");
+
                 TilingManager.GetInstance().ApplySettings();
 
             }

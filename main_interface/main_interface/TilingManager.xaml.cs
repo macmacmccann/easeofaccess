@@ -250,16 +250,22 @@ namespace main_interface
                 // dont return cuts off method 
             }
 
-            if (StateSettings.TilingManagerEnabled)
+
+            /*
+            NO RECALL -> hooks do it - these methods are constantly called on window alive
+            so boolean state seattings cdefines which one funs 
+            if (StateSettings.StackedModeEnabled)
             {
                 GetTileableWindows();
                 TilePrimaryMonitorWindows();
             }
-            if (!StateSettings.TilingManagerEnabled)
-            {
-    
-            }
 
+            if (StateSettings.ColumnModeEnabled)
+            {
+                GetTileableWindows();
+                TilePrimaryMonitorWindows();
+            }
+            */
 
 
 
@@ -404,7 +410,8 @@ namespace main_interface
                 if (title == "Program Manager" ||
                     title == "Microsoft Text Input Application" ||
                     title == "Command Palette" ||
-                    title == "Ease Of Access"
+                    title == "Ease Of Access" ||
+                    title == "Sticky Notes"
                     )
                     return true;
                 // Find which monitor this window is currently on 
@@ -742,11 +749,16 @@ namespace main_interface
             switch (currentState)
             {
                 case ProgressState.StepOne:
-                    TilingManagerControlPanel._tilingControlPanelPage.GlobalStackedToggle();
+                    Debug.WriteLine("Turn on stacked ");
+
+                    TilingManagerControlPanel._tilingControlPanelPage.Stacked_SetStateAndToggle_DontRead();
+                    
                     break;
 
                 case ProgressState.StepTwo:
-                    TilingManagerControlPanel._tilingControlPanelPage.GlobalColumnToggle();
+                    Debug.WriteLine("Turn on Column ");
+
+                    TilingManagerControlPanel._tilingControlPanelPage.Column_SetStateAndToggle_DontRead();
                     break;
 
           
@@ -835,7 +847,7 @@ namespace main_interface
             { // Was the event a hotkey press?
 
            
-                if (wParam.ToInt32() == HOTKEY_ID_OVERLAY) // 
+                if (wParam.ToInt32() == HOTKEY_ID_OVERLAY) 
                 {
                     Debug.WriteLine("Alternating Modes On tiling manager");
                     ProgressWhatIsOn();
