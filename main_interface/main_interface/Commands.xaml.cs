@@ -47,21 +47,19 @@ namespace main_interface
 
         DesktopAcrylicBackdrop acrylic;
 
-   
-
         public static Commands Instance
-        { 
+        {
             get// make sure only ONE overlay window exists 
             {
                 if (_instance == null)
                     _instance = new Commands();
-                    
+
 
                 return _instance;
 
             }
-        
-        } 
+
+        }
 
 
         public static bool Exists()
@@ -99,12 +97,83 @@ namespace main_interface
             // " Subscription" logic -> dump method into this 
             Activated += OnActivated;
 
-             // Closed called by x or manual run - given by windows (an event)
-             // this.Close() runs it and also the added logic on OnClosed ( unregister hotkey) 
+            // Closed called by x or manual run - given by windows (an event)
+            // this.Close() runs it and also the added logic on OnClosed ( unregister hotkey) 
             this.Closed += OnClosed;
 
 
         }
+
+
+        void LoadCommands()
+        {
+
+            CommandList.Items.Add("Get-Process |\r\n    Group-Object Name |\r\n    Sort-Object Count -Descending |\r\n    Select-Object -First 15 Name, Count");
+            CommandList.Items.Add("Get-ChildItem 'C:\\Users' -Recurse -File -ErrorAction SilentlyContinue |\r\n    Where-Object { $_.Length -gt 100MB } |\r\n    Sort-Object Length -Descending |\r\n    Select-Object -First 20 FullName, Length, LastWriteTime\r\n");
+
+
+        }
+
+        public void Command_Clicked(object sender, PointerRoutedEventArgs e)
+        {
+
+            var textBlock = sender as TextBlock;
+            if (textBlock == null)
+            {
+                return; // simple null check 
+            }
+            var commandText = textBlock.Text; // The bound command string 
+
+            var dataPackage = new Windows.ApplicationModel.DataTransfer.DataPackage(); // Represents clipboard content 
+
+            dataPackage.SetText(commandText); // put the text into the clipbaord container 
+
+            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage); // Push cobntent onto system clipboard 
+
+            MoveOffScreen();
+            SetForegroundWindow(_previousforground);
+            Sleep(50);
+
+            if (StateSettings.AutoPasteEnabled)
+            {
+                PasteIntoActiveApp(commandText);
+            }
+
+        }
+
+
+
+
+
+        public void CopyToClipboard(string text)
+        {
+            var data = new Windows.ApplicationModel.DataTransfer.DataPackage(); // Create a clipboard data container 
+
+            data.SetText(text); // Put text into the container 
+
+            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(data);
+
+        }
+
+
+        public async void PasteIntoActiveApp(string text)
+        {
+            CopyToClipboard(text);
+
+            await Task.Delay(50);
+
+            var targetHwnd = GetForegroundWindow();
+
+            MoveOffScreen();
+
+            await Task.Delay(50);
+
+            keybd_event(VK_CONTROL, 0, 0, UIntPtr.Zero); // ctrl key down 
+            keybd_event(VK_V, 0, 0, UIntPtr.Zero); // v key down 
+            keybd_event(VK_V, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // v key up 
+            keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // control key up  
+        }
+
 
 
 
@@ -160,7 +229,7 @@ namespace main_interface
 
 
 
-       private  void OnActivated(object sender, WindowActivatedEventArgs args) // hwnd exists after the fact thats why is activated when window is constructred not in the construcotr 
+        private void OnActivated(object sender, WindowActivatedEventArgs args) // hwnd exists after the fact thats why is activated when window is constructred not in the construcotr 
         {
             //thhis will run once im not unsuncribing to this method 
             if (!_isHookUpSet)
@@ -168,19 +237,19 @@ namespace main_interface
                 //SetupHook(); old method not dynamic hardcoded keys commented below 
                 // UpdateHotkey(0,0);
                 SetupSubclass(); // Hook into Win32 message loops 
-                UpdateHotkey(1,MOD_CONTROL, VK_O); // id set to match in method (as page doesnt know it only here does ) 
+                UpdateHotkey(1, MOD_CONTROL, VK_O); // id set to match in method (as page doesnt know it only here does ) 
                 _isHookUpSet = true; // now never try again 
                                      // HotKeyErrorOccured?.Invoke("In Use. Try again");
 
             }
-                // Elevated command choice cuts off code -> no way to override -> only after regaining focus 
-                if (args.WindowActivationState == WindowActivationState.Deactivated)
-                {
-                 
-                }
-            }
+            // Elevated command choice cuts off code -> no way to override -> only after regaining focus 
+            if (args.WindowActivationState == WindowActivationState.Deactivated)
+            {
 
-        
+            }
+        }
+
+
 
         // when window loses focus : assumed to mean "elevated command cut if off "
         // takes a snapshot of time it in Page by commandWindow.recordAttempt() 
@@ -238,7 +307,7 @@ namespace main_interface
 
             Debug.WriteLine($"ID of hotkey passed into window ={id}");
 
-         var hwnd = WindowNative.GetWindowHandle(this);
+            var hwnd = WindowNative.GetWindowHandle(this);
             //id = HOTKEY_ID_OVERLAY;
             var newCombo = new HotKeyCombo((uint)modkey, vk);
 
@@ -284,37 +353,37 @@ namespace main_interface
             return true;
         }
 
-        public bool UpdateHotkey(int id,uint modkey, uint vk)
+        public bool UpdateHotkey(int id, uint modkey, uint vk)
         {
             var hwnd = WindowNative.GetWindowHandle(this);
 
             id = HOTKEY_ID_OVERLAY; // id assigned in window as its only seen here 
 
-            var newCombo = new TakenCombinations.HotKeyCombo(modkey,vk);
+            var newCombo = new TakenCombinations.HotKeyCombo(modkey, vk);
 
             // If this id already own this combo - dont change anything 
-           if (TakenCombinations._assignedCombos.TryGetValue(id, out var existing))
-                    {
-                        if (existing.Equals(newCombo))
-                            return true; // no change you inputt the same one 
-                    }
+            if (TakenCombinations._assignedCombos.TryGetValue(id, out var existing))
+            {
+                if (existing.Equals(newCombo))
+                    return true; // no change you inputt the same one 
+            }
 
-           // If taken by another is coded in page as userfeedback (this is a hidden window for low level hooks )
+            // If taken by another is coded in page as userfeedback (this is a hidden window for low level hooks )
             TakenCombinations.RemoveById(id); // the set id 
 
             UnregisterHotKey(hwnd, id);
-            
+
             // if windows returns true init keyword success  for readability 
             bool success = RegisterHotKey(hwnd, id, modkey, vk);
 
             if (!success)
                 return false;
-            
+
             // Assign to new ownership 
-            TakenCombinations.Add(modkey,vk);
+            TakenCombinations.Add(modkey, vk);
             // Assign id to hash where old can be freed ( dont just free any key combination ) 
             TakenCombinations._assignedCombos[id] = newCombo; // eg., [9000] Ctrl C 
-                return success;
+            return success;
         }
 
 
@@ -340,7 +409,7 @@ namespace main_interface
                 }
                 if (wParam.ToInt32() == HOTKEY_ID_FAKE_OTHER_FUNCTION)
                 {
-                    Debug.WriteLine("Other function called"); 
+                    Debug.WriteLine("Other function called");
                     return IntPtr.Zero; // tell win32 the message was handled  
                 }
 
@@ -352,6 +421,319 @@ namespace main_interface
         }
 
 
+
+
+
+
+
+        // https://github.com/microsoft/WindowsAppSDK/discussions/2994
+        private AppWindow GetAppWindowForCurrentWindow()
+        {
+            IntPtr hWnd = WindowNative.GetWindowHandle(this);
+            WindowId windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
+            return AppWindow.GetFromWindowId(windowId);
+        }
+
+
+        void ToggleOverlay() // The method that is called that runs the other pages code ( the overlay screen ) 
+        {
+            if (!StateSettings.OverlayEnabled)
+                return;
+
+
+            var appWindow = GetAppWindowForCurrentWindow();
+            if (StateSettings.OverlayEnabled)
+            {
+                appWindow?.Show();
+                // if window == null  - how to null check this window again syntax? 
+                Commands.Instance?.Toggle();
+
+            }
+
+
+
+        }
+
+        public void ApplySettings()
+        {
+            if (!StateSettings.OverlayEnabled)
+            {
+                MoveOffScreen();
+
+                //run event that has inherited OnClosed ( in construct) 
+                // this.Close();
+
+                //  var appWindow = GetAppWindowForCurrentWindow();
+                // appWindow.Hide();
+
+                return;
+            }
+
+            if (StateSettings.BackdropEnabled)
+            {
+                EnableAcrylic();
+            }
+
+
+        }
+
+
+        public void Toggle()
+        {
+            if (_visible)
+            {
+                MoveOffScreen();
+            }
+            else
+            {
+                _previousforground = GetForegroundWindow();
+                ShowOnScreen(); // Hide or show the window if currently visible . 
+            }
+            _visible = !_visible;
+        }
+
+
+        DispatcherTimer _animationTimer;
+        double _opacity;
+
+        void ShowOnScreen() // Always on top is show on screen here 
+        {
+
+
+            // var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
+            /*
+            SetWindowPos(
+                hwnd,
+                IntPtr.Zero, // dont change the index i set on onTop
+                100, 100, // x and y screen postions 
+                400, 300, // width heigh 
+                0x0040); // Dont activate the window 
+            */
+            if (StateSettings.AlwaysOnTopEnabled)
+            {
+                AlwaysOnTop();
+            }
+            else
+            {
+                RemoveOnTopSetToDefault();
+            }
+
+
+
+
+        }
+
+
+        void MoveOffScreen()
+        {
+            var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
+
+            SetWindowPos(
+                hwnd,
+                IntPtr.Zero, // dont change index when your hiding
+                -2000, -2000, // x and y screen postions 
+                0, 0,// width heigh 
+                0x0040); // Dont activate the window 
+
+        }
+
+        void SetOverlayStyle() //Win32 styling - aim -> borderless and always on top needed - its a pop up not a real window 
+        {
+            var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
+            var style = GetWindowLong(hwnd, -16); // Reads current window style flags 
+            SetWindowLong(hwnd, -16, style & ~0x00C00000); // remove titlebar 
+        }
+
+
+
+        // Lets not block the other windows 
+
+        const int GWL_EXSTYLE = -20;
+        const int WS_EX_TRANSPARENT = 0x00000020;
+        const int WS_EX_LAYERED = 0x00080000;
+
+        const int WS_EX_TOOLWINDOW = 0x80; // This is a tool window not a window on the taskbar
+        const int WS_EX_APPWINDOW = 0x40000; // Nomral app window definition ( going to take it away in style below ) 
+        void HideFromTaskbar()
+        {
+            var hwnd = WindowNative.GetWindowHandle(this);
+
+            int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE); // declare what iv already coded in terms of style in the scope of this method
+
+            exStyle &= ~WS_EX_APPWINDOW; // from style remove "this is an app window 
+            exStyle |= WS_EX_TOOLWINDOW; // from style add "this is a toolbar window "
+
+            SetWindowLong(hwnd, GWL_EXSTYLE, exStyle); // Apply these mods to the window 
+
+
+
+        }
+
+
+
+
+
+        public void AlwaysOnTop()
+        {
+            var hwnd = WindowNative.GetWindowHandle(this); // Get the hwnd for THIS  window 
+
+
+            SetWindowPos(
+                hwnd,
+                HWND_TOPMOST, // Keep it on top var in docuemntation 
+                100, 100, // x and y screen postions 
+                1200, 600, // width heigh 
+                SWP_NOACTIVATE
+                // SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE // Keep position and size dont steal focus 
+                );
+
+            FadeIn();
+
+        }
+
+
+
+
+        public void RemoveOnTopSetToDefault()
+        {
+            var hwnd = WindowNative.GetWindowHandle(this);
+
+            SetWindowPos(
+                hwnd,
+                HWND_NOTTOPMOST, // Declares not top like z index 
+
+                   100, 100, // x and y screen postions 
+                    1200, 600, // width heigh 
+                    SWP_NOACTIVATE
+                // SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE
+                );
+
+
+            FadeIn();
+
+
+        }
+
+
+        public void FadeIn()
+        {
+
+            RootPanel.Opacity = 0;
+            _opacity = 0;
+
+            _animationTimer = new DispatcherTimer();
+
+            _animationTimer.Interval = TimeSpan.FromMilliseconds(16); // docuemented to be 60 fps 
+
+            _animationTimer.Tick += (s, e) =>
+            {
+                _opacity += 0.1;
+                RootPanel.Opacity = _opacity;
+
+                if (_opacity >= 1) // Okay now its visible 
+                    _animationTimer.Stop();
+
+            };
+
+            _animationTimer.Start();
+        }
+
+
+        private void EnableAcrylic()
+        {
+            //if (!DesktopAcrylicBackdrop.IsSupported())
+            //  return; // null check
+            acrylic = new DesktopAcrylicBackdrop();
+            this.SystemBackdrop = acrylic;
+        }
+
+
+        // IMPORTS 
+
+
+        // Get currently focused window 
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+
+
+
+
+        // Set a window to be current focus import for use  
+        [DllImport("user32.dll")]
+        static extern IntPtr SetForegroundWindow(IntPtr hwnd);
+
+
+
+        // Simulate keyboard input 
+        [DllImport("user32.dll")]
+        static extern void keybd_event(
+            byte bVk, // bute virtual key code 
+            byte bScan, // Hardware scan code 
+            uint dwFlags, // Keydown / keyup
+            UIntPtr dwExtraInfo  // desktp window extra info param if needed 
+            );
+
+        //Actual keycode params to cope paste into an app 
+        const byte VK_CONTROL = 0x11; // keycode for control 
+                                      // const byte VK_V = 0x56; // virtual key v 
+        const uint KEYEVENTF_KEYUP = 0x0002; // flag for indicating you releaed the buttons 
+
+
+
+
+        [DllImport("user32.dll")]
+        static extern int GetWindowLong(IntPtr hWnd, int nIndex); // Read the windows current attributes please
+
+        [DllImport("user32.dll")]
+        static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong); // Modify the window attributes as stated above 
+
+        [DllImport("user32.dll")]
+        static extern bool SetWindowPos(IntPtr hWnd, int HwnInsertAfter, int X, int Y, int cs, int cy, uint uFlags);    // declaration of parameters for simply sizing of window (impleneted above)
+
+
+        // iv made the overlay screen work this is importing the default windows management for nice effects blur 
+        [DllImport("dwmapi.dll")]
+        static extern int DwmExtendFrameIntoClientArea(
+            IntPtr hwnd, // Window 
+            ref MARGINS margins // how far is the blur gonna extend 
+            );
+
+        // required if i want to use this import
+        struct MARGINS
+        {
+            public int cxLeftWidth;
+            public int cxRightWidth;
+            public int cyTopHeight;
+            public int cyBottomHeight;
+
+        }
+
+
+
+        [DllImport("kernel32.dll")]
+        static extern void Sleep(uint dwMilliseconds);
+
+
+
+
+        // Win32 function to reposition windows . 
+        [DllImport("user32.dll")]
+        static extern bool SetWindowPos(
+            IntPtr hWnd,
+            IntPtr hWndInsertAfter, // Special HWND (topmost, notopmost etc ) 
+            int X, // x position 
+            int Y, // y poisiotn 
+            int cx, // Width 
+            int cy, // Height
+            uint uFlags // Flags controlling behavior 
+            );
+
+        //Declare constants 
+        static readonly IntPtr HWND_NOTTOPMOST = new IntPtr(-2);
+        static readonly IntPtr HWND_TOPMOST = new IntPtr(-1); // Special value telling windows " keep this above all otheres 
+        const uint SWP_NOMOVE = 0x0002; // Dont move window 
+        const uint SWP_NOSIZE = 0X0001; // Dont change window size 
+        const uint SWP_NOACTIVATE = 0x0010; // Dont activate
 
 
 
@@ -395,424 +777,7 @@ namespace main_interface
 
 
 
-
-
-
-
-
-
-
-
-        // https://github.com/microsoft/WindowsAppSDK/discussions/2994
-        private AppWindow GetAppWindowForCurrentWindow()
-        {
-            IntPtr hWnd = WindowNative.GetWindowHandle(this);
-            WindowId windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
-            return AppWindow.GetFromWindowId(windowId);
-        }
-
-     
-        void ToggleOverlay() // The method that is called that runs the other pages code ( the overlay screen ) 
-        {
-            if (!StateSettings.OverlayEnabled)
-                return;
-
-
-            var appWindow = GetAppWindowForCurrentWindow();
-            if (StateSettings.OverlayEnabled)
-            {
-                appWindow?.Show();
-                // if window == null  - how to null check this window again syntax? 
-                Commands.Instance?.Toggle();
-
-            }
-
-   
-            
-        }
-
-        public void ApplySettings()
-        {
-            if(!StateSettings.OverlayEnabled)
-            {
-                MoveOffScreen();
-
-                //run event that has inherited OnClosed ( in construct) 
-                // this.Close();
-
-              //  var appWindow = GetAppWindowForCurrentWindow();
-               // appWindow.Hide();
-
-                return;
-            }
-     
-            if (StateSettings.BackdropEnabled)
-            {
-                EnableAcrylic();
-            }
-
-
-        }
-
-
-        public void Toggle() 
-        {
-            if (_visible)
-            {
-                MoveOffScreen();
-
-            }
-            else
-            {
-                _previousforground = GetForegroundWindow();
-
-                ShowOnScreen(); // Hide or show the window if currently visible . 
-            }
-
-                _visible = !_visible;
-            
-
-        }
-
-
-        DispatcherTimer _animationTimer;
-        double _opacity;
-
-        void ShowOnScreen() // Always on top is show on screen here 
-        {
-
-
-           // var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
-            /*
-            SetWindowPos(
-                hwnd,
-                IntPtr.Zero, // dont change the index i set on onTop
-                100, 100, // x and y screen postions 
-                400, 300, // width heigh 
-                0x0040); // Dont activate the window 
-            */
-            if (StateSettings.AlwaysOnTopEnabled)
-            {
-                AlwaysOnTop();
-            }
-            else
-            {
-                RemoveOnTopSetToDefault();
-            }
-
-
-   
-
-        }
-
-
-        void MoveOffScreen()
-        {
-            var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
-
-            SetWindowPos(
-                hwnd,
-                IntPtr.Zero, // dont change index when your hiding
-                -2000, -2000, // x and y screen postions 
-                0,0,// width heigh 
-                0x0040); // Dont activate the window 
-
-        }
-
-        void SetOverlayStyle() //Win32 styling - aim -> borderless and always on top needed - its a pop up not a real window 
-        {
-            var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
-            var style = GetWindowLong(hwnd, -16); // Reads current window style flags 
-            SetWindowLong(hwnd, -16, style & ~0x00C00000); // remove titlebar 
-                    }
-
-        // Margins important 
-        void EnableBlur()
-        {
-            var hwnd = WindowNative.GetWindowHandle(this);
-
-            MARGINS margins = new MARGINS
-            {
-                cxLeftWidth = -1,
-                cxRightWidth = -1,
-                cyTopHeight = -1,
-                cyBottomHeight = -1 // -1  means extend blue of entire window 
-
-            };
-            DwmExtendFrameIntoClientArea(hwnd, ref margins); // Pass them is an arguments 
-        }
-
-        void LoadCommands()
-        {
-         
-            CommandList.Items.Add("Get-Process |\r\n    Group-Object Name |\r\n    Sort-Object Count -Descending |\r\n    Select-Object -First 15 Name, Count");
-            CommandList.Items.Add("Get-ChildItem 'C:\\Users' -Recurse -File -ErrorAction SilentlyContinue |\r\n    Where-Object { $_.Length -gt 100MB } |\r\n    Sort-Object Length -Descending |\r\n    Select-Object -First 20 FullName, Length, LastWriteTime\r\n");
-
-
-        }
-
-        void Command_Clicked(object sender, PointerRoutedEventArgs e)
-        {
-
-            var textBlock = sender as TextBlock;
-            if (textBlock == null)
-            {
-                return; // simple null check 
-            }
-            var commandText = textBlock.Text; // The bound command string 
-
-            var dataPackage = new Windows.ApplicationModel.DataTransfer.DataPackage(); // Represents clipboard content 
-
-            dataPackage.SetText(commandText); // put the text into the clipbaord container 
-
-            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage); // Push cobntent onto system clipboard 
-
-            MoveOffScreen();
-            SetForegroundWindow(_previousforground);
-            Sleep(50);
-
-            if (StateSettings.AutoPasteEnabled)
-            {
-                PasteIntoActiveApp(commandText);
-            }
-
-        }
-
-        // Lets not block the other windows 
-
-        const int GWL_EXSTYLE = -20;
-        const int WS_EX_TRANSPARENT = 0x00000020;
-        const int WS_EX_LAYERED = 0x00080000;
-
-
-        void EnableClickThrough()
-        {
-            var hwnd = WindowNative.GetWindowHandle(this);
-
-            int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-
-            SetWindowLong(
-                hwnd,
-                GWL_EXSTYLE,
-                exStyle | WS_EX_LAYERED | WS_EX_TRANSPARENT
-                );
-
-        }
-
-
-        const int WS_EX_TOOLWINDOW = 0x80; // This is a tool window not a window on the taskbar
-        const int WS_EX_APPWINDOW = 0x40000; // Nomral app window definition ( going to take it away in style below ) 
-        void HideFromTaskbar()
-        {
-            var hwnd = WindowNative.GetWindowHandle(this);
-
-            int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE); // declare what iv already coded in terms of style in the scope of this method
-
-            exStyle &= ~WS_EX_APPWINDOW; // from style remove "this is an app window 
-            exStyle |= WS_EX_TOOLWINDOW; // from style add "this is a toolbar window "
-
-            SetWindowLong(hwnd, GWL_EXSTYLE, exStyle); // Apply these mods to the window 
-
-
-
-        }
-
-
-
-
-        // Win32 function to reposition windows . 
-        [DllImport("user32.dll")]
-        static extern bool SetWindowPos(
-            IntPtr hWnd,
-            IntPtr hWndInsertAfter, // Special HWND (topmost, notopmost etc ) 
-            int X, // x position 
-            int Y, // y poisiotn 
-            int cx, // Width 
-            int cy, // Height
-            uint uFlags // Flags controlling behavior 
-            );
-
-        //Declare constants 
-        static readonly IntPtr HWND_NOTTOPMOST = new IntPtr(-2);
-        static readonly IntPtr HWND_TOPMOST = new IntPtr(-1); // Special value telling windows " keep this above all otheres 
-        const uint SWP_NOMOVE = 0x0002; // Dont move window 
-        const uint SWP_NOSIZE = 0X0001; // Dont change window size 
-        const uint SWP_NOACTIVATE = 0x0010; // Dont activate
-        void AlwaysOnTop()
-        {
-            var hwnd = WindowNative.GetWindowHandle(this); // Get the hwnd for THIS  window 
-
-
-            SetWindowPos(
-                hwnd,
-                HWND_TOPMOST, // Keep it on top var in docuemntation 
-                100, 100, // x and y screen postions 
-                1200, 600, // width heigh 
-                SWP_NOACTIVATE
-               // SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE // Keep position and size dont steal focus 
-                );
-
-            FadeIn();
-
-        }
-
-
-
-
-        void RemoveOnTopSetToDefault()
-        {
-            var hwnd = WindowNative.GetWindowHandle(this);
-
-            SetWindowPos(
-                hwnd,
-                HWND_NOTTOPMOST, // Declares not top like z index 
-
-                   100, 100, // x and y screen postions 
-                    1200, 600, // width heigh 
-                    SWP_NOACTIVATE
-               // SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE
-                );
-
-
-            FadeIn();
-
-
-        }
-
-
-        void FadeIn(){
-
-
-
-            RootPanel.Opacity = 0;
-            _opacity = 0;
-
-            _animationTimer = new DispatcherTimer();
-
-            _animationTimer.Interval = TimeSpan.FromMilliseconds(16); // docuemented to be 60 fps 
-
-            _animationTimer.Tick += (s, e) =>
-            {
-                _opacity += 0.1;
-                RootPanel.Opacity = _opacity;
-
-                if (_opacity >= 1) // Okay now its visible 
-                    _animationTimer.Stop();
-
-            };
-
-            _animationTimer.Start();
-        }
-
-        void CopyToClipboard(string text)
-        {
-            var data = new Windows.ApplicationModel.DataTransfer.DataPackage(); // Create a clipboard data container 
-
-            data.SetText(text); // Put text into the container 
-
-            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(data);
-            
-        }
-
-
-        // Get currently focused window 
-        [DllImport("user32.dll")]
-        static extern IntPtr GetForegroundWindow();
-
-
-
-
-        // Set a window to be current focus import for use  
-        [DllImport("user32.dll")]
-        static extern IntPtr SetForegroundWindow(IntPtr hwnd);
-
-
-
-        // Simulate keyboard input 
-        [DllImport("user32.dll")]
-        static extern void keybd_event(
-            byte bVk, // bute virtual key code 
-            byte bScan, // Hardware scan code 
-            uint dwFlags, // Keydown / keyup
-            UIntPtr dwExtraInfo  // desktp window extra info param if needed 
-            );
-
-        //Actual keycode params to cope paste into an app 
-        const byte VK_CONTROL = 0x11; // keycode for control 
-       // const byte VK_V = 0x56; // virtual key v 
-        const uint KEYEVENTF_KEYUP = 0x0002; // flag for indicating you releaed the buttons 
-
-
-        async void PasteIntoActiveApp(string text)
-        {
-            CopyToClipboard(text);
-
-            await Task.Delay(50); 
-
-            var targetHwnd = GetForegroundWindow();
-
-            MoveOffScreen();
-
-            await Task.Delay(50);
-
-            keybd_event(VK_CONTROL, 0, 0, UIntPtr.Zero); // ctrl key down 
-            keybd_event(VK_V, 0, 0, UIntPtr.Zero); // v key down 
-            keybd_event(VK_V, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // v key up 
-            keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // control key up  
-
-
-        }
-
-
-
-
-
-        [DllImport("user32.dll")]
-            static extern int GetWindowLong(IntPtr hWnd, int nIndex); // Read the windows current attributes please
-
-            [DllImport("user32.dll")]
-            static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong); // Modify the window attributes as stated above 
-
-            [DllImport("user32.dll")]
-            static extern bool SetWindowPos(  IntPtr hWnd, int HwnInsertAfter, int X, int Y, int cs, int cy, uint uFlags);    // declaration of parameters for simply sizing of window (impleneted above)
-
-
-        // iv made the overlay screen work this is importing the default windows management for nice effects blur 
-        [DllImport("dwmapi.dll")]
-        static extern int DwmExtendFrameIntoClientArea(
-            IntPtr hwnd, // Window 
-            ref MARGINS margins // how far is the blur gonna extend 
-            );
-
-        // required if i want to use this import
-        struct MARGINS
-        {
-            public int cxLeftWidth;
-            public int cxRightWidth;
-            public int cyTopHeight;
-            public int cyBottomHeight;
-
-        }
-
-
-
-        [DllImport("kernel32.dll")]
-        static extern void Sleep(uint dwMilliseconds);
-
-
-
-
-        void EnableAcrylic()
-        {
-            //if (!DesktopAcrylicBackdrop.IsSupported())
-              //  return; // null check
-            acrylic = new DesktopAcrylicBackdrop();
-            this.SystemBackdrop = acrylic;
-        }
-
-
-
-     }
+    }
 
 
 }
