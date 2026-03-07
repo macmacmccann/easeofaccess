@@ -142,9 +142,6 @@ namespace main_interface
         }
 
 
-
-
-
         public void CopyToClipboard(string text)
         {
             var data = new Windows.ApplicationModel.DataTransfer.DataPackage(); // Create a clipboard data container 

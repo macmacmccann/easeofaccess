@@ -109,6 +109,7 @@ namespace main_interface
             {
                 // Get the visual backing this Border
                 var visual = ElementCompositionPreview.GetElementVisual(element);
+                //visual.CenterPoint = new System.Numerics.Vector3((float)element.ActualSize.X / 2, (float)element.ActualSize.Y / 2, 0);
 
                 // Create a compositor instance
                 var compositor = visual.Compositor;
@@ -169,6 +170,8 @@ namespace main_interface
             {
                 // get the visual backing for the element 
                 var visual = ElementCompositionPreview.GetElementVisual(element);
+              //  visual.CenterPoint = new System.Numerics.Vector3((float)element.ActualSize.X / 2, (float)element.ActualSize.Y / 2, 0);
+
                 //access compositor for animations 
                 var compositor = visual.Compositor;
 
@@ -210,7 +213,6 @@ namespace main_interface
         }
 
 
-
             // THIS IS FOR BLURRING IMAGE BEHIND GRID 
             public static void BlurBehindContent(Microsoft.UI.Xaml.Controls.Grid grid)
             {
@@ -220,10 +222,7 @@ namespace main_interface
                     TintOpacity = 0.0,
                     //  FallbackColor = Colors.White
                 };
-
-
                 grid.Background = acrylicBrush;
-
             }
             // THIS BLURES BEHIND THE APP 
            public static  void BlurBehindAppNotContent(Window window)
@@ -237,5 +236,90 @@ namespace main_interface
 
 
 
+      
+         public static void Key_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if (sender is UIElement element)
+            {
+                var visual = ElementCompositionPreview.GetElementVisual(element);
+                visual.CenterPoint = new System.Numerics.Vector3((float)element.ActualSize.X / 2, (float)element.ActualSize.Y / 2, 0);
+                var compositor = visual.Compositor;
+
+                // Use a "Power" Ease-Out: Starts very fast, ends with a soft hover landing
+                var easeOut = compositor.CreateCubicBezierEasingFunction(
+                    new System.Numerics.Vector2(0.1f, 0.9f),
+                    new System.Numerics.Vector2(0.2f, 1.0f)
+                );
+
+                // 1. Restore Opacity to 100%
+                var opacityAnimation = compositor.CreateScalarKeyFrameAnimation();
+                opacityAnimation.InsertKeyFrame(1f, 1.0f, easeOut);
+                opacityAnimation.Duration = TimeSpan.FromMilliseconds(300);
+                visual.StartAnimation("Opacity", opacityAnimation);
+
+                // 2. Scale up slightly (1.05f = 5% growth)
+                var scaleAnimation = compositor.CreateVector3KeyFrameAnimation();
+                // Start from current scale to prevent "jumping"
+                scaleAnimation.InsertKeyFrame(0f, visual.Scale);
+                scaleAnimation.InsertKeyFrame(1f, new System.Numerics.Vector3(1.45f, 1.45f, 1.0f), easeOut);
+                scaleAnimation.Duration = TimeSpan.FromMilliseconds(400);
+                visual.StartAnimation("Scale", scaleAnimation);
+
+                if (sender is Microsoft.UI.Xaml.Controls.Border control)
+                {
+                    // Re-apply the original ThemeResource instead of making it transparent
+                    if (Application.Current.Resources.TryGetValue("SystemControlBackgroundBaseMediumBrush", out object resource))
+                    {
+                        control.Background = resource as Brush;
+                    }
+                }
+            }
         }
+
+
+
+        public static void Key_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+
+
+            if (sender is UIElement element)
+            {
+                var visual = ElementCompositionPreview.GetElementVisual(element);
+                visual.CenterPoint = new System.Numerics.Vector3((float)element.ActualSize.X / 2, (float)element.ActualSize.Y / 2, 0);
+                var compositor = visual.Compositor;
+
+                // 1. Create a Shared Ease-Out function (Starts fast, ends slow)
+                var easeOut = compositor.CreateCubicBezierEasingFunction(
+                    new System.Numerics.Vector2(0.1f, 0.9f),
+                    new System.Numerics.Vector2(0.2f, 1.0f)
+                );
+
+                // 2. Opacity Animation with Ease-Out
+                var opacityAnimation = compositor.CreateScalarKeyFrameAnimation();
+                opacityAnimation.InsertKeyFrame(1f, 0.85f, easeOut); // Applied here
+                opacityAnimation.Duration = TimeSpan.FromMilliseconds(400);
+                visual.StartAnimation("Opacity", opacityAnimation);
+
+                // 3. Scale Animation with Ease-Out
+                var scaleAnimation = compositor.CreateVector3KeyFrameAnimation();
+                scaleAnimation.InsertKeyFrame(1f, new System.Numerics.Vector3(1f), easeOut); // Applied here
+                scaleAnimation.Duration = TimeSpan.FromMilliseconds(800); // Slightly longer for a softer snap
+                visual.StartAnimation("Scale", scaleAnimation);
+
+                if (sender is Microsoft.UI.Xaml.Controls.Border control)
+                {
+                    // Re-apply the original ThemeResource instead of making it transparent
+                    if (Application.Current.Resources.TryGetValue("SystemControlBackgroundBaseLowBrush", out object resource))
+                    {
+                        control.Background = resource as Brush;
+                    }
+                }
+            }
+
+        }
+
+
+
+
     }
+}

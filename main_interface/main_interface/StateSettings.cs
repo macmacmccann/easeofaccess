@@ -18,6 +18,7 @@ namespace main_interface
 
 
         // Color gradients 
+
         public static bool MonitorColorFixEnabled = false;
 
 
@@ -46,8 +47,13 @@ namespace main_interface
         public static bool StackedModeEnabled = false;
         public static bool ColumnModeEnabled = true;
 
+        // Reprogam Keys // Key Control
 
-        //Settings Page
+        public static bool ReprogramKeysEnabled = false;
+
+
+
+        // Settings Page
 
         public static bool BackgroundProcessActiveEnabled = false;
         public static bool SyncActiveEnabled = false;
