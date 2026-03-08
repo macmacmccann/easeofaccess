@@ -38,12 +38,8 @@ public sealed partial class ReprogramKeysControlPanel : Page
         InitializeComponent();
         _ReprogramKeys = this;
         LoadPreferencesOnStart();
-       // KeyListenerConstructor();
-        this.IsTabStop = true;
-        this.Focus(FocusState.Programmatic);
-        this.KeyDown += OnKeyDown;
-        this.KeyUp += OnKeyUp;
-
+       KeyListenerConstructor();
+ 
         Headertop.BackgroundTransition = new BrushTransition() { Duration = TimeSpan.FromMilliseconds(300) };
         DesignGlobalCode.HeaderColour(Headertop);
 
@@ -55,100 +51,6 @@ public sealed partial class ReprogramKeysControlPanel : Page
     }
 
 
-    public void ConstructDictionary()
-    {
-        _keyMap = new Dictionary<VirtualKey, KeyboardKey>
-        {
-            // Row 0 - Function Keys
-            { VirtualKey.Escape,        KeyEsc           },
-            { VirtualKey.F1,            KeyF1            },
-            { VirtualKey.F2,            KeyF2            },
-            { VirtualKey.F3,            KeyF3            },
-            { VirtualKey.F4,            KeyF4            },
-            { VirtualKey.F5,            KeyF5            },
-            { VirtualKey.F6,            KeyF6            },
-            { VirtualKey.F7,            KeyF7            },
-            { VirtualKey.F8,            KeyF8            },
-            { VirtualKey.F9,            KeyF9            },
-            { VirtualKey.F10,           KeyF10           },
-            { VirtualKey.F11,           KeyF11           },
-            { VirtualKey.F12,           KeyF12           },
-            { VirtualKey.Snapshot,      KeyPrintScreen   },
-            { VirtualKey.Scroll,        KeyScrollLock    },
-            { VirtualKey.Pause,         KeyPause         },
-            
-            // Row 1 - Number Row
-            { (VirtualKey)192,          KeyBackquote     },
-            { VirtualKey.Number1,       Key1             },
-            { VirtualKey.Number2,       Key2             },
-            { VirtualKey.Number3,       Key3             },
-            { VirtualKey.Number4,       Key4             },
-            { VirtualKey.Number5,       Key5             },
-            { VirtualKey.Number6,       Key6             },
-            { VirtualKey.Number7,       Key7             },
-            { VirtualKey.Number8,       Key8             },
-            { VirtualKey.Number9,       Key9             },
-            { VirtualKey.Number0,       Key0             },
-            { (VirtualKey)189,          KeyMinus         },
-            { (VirtualKey)187,          KeyEqual         },
-            { VirtualKey.Back,          KeyBackspace     },
-            
-            // Row 2 - QWERTY Row
-            { VirtualKey.Tab,           KeyTab           },
-            { VirtualKey.Q,             KeyQ             },
-            { VirtualKey.W,             KeyW             },
-            { VirtualKey.E,             KeyE             },
-            { VirtualKey.R,             KeyR             },
-            { VirtualKey.T,             KeyT             },
-            { VirtualKey.Y,             KeyY             },
-            { VirtualKey.U,             KeyU             },
-            { VirtualKey.I,             KeyI             },
-            { VirtualKey.O,             KeyO             },
-            { VirtualKey.P,             KeyP             },
-            { (VirtualKey)219,          KeyOpenBracket   },
-            { (VirtualKey)221,          KeyCloseBracket  },
-            { (VirtualKey)220,          KeyBackslash     },
-            
-            // Row 3 - ASDF Row
-            { VirtualKey.CapitalLock,   KeyCapsLock      },
-            { VirtualKey.A,             KeyA             },
-            { VirtualKey.S,             KeyS             },
-            { VirtualKey.D,             KeyD             },
-            { VirtualKey.F,             KeyF             },
-            { VirtualKey.G,             KeyG             },
-            { VirtualKey.H,             KeyH             },
-            { VirtualKey.J,             KeyJ             },
-            { VirtualKey.K,             KeyK             },
-            { VirtualKey.L,             KeyL             },
-            { (VirtualKey)186,          KeySemicolon     },
-            { (VirtualKey)222,          KeyApostrophe    },
-            { VirtualKey.Enter,         KeyEnter         },
-            
-            // Row 4 - ZXCV Row
-            { VirtualKey.LeftShift,     KeyLeftShift     },
-            { VirtualKey.Z,             KeyZ             },
-            { VirtualKey.X,             KeyX             },
-            { VirtualKey.C,             KeyC             },
-            { VirtualKey.V,             KeyV             },
-            { VirtualKey.B,             KeyB             },
-            { VirtualKey.N,             KeyN             },
-            { VirtualKey.M,             KeyM             },
-            { (VirtualKey)188,          KeyComma         },
-            { (VirtualKey)190,          KeyPeriod        },
-            { (VirtualKey)191,          KeySlash         },
-            { VirtualKey.RightShift,    KeyRightShift    },
-            
-            // Row 5 - Bottom Row
-            { VirtualKey.LeftControl,   KeyLeftCtrl      },
-            { VirtualKey.LeftWindows,   KeyLeftWin       },
-            { VirtualKey.LeftMenu,      KeyLeftAlt       },
-            { VirtualKey.Space,         KeySpace         },
-            { VirtualKey.RightMenu,     KeyRightAlt      },
-            { VirtualKey.RightWindows,  KeyRightWin      },
-            { VirtualKey.Application,   KeyMenu          },
-            { VirtualKey.RightControl,  KeyRightCtrl     }
-        };
-    }
 
 
     private void KeyListenerConstructor()
@@ -156,16 +58,49 @@ public sealed partial class ReprogramKeysControlPanel : Page
         this.IsTabStop = true;
         this.Focus(FocusState.Programmatic);
         this.KeyDown += OnKeyDown;
-        this.KeyUp += OnKeyUp;
+       // this.KeyUp += OnKeyUp; leep it up for nmow 
     }
 
+    VirtualKey? firstKey = null;
+    VirtualKey? secondKey = null;
     private void OnKeyDown(object sender, KeyRoutedEventArgs e)
     {
         if (_keyMap.TryGetValue(e.Key, out KeyboardKey keyControl))
         {
-            keyControl.TriggerPressedVisual();
+            if(firstKey == null)
+            {
+                this.KeyUp -= OnKeyUp; // If im starting back revert to held key ui 
+                firstKey = e.Key;
+                Debug.WriteLine($"First key: {firstKey}");
+                keyControl.TriggerPressedVisual();
+
+
+            }
+            if (firstKey != null && secondKey == null && e.Key != firstKey)
+            {
+                secondKey = e.Key;
+                Debug.WriteLine($"Second key: {secondKey}");
+                keyControl.TriggerPressedVisual();
+                return;
+
+            }
+            // This should actually be on second key success register
+            // then null both again after reigster anywhere as class level fields 
+            if (firstKey != null && secondKey != null ){
+                Debug.WriteLine($"Finished capturing ");
+
+                this.KeyUp += OnKeyUp; // THEN SOMEWHERE DROP KEYS AFTER SUCCESS  
+                keyControl.TriggerPressedVisual();
+
+            }
+
         }
     }
+
+
+
+
+
 
     private void OnKeyUp(object sender, KeyRoutedEventArgs e)
     {
@@ -298,6 +233,103 @@ public sealed partial class ReprogramKeysControlPanel : Page
     {
         DesignGlobalCode.Border_PointerExited(sender, e);
 
+    }
+
+
+
+    public void ConstructDictionary()
+    {
+        _keyMap = new Dictionary<VirtualKey, KeyboardKey>
+        {
+            // Row 0 - Function Keys
+            { VirtualKey.Escape,        KeyEsc           },
+            { VirtualKey.F1,            KeyF1            },
+            { VirtualKey.F2,            KeyF2            },
+            { VirtualKey.F3,            KeyF3            },
+            { VirtualKey.F4,            KeyF4            },
+            { VirtualKey.F5,            KeyF5            },
+            { VirtualKey.F6,            KeyF6            },
+            { VirtualKey.F7,            KeyF7            },
+            { VirtualKey.F8,            KeyF8            },
+            { VirtualKey.F9,            KeyF9            },
+            { VirtualKey.F10,           KeyF10           },
+            { VirtualKey.F11,           KeyF11           },
+            { VirtualKey.F12,           KeyF12           },
+            { VirtualKey.Snapshot,      KeyPrintScreen   },
+            { VirtualKey.Scroll,        KeyScrollLock    },
+            { VirtualKey.Pause,         KeyPause         },
+            
+            // Row 1 - Number Row
+            { (VirtualKey)192,          KeyBackquote     },
+            { VirtualKey.Number1,       Key1             },
+            { VirtualKey.Number2,       Key2             },
+            { VirtualKey.Number3,       Key3             },
+            { VirtualKey.Number4,       Key4             },
+            { VirtualKey.Number5,       Key5             },
+            { VirtualKey.Number6,       Key6             },
+            { VirtualKey.Number7,       Key7             },
+            { VirtualKey.Number8,       Key8             },
+            { VirtualKey.Number9,       Key9             },
+            { VirtualKey.Number0,       Key0             },
+            { (VirtualKey)189,          KeyMinus         },
+            { (VirtualKey)187,          KeyEqual         },
+            { VirtualKey.Back,          KeyBackspace     },
+            
+            // Row 2 - QWERTY Row
+            { VirtualKey.Tab,           KeyTab           },
+            { VirtualKey.Q,             KeyQ             },
+            { VirtualKey.W,             KeyW             },
+            { VirtualKey.E,             KeyE             },
+            { VirtualKey.R,             KeyR             },
+            { VirtualKey.T,             KeyT             },
+            { VirtualKey.Y,             KeyY             },
+            { VirtualKey.U,             KeyU             },
+            { VirtualKey.I,             KeyI             },
+            { VirtualKey.O,             KeyO             },
+            { VirtualKey.P,             KeyP             },
+            { (VirtualKey)219,          KeyOpenBracket   },
+            { (VirtualKey)221,          KeyCloseBracket  },
+            { (VirtualKey)220,          KeyBackslash     },
+            
+            // Row 3 - ASDF Row
+            { VirtualKey.CapitalLock,   KeyCapsLock      },
+            { VirtualKey.A,             KeyA             },
+            { VirtualKey.S,             KeyS             },
+            { VirtualKey.D,             KeyD             },
+            { VirtualKey.F,             KeyF             },
+            { VirtualKey.G,             KeyG             },
+            { VirtualKey.H,             KeyH             },
+            { VirtualKey.J,             KeyJ             },
+            { VirtualKey.K,             KeyK             },
+            { VirtualKey.L,             KeyL             },
+            { (VirtualKey)186,          KeySemicolon     },
+            { (VirtualKey)222,          KeyApostrophe    },
+            { VirtualKey.Enter,         KeyEnter         },
+            
+            // Row 4 - ZXCV Row
+            { VirtualKey.LeftShift,     KeyLeftShift     },
+            { VirtualKey.Z,             KeyZ             },
+            { VirtualKey.X,             KeyX             },
+            { VirtualKey.C,             KeyC             },
+            { VirtualKey.V,             KeyV             },
+            { VirtualKey.B,             KeyB             },
+            { VirtualKey.N,             KeyN             },
+            { VirtualKey.M,             KeyM             },
+            { (VirtualKey)188,          KeyComma         },
+            { (VirtualKey)190,          KeyPeriod        },
+            { (VirtualKey)191,          KeySlash         },
+            { VirtualKey.RightShift,    KeyRightShift    },
+            
+            // Row 5 - Bottom Row
+            { VirtualKey.LeftControl,   KeyLeftCtrl      },
+            { VirtualKey.LeftWindows,   KeyLeftWin       },
+            { VirtualKey.LeftMenu,      KeyLeftAlt       },
+            { VirtualKey.Space,         KeySpace         },
+            { VirtualKey.RightMenu,     KeyRightAlt      },
+            { VirtualKey.RightWindows,  KeyRightWin      },
+            { VirtualKey.Application,   KeyMenu          },
+            { VirtualKey.RightControl,  KeyRightCtrl     }
+        };
     }
 
 }

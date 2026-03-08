@@ -41,6 +41,7 @@ namespace main_interface
 
 
         DesktopAcrylicBackdrop acrylic;
+       // public PopupKeyboard popupkeyboard = new PopupKeyboard();
 
         public MainWindow()
         {
@@ -82,6 +83,7 @@ namespace main_interface
                     TransitionTo(State_IsAppInFocus.AppNotActive);
                 }
             };
+
         }
 
         private void OnClosed(object sender, WindowEventArgs args)

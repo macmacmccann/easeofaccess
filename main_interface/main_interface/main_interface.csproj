@@ -20,7 +20,9 @@
     <None Remove="Mouseless.xaml" />
     <None Remove="MouselessControlPanel.xaml" />
     <None Remove="MySplashScreen.xaml" />
+    <None Remove="PopupKeyboard.xaml" />
     <None Remove="RegisterPage.xaml" />
+    <None Remove="ReprogamKeys.xaml" />
     <None Remove="ReprogramKeysControlPanel.xaml" />
     <None Remove="SettingsControlPanel.xaml" />
     <None Remove="SpotlightPage.xaml" />
@@ -83,6 +85,18 @@
   <ItemGroup>
     <Folder Include="Assets\gifs\" />
     <Folder Include="NewFolder\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="ReprogamKeys.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="PopupKeyboard.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

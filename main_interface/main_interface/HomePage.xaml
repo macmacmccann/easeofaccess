@@ -87,7 +87,7 @@
                 PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                 <Grid>
                     <StackPanel VerticalAlignment="Center" Spacing="4">
-                        <Button Content="Box 2" HorizontalAlignment="Stretch" Click="Box2_Click"/>
+                        <Button Content="Toggle" HorizontalAlignment="Stretch" Click="Box2_Click"/>
                         <TextBlock Text="Description for Box 2" FontSize="12" Opacity="0.9" Foreground="White" TextAlignment="Center"/>
                     </StackPanel>
                 </Grid>

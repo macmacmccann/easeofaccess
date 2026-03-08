@@ -69,7 +69,9 @@ namespace main_interface
 
         private void Box2_Click(object sender, RoutedEventArgs e)
         {
-            // Add your Box 2 logic here
+            PopupKeyboard pop = PopupKeyboard.MakeInstance;
+            pop.Toggle();
+
         }
 
         private void Box3_Click(object sender, RoutedEventArgs e)

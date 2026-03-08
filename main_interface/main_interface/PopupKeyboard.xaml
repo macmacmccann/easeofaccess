@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="main_interface.PopupKeyboard"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:main_interface"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    
+     
+    xmlns:controls="using:main_interface.Controls"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+xmlns:system="using:Windows.System"    
+    
+    
+    Title="PopupKeyboard">
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+
+    <ScrollViewer>
+
+
+        <Grid x:Name="keyboard"  RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+
+            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Stretch" Height="60" Padding="8" Margin="24,0,0,0">
+                <controls:KeyboardKey x:Name="KeyEsc" Label="Esc" VirtualKeyCode="{local:VirtualKeyExtension Key=Escape}"/>
+
+                <controls:KeyboardKey x:Name="KeyF1" Label="F1" VirtualKeyCode="{local:VirtualKeyExtension Key=F1}"/>
+                <controls:KeyboardKey x:Name="KeyF2" Label="F2" VirtualKeyCode="{local:VirtualKeyExtension Key=F2}"/>
+                <controls:KeyboardKey x:Name="KeyF3" Label="F3" VirtualKeyCode="{local:VirtualKeyExtension Key=F3}"/>
+                <controls:KeyboardKey x:Name="KeyF4" Label="F4" VirtualKeyCode="{local:VirtualKeyExtension Key=F4}"/>
+                <controls:KeyboardKey x:Name="KeyF5" Label="F5" VirtualKeyCode="{local:VirtualKeyExtension Key=F5}"/>
+                <controls:KeyboardKey x:Name="KeyF6" Label="F6" VirtualKeyCode="{local:VirtualKeyExtension Key=F6}"/>
+                <controls:KeyboardKey x:Name="KeyF7" Label="F7" VirtualKeyCode="{local:VirtualKeyExtension Key=F7}"/>
+                <controls:KeyboardKey x:Name="KeyF8" Label="F8" VirtualKeyCode="{local:VirtualKeyExtension Key=F8}"/>
+                <controls:KeyboardKey x:Name="KeyF9" Label="F9" VirtualKeyCode="{local:VirtualKeyExtension Key=F9}"/>
+                <controls:KeyboardKey x:Name="KeyF10" Label="F10" VirtualKeyCode="{local:VirtualKeyExtension Key=F10}"/>
+                <controls:KeyboardKey x:Name="KeyF11" Label="F11" VirtualKeyCode="{local:VirtualKeyExtension Key=F11}"/>
+                <controls:KeyboardKey x:Name="KeyF12" Label="F12" VirtualKeyCode="{local:VirtualKeyExtension Key=F12}"/>
+
+                <controls:KeyboardKey x:Name="KeyPrintScreen" Label="PrtSc" VirtualKeyCode="{local:VirtualKeyExtension Key=Snapshot}"/>
+                <controls:KeyboardKey x:Name="KeyScrollLock" Label="ScrLk" VirtualKeyCode="{local:VirtualKeyExtension Key=Scroll}"/>
+                <controls:KeyboardKey x:Name="KeyPause" Label="Pause" VirtualKeyCode="{local:VirtualKeyExtension Key=Pause}"/>
+            </StackPanel>
+
+            <Grid Grid.Row="1">
+                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="60" Padding="8" Margin="24,0,0,0">
+                    <controls:KeyboardKey x:Name="KeyBackquote" Label="~" VirtualKeyCode="{local:VirtualKeyExtension Key=192}"/>
+                    <controls:KeyboardKey x:Name="Key1" Label="1" VirtualKeyCode="{local:VirtualKeyExtension Key=Number1}"/>
+                    <controls:KeyboardKey x:Name="Key2" Label="2" VirtualKeyCode="{local:VirtualKeyExtension Key=Number2}"/>
+                    <controls:KeyboardKey x:Name="Key3" Label="3" VirtualKeyCode="{local:VirtualKeyExtension Key=Number3}"/>
+                    <controls:KeyboardKey x:Name="Key4" Label="4" VirtualKeyCode="{local:VirtualKeyExtension Key=Number4}"/>
+                    <controls:KeyboardKey x:Name="Key5" Label="5" VirtualKeyCode="{local:VirtualKeyExtension Key=Number5}"/>
+                    <controls:KeyboardKey x:Name="Key6" Label="6" VirtualKeyCode="{local:VirtualKeyExtension Key=Number6}"/>
+                    <controls:KeyboardKey x:Name="Key7" Label="7" VirtualKeyCode="{local:VirtualKeyExtension Key=Number7}"/>
+                    <controls:KeyboardKey x:Name="Key8" Label="8" VirtualKeyCode="{local:VirtualKeyExtension Key=Number8}"/>
+                    <controls:KeyboardKey x:Name="Key9" Label="9" VirtualKeyCode="{local:VirtualKeyExtension Key=Number9}"/>
+                    <controls:KeyboardKey x:Name="Key0" Label="0" VirtualKeyCode="{local:VirtualKeyExtension Key=Number0}"/>
+                    <controls:KeyboardKey x:Name="KeyMinus" Label="-" VirtualKeyCode="{local:VirtualKeyExtension Key=189}"/>
+                    <controls:KeyboardKey x:Name="KeyEqual" Label="=" VirtualKeyCode="{local:VirtualKeyExtension Key=187}"/>
+                    <controls:KeyboardKey x:Name="KeyBackspace" Label="Backspace" VirtualKeyCode="{local:VirtualKeyExtension Key=Back}"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Top" Height="60" Padding="8" Margin="24,0,0,0">
+                    <controls:KeyboardKey x:Name="KeyTab" Label="Tab" VirtualKeyCode="{local:VirtualKeyExtension Key=Tab}"/>
+                    <controls:KeyboardKey x:Name="KeyQ" Label="Q" VirtualKeyCode="{local:VirtualKeyExtension Key=Q}"/>
+                    <controls:KeyboardKey x:Name="KeyW" Label="W" VirtualKeyCode="{local:VirtualKeyExtension Key=W}"/>
+                    <controls:KeyboardKey x:Name="KeyE" Label="E" VirtualKeyCode="{local:VirtualKeyExtension Key=E}"/>
+                    <controls:KeyboardKey x:Name="KeyR" Label="R" VirtualKeyCode="{local:VirtualKeyExtension Key=R}"/>
+                    <controls:KeyboardKey x:Name="KeyT" Label="T" VirtualKeyCode="{local:VirtualKeyExtension Key=T}"/>
+                    <controls:KeyboardKey x:Name="KeyY" Label="Y" VirtualKeyCode="{local:VirtualKeyExtension Key=Y}"/>
+                    <controls:KeyboardKey x:Name="KeyU" Label="U" VirtualKeyCode="{local:VirtualKeyExtension Key=U}"/>
+                    <controls:KeyboardKey x:Name="KeyI" Label="I" VirtualKeyCode="{local:VirtualKeyExtension Key=I}"/>
+                    <controls:KeyboardKey x:Name="KeyO" Label="O" VirtualKeyCode="{local:VirtualKeyExtension Key=O}"/>
+                    <controls:KeyboardKey x:Name="KeyP" Label="P" VirtualKeyCode="{local:VirtualKeyExtension Key=P}"/>
+                    <controls:KeyboardKey x:Name="KeyOpenBracket" Label="[" VirtualKeyCode="{local:VirtualKeyExtension Key=219}"/>
+                    <controls:KeyboardKey x:Name="KeyCloseBracket" Label="]" VirtualKeyCode="{local:VirtualKeyExtension Key=221}"/>
+                    <controls:KeyboardKey x:Name="KeyBackslash" Label="\\" VirtualKeyCode="{local:VirtualKeyExtension Key=220}"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="3">
+                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Top" Height="60" Padding="8" Margin="24,0,0,0">
+                    <controls:KeyboardKey x:Name="KeyCapsLock" Label="Caps" VirtualKeyCode="{local:VirtualKeyExtension Key=CapitalLock}"/>
+                    <controls:KeyboardKey x:Name="KeyA" Label="A" VirtualKeyCode="{local:VirtualKeyExtension Key=A}"/>
+                    <controls:KeyboardKey x:Name="KeyS" Label="S" VirtualKeyCode="{local:VirtualKeyExtension Key=S}"/>
+                    <controls:KeyboardKey x:Name="KeyD" Label="D" VirtualKeyCode="{local:VirtualKeyExtension Key=D}"/>
+                    <controls:KeyboardKey x:Name="KeyF" Label="F" VirtualKeyCode="{local:VirtualKeyExtension Key=F}"/>
+                    <controls:KeyboardKey x:Name="KeyG" Label="G" VirtualKeyCode="{local:VirtualKeyExtension Key=G}"/>
+                    <controls:KeyboardKey x:Name="KeyH" Label="H" VirtualKeyCode="{local:VirtualKeyExtension Key=H}"/>
+                    <controls:KeyboardKey x:Name="KeyJ" Label="J" VirtualKeyCode="{local:VirtualKeyExtension Key=J}"/>
+                    <controls:KeyboardKey x:Name="KeyK" Label="K" VirtualKeyCode="{local:VirtualKeyExtension Key=K}"/>
+                    <controls:KeyboardKey x:Name="KeyL" Label="L" VirtualKeyCode="{local:VirtualKeyExtension Key=L}"/>
+                    <controls:KeyboardKey x:Name="KeySemicolon" Label=";" VirtualKeyCode="{local:VirtualKeyExtension Key=186}"/>
+                    <controls:KeyboardKey x:Name="KeyApostrophe" Label="'" VirtualKeyCode="{local:VirtualKeyExtension Key=222}"/>
+                    <controls:KeyboardKey x:Name="KeyEnter" Label="Enter" VirtualKeyCode="{local:VirtualKeyExtension Key=Enter}"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="4">
+                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Top" Height="60" Padding="8" Margin="24,0,0,0">
+                    <controls:KeyboardKey x:Name="KeyLeftShift" Label="Shift" VirtualKeyCode="{local:VirtualKeyExtension Key=LeftShift}"/>
+                    <controls:KeyboardKey x:Name="KeyZ" Label="Z" VirtualKeyCode="{local:VirtualKeyExtension Key=Z}"/>
+                    <controls:KeyboardKey x:Name="KeyX" Label="X" VirtualKeyCode="{local:VirtualKeyExtension Key=X}"/>
+                    <controls:KeyboardKey x:Name="KeyC" Label="C" VirtualKeyCode="{local:VirtualKeyExtension Key=C}"/>
+                    <controls:KeyboardKey x:Name="KeyV" Label="V" VirtualKeyCode="{local:VirtualKeyExtension Key=V}"/>
+                    <controls:KeyboardKey x:Name="KeyB" Label="B" VirtualKeyCode="{local:VirtualKeyExtension Key=B}"/>
+                    <controls:KeyboardKey x:Name="KeyN" Label="N" VirtualKeyCode="{local:VirtualKeyExtension Key=N}"/>
+                    <controls:KeyboardKey x:Name="KeyM" Label="M" VirtualKeyCode="{local:VirtualKeyExtension Key=M}"/>
+                    <controls:KeyboardKey x:Name="KeyComma" Label="," VirtualKeyCode="{local:VirtualKeyExtension Key=188}"/>
+                    <controls:KeyboardKey x:Name="KeyPeriod" Label="." VirtualKeyCode="{local:VirtualKeyExtension Key=190}"/>
+                    <controls:KeyboardKey x:Name="KeySlash" Label="/" VirtualKeyCode="{local:VirtualKeyExtension Key=191}"/>
+                    <controls:KeyboardKey x:Name="KeyRightShift" Label="Shift" VirtualKeyCode="{local:VirtualKeyExtension Key=RightShift}"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="5">
+                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="60" Padding="8" Margin="24,0,0,0">
+                    <controls:KeyboardKey x:Name="KeyLeftCtrl" Label="Ctrl" VirtualKeyCode="{local:VirtualKeyExtension Key=LeftControl}"/>
+                    <controls:KeyboardKey x:Name="KeyLeftWin" Label="Win" VirtualKeyCode="{local:VirtualKeyExtension Key=LeftWindows}"/>
+                    <controls:KeyboardKey x:Name="KeyLeftAlt" Label="Alt" VirtualKeyCode="{local:VirtualKeyExtension Key=LeftMenu}"/>
+                    <controls:KeyboardKey x:Name="KeySpace" Label="Space" VirtualKeyCode="{local:VirtualKeyExtension Key=Space}"/>
+                    <controls:KeyboardKey x:Name="KeyRightAlt" Label="Alt" VirtualKeyCode="{local:VirtualKeyExtension Key=RightMenu}"/>
+                    <controls:KeyboardKey x:Name="KeyRightWin" Label="Win" VirtualKeyCode="{local:VirtualKeyExtension Key=RightWindows}"/>
+                    <controls:KeyboardKey x:Name="KeyMenu" Label="Menu" VirtualKeyCode="{local:VirtualKeyExtension Key=Application}"/>
+                    <controls:KeyboardKey x:Name="KeyRightCtrl" Label="Ctrl" VirtualKeyCode="{local:VirtualKeyExtension Key=RightControl}"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+
+    </ScrollViewer>
+
+
+
+</Window>

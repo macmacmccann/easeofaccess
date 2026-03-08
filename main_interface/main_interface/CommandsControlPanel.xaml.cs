@@ -193,6 +193,8 @@ public sealed partial class CommandsControlPanel : Page
     private async void AssignHotkey_Clicked(object sender, RoutedEventArgs e)
     {
         _isCapturingHotKey = true; // Capture mode 
+        PopupKeyboard pop = PopupKeyboard.MakeInstance;
+        pop.Toggle();
         _waitingForPrimaryKey = false;
         CapturedModiferKeys = Modifiers.None;
         CapturedVK = 0;
@@ -545,11 +547,14 @@ public sealed partial class CommandsControlPanel : Page
     private const int HOT_DEFAULT_ERROR = 101010;
     private async Task OnHotkeyCaptured(Modifiers modifiers, uint vk)  // Changed from uint to Modifiers
     {
+
+        PopupKeyboard pop = PopupKeyboard.MakeInstance;
+        pop.Toggle();
         Debug.WriteLine($"checking combo: mod={modifiers}, vk={vk}");
         Debug.WriteLine($"currently taken: {string.Join(", ", TakenCombinations._taken)}");
 
         // Determine which hotkey ID based on active button
-        //  int hotkeyId = _activeButton.Name == "AssignHotkey" ? HOTKEY_ID_1 : HOTKEY_ID_2;
+        //  int hotkeyId = _activeButton.Name == "AssignHotkey" ? HOTKEY_ID_1 : HOTKEY_ID_2; shorthand
 
         int hotkeyId = 0;
         switch (_activeButton.Name)

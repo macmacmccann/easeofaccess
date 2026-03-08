@@ -29,8 +29,6 @@ using WinRT.Interop; // This allows access to the underlying hwnd of winui windo
 using static main_interface.TakenCombinations;
 
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace main_interface
 {
@@ -221,9 +219,6 @@ namespace main_interface
 
         //Guard flag implenetation 
         private bool _isHookUpSet = false;
-
-
-
 
 
         private void OnActivated(object sender, WindowActivatedEventArgs args) // hwnd exists after the fact thats why is activated when window is constructred not in the construcotr 
@@ -561,9 +556,6 @@ namespace main_interface
             exStyle |= WS_EX_TOOLWINDOW; // from style add "this is a toolbar window "
 
             SetWindowLong(hwnd, GWL_EXSTYLE, exStyle); // Apply these mods to the window 
-
-
-
         }
 
 
