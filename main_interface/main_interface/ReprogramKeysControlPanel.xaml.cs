@@ -45,7 +45,7 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
         // Keep the page alive / no duplicates upon nav switch by caching / reflected states preserved in ui 
         this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
-        Test();
+      //  Test();
 
         ConstructDictionary();
     }
@@ -81,6 +81,29 @@ public sealed partial class ReprogramKeysControlPanel : Page
                 secondKey = e.Key;
                 Debug.WriteLine($"Second key: {secondKey}");
                 keyControl.TriggerPressedVisual();
+
+                // a check should be here 
+
+
+                var matchedControl = FindKeyByVirtualKey(secondKey);
+                if (matchedControl != null)
+                {
+                   
+                    matchedControl.Label = firstKey.ToString() ;
+                    Debug.WriteLine($"Matched control name: {matchedControl.Name}");
+
+                    // Matching ui control by the first key and change the label to second keys
+                    var matchedControlForFirstKey = FindKeyByVirtualKey(firstKey);
+                    matchedControlForFirstKey.Label = secondKey.ToString();
+
+                }
+                // get x  VirtualKeyCode = x 
+                // var name = control.keyboard.X:name 
+                //  var keyboardKey = this.FindName(name) as KeyboardKey;
+                //keyboardKey.Label = "success";
+
+
+                ReprogamKeys.MakeInstance.TransferKeys(firstKey, secondKey);
                 return;
 
             }
@@ -98,6 +121,28 @@ public sealed partial class ReprogramKeysControlPanel : Page
     }
 
 
+    // helper to walk the visual tree and find all KeyboardKey controls
+    private IEnumerable<KeyboardKey> GetAllKeyboardKeys(DependencyObject parent)
+    {
+        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, i);
+
+            if (child is KeyboardKey keyboardKey)
+                yield return keyboardKey;
+
+            // all children
+            foreach (var descendant in GetAllKeyboardKeys(child))
+                yield return descendant;
+        }
+    }
+
+    // then find the one matching firstKey
+    private KeyboardKey FindKeyByVirtualKey(VirtualKey? targetKey)
+    {
+        return GetAllKeyboardKeys(this)
+            .FirstOrDefault(k => k.VirtualKeyCode == targetKey);
+    }
 
 
 

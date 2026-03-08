@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
 using WinRT.Interop;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -87,9 +88,17 @@ public sealed partial class ReprogamKeys : Window
     
     }
 
+    VirtualKey? firstKey;
+    VirtualKey? secondKey;
 
-
-
+    // virtualKeyExtension might be better your class - oems might not transger with direct 
+    // Constructor 
+    public void TransferKeys(VirtualKey? firstKeyPassed ,VirtualKey? secondKeyPassed)
+    {
+        firstKey = firstKeyPassed;
+        secondKey = secondKeyPassed;
+        
+    }
 
     private SubclassProc _windowProc; // Field is in scope of MainWindow - will live as long as MainWindow does !
 
@@ -123,32 +132,40 @@ public sealed partial class ReprogamKeys : Window
 
     const int HOTKEY_ID_OVERLAY = 9000; //hotkey id so when windows sends it back to us 
     const int HOTKEY_ID_FAKE_OTHER_FUNCTION = 8000;
-    // WHEN HOTKEY IS MADE 
-    // Windows Procedure Win32 
-    // This function is called every time windows sends a message 
+
+
+
+    const uint WM_KEYDOWN = 0x0100;// Constant code " key down " 
+    const int  WM_KEYUP = 0x0101; 
+    const int WM_CHAR = 0x0102;
+
+
+    [DllImport("user32.dll")]
+    static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+    [DllImport("user32.dll")]
+    static extern IntPtr PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
     IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, IntPtr dwRefdata)
     // params = 1. window receiving the message 2,the type (VM_HOTKEY not VM_PAINT) 3, wparam extra info - the id of the hotkey - ,lparam extra key data , handled, if we used the message 
     {
 
-        const int WM_HOTKEY = 0x0312; // Win32 message sent when a registered hotkepy is pressed
+        //https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keydown
+        if (msg == WM_KEYDOWN)
+        {
+         uint vkCode = (uint)wParam.ToInt32(); // Extract what key was pressed from the word param 
 
-        // What ill do if there is an event that i coded for something to happen 
-        if (msg == WM_HOTKEY)
-        { // Was the event a hotkey press?
-            if (wParam.ToInt32() == HOTKEY_ID_OVERLAY) // 
+            if (wParam.ToInt32() == (uint)firstKey) 
             {
-                Debug.WriteLine("Overlay Called");
+                Debug.WriteLine("First Key intercepted — blocking and  then simulating second key");
+
+                // block first key but then simulate secondKey press 
+                PostMessage(hwnd, WM_KEYDOWN, wParam, lParam);
+
                 
-                // INSERT METHOD OR IF KEY = F THEN RUN D 
-                return IntPtr.Zero; // tell win32 the message was handled  
+                return IntPtr.Zero; // tell win32 the message was handled  //suppressed " i dealt with this" 
             }
-            if (wParam.ToInt32() == HOTKEY_ID_FAKE_OTHER_FUNCTION)
-            {
-                Debug.WriteLine("Other function called");
-                return IntPtr.Zero; // tell win32 the message was handled  
-            }
-
-
+      
         }
         return DefSubclassProc(hwnd, msg, wParam, lParam);
         // Let windows handle all other messages normally . 

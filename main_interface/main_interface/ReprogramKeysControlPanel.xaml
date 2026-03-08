@@ -85,7 +85,6 @@ xmlns:system="using:Windows.System"
                         <controls:KeyboardKey x:Name="KeyF10" Label="F10" VirtualKeyCode="{local:VirtualKeyExtension Key=F10}"/>
                         <controls:KeyboardKey x:Name="KeyF11" Label="F11" VirtualKeyCode="{local:VirtualKeyExtension Key=F11}"/>
                         <controls:KeyboardKey x:Name="KeyF12" Label="F12" VirtualKeyCode="{local:VirtualKeyExtension Key=F12}"/>
-
                         <controls:KeyboardKey x:Name="KeyPrintScreen" Label="PrtSc" VirtualKeyCode="{local:VirtualKeyExtension Key=Snapshot}"/>
                         <controls:KeyboardKey x:Name="KeyScrollLock" Label="ScrLk" VirtualKeyCode="{local:VirtualKeyExtension Key=Scroll}"/>
                         <controls:KeyboardKey x:Name="KeyPause" Label="Pause" VirtualKeyCode="{local:VirtualKeyExtension Key=Pause}"/>
