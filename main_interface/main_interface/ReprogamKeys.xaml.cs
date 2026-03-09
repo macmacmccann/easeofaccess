@@ -38,10 +38,10 @@ public sealed partial class ReprogamKeys : Window
         InitializeComponent();
         Activate();
         HideFromTaskbar();
-
         MoveOffScreen();
-
         Activated += OnActivated;
+        Debug.WriteLine("reprogram windows created created ");
+
     }
 
 
@@ -51,14 +51,9 @@ public sealed partial class ReprogamKeys : Window
         {
             if (_instance == null)
                 _instance = new ReprogamKeys();
-
-
             return _instance;
-
         }
-
     }
-
 
     public static bool Exists()
     {
@@ -70,9 +65,6 @@ public sealed partial class ReprogamKeys : Window
         }
         return true;
     }
-
-
-
 
 
     //Guard flag implenetation 
@@ -149,26 +141,34 @@ public sealed partial class ReprogamKeys : Window
     IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, IntPtr dwRefdata)
     // params = 1. window receiving the message 2,the type (VM_HOTKEY not VM_PAINT) 3, wparam extra info - the id of the hotkey - ,lparam extra key data , handled, if we used the message 
     {
+        Debug.WriteLine("Wnd proc Called on Repgoram Keys ");
+
+        uint vkCode = (uint)wParam.ToInt32(); // Extract what key was pressed from the word param 
 
         //https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keydown
         if (msg == WM_KEYDOWN)
         {
-         uint vkCode = (uint)wParam.ToInt32(); // Extract what key was pressed from the word param 
-
             if (wParam.ToInt32() == (uint)firstKey) 
             {
-                Debug.WriteLine("First Key intercepted — blocking and  then simulating second key");
 
-                // block first key but then simulate secondKey press 
-                PostMessage(hwnd, WM_KEYDOWN, wParam, lParam);
+                Debug.WriteLine("Wnd proc first key DOWN");
+             PostMessage(hwnd, WM_KEYDOWN, (nint)secondKey, lParam);
+             return IntPtr.Zero; // Tell cpu "I Handle down event" -> means block it 
+            }
+        }
+        if (msg == WM_KEYUP)
+        {
+            if (wParam.ToInt32() == (uint)firstKey)
+            {
+                Debug.WriteLine("Wnd proc first key UP");
 
-                
-                return IntPtr.Zero; // tell win32 the message was handled  //suppressed " i dealt with this" 
+                PostMessage(hwnd, WM_KEYUP, (nint)secondKey, lParam);
+               return IntPtr.Zero;
             }
       
         }
+         // Let windows handle all other messages normally . 
         return DefSubclassProc(hwnd, msg, wParam, lParam);
-        // Let windows handle all other messages normally . 
 
     }
 
