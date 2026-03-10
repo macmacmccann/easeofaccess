@@ -414,10 +414,6 @@ namespace main_interface
 
 
 
-
-
-
-
         // https://github.com/microsoft/WindowsAppSDK/discussions/2994
         private AppWindow GetAppWindowForCurrentWindow()
         {
@@ -465,8 +461,6 @@ namespace main_interface
             {
                 EnableAcrylic();
             }
-
-
         }
 
 
@@ -509,10 +503,6 @@ namespace main_interface
             {
                 RemoveOnTopSetToDefault();
             }
-
-
-
-
         }
 
 

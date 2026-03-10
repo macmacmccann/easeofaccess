@@ -26,8 +26,9 @@ namespace main_interface;
 
 public sealed partial class ReprogramKeysControlPanel : Page
 {
-    public static ReprogramKeysControlPanel _ReprogramKeys { get; private set; }
+    public static ReprogramKeysControlPanel _ReprogramKeysPanel { get; private set; }
 
+   // public ReprogamKeys _Window;
     private Modifiers CapturedModiferKeys; // not uint casting problem its cast to None in enum method below 
     private Dictionary<VirtualKey, KeyboardKey> _keyMap;
 
@@ -35,11 +36,12 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
     public ReprogramKeysControlPanel()
     {
+    
         InitializeComponent();
-        _ReprogramKeys = this;
+        _ReprogramKeysPanel = this;
         LoadPreferencesOnStart();
        KeyListenerConstructor();
- 
+       
         Headertop.BackgroundTransition = new BrushTransition() { Duration = TimeSpan.FromMilliseconds(300) };
         DesignGlobalCode.HeaderColour(Headertop);
 
@@ -49,7 +51,6 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
         ConstructDictionary();
     }
-
 
 
 
@@ -81,15 +82,15 @@ public sealed partial class ReprogramKeysControlPanel : Page
                 secondKey = e.Key;
                 Debug.WriteLine($"Second key: {secondKey}");
                 keyControl.TriggerPressedVisual();
+                ReprogamKeys.MakeInstance.TransferKeys(firstKey, secondKey);
 
                 // a check should be here 
-
 
                 var matchedControl = FindKeyByVirtualKey(secondKey);
                 if (matchedControl != null)
                 {
                    
-                    matchedControl.Label = firstKey.ToString() ;
+                    matchedControl.Label = firstKey.ToString();
                     Debug.WriteLine($"Matched control name: {matchedControl.Name}");
 
                     // Matching ui control by the first key and change the label to second keys
@@ -103,7 +104,6 @@ public sealed partial class ReprogramKeysControlPanel : Page
                 //keyboardKey.Label = "success";
 
 
-                ReprogamKeys.MakeInstance.TransferKeys(firstKey, secondKey);
                 return;
 
             }

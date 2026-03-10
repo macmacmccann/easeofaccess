@@ -38,10 +38,10 @@ public sealed partial class ReprogamKeys : Window
         InitializeComponent();
         Activate();
         HideFromTaskbar();
-
         MoveOffScreen();
-
         Activated += OnActivated;
+        Debug.WriteLine("reprogram windows created created ");
+
     }
 
 
@@ -51,14 +51,9 @@ public sealed partial class ReprogamKeys : Window
         {
             if (_instance == null)
                 _instance = new ReprogamKeys();
-
-
             return _instance;
-
         }
-
     }
-
 
     public static bool Exists()
     {
@@ -70,9 +65,6 @@ public sealed partial class ReprogamKeys : Window
         }
         return true;
     }
-
-
-
 
 
     //Guard flag implenetation 
@@ -153,6 +145,56 @@ public sealed partial class ReprogamKeys : Window
 
 
 
+    void InstallKeyboardHook()
+    {
+        // This hook needs to live as long as the hook exists not to be g collected. 
+        _keyboardProc = KeyboardHookCallback;
+
+        _keyboardHook = SetWindowsHookEx(
+
+            WH_KEYBOARD_LL, // I 
+            _keyboardProc, // Keyboard callback method below 
+            IntPtr.Zero,
+            0
+            );
+    }
+
+
+
+
+
+    const int WH_KEYBOARD_LL = 13;
+
+    IntPtr KeyboardHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+    {
+        if (speed == null)
+        {
+            speed = 20;
+        }
+        // if windows tells us to skip process 
+        if (nCode < 0)
+        {
+
+            return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);
+        }
+
+        if (!StateSettings.ReprogramKeysEnabled)
+        {
+            // diabled - do nothing pass the event on 
+            return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);
+
+        }
+        if (nCode >= 0)
+        {
+
+            // HOOK LOGIC HERE 
+        }
+        return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);
+
+    }
+
+
+
     void SetupSubclass()
     {
         var hwnd = WindowNative.GetWindowHandle(this);
@@ -188,26 +230,34 @@ public sealed partial class ReprogamKeys : Window
     IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, IntPtr dwRefdata)
     // params = 1. window receiving the message 2,the type (VM_HOTKEY not VM_PAINT) 3, wparam extra info - the id of the hotkey - ,lparam extra key data , handled, if we used the message 
     {
+        Debug.WriteLine("Wnd proc Called on Repgoram Keys ");
+
+        uint vkCode = (uint)wParam.ToInt32(); // Extract what key was pressed from the word param 
 
         //https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keydown
         if (msg == WM_KEYDOWN)
         {
-         uint vkCode = (uint)wParam.ToInt32(); // Extract what key was pressed from the word param 
-
             if (wParam.ToInt32() == (uint)firstKey) 
             {
-                Debug.WriteLine("First Key intercepted — blocking and  then simulating second key");
 
-                // block first key but then simulate secondKey press 
-                PostMessage(hwnd, WM_KEYDOWN, wParam, lParam);
+                Debug.WriteLine("Wnd proc first key DOWN");
+             PostMessage(hwnd, WM_KEYDOWN, (nint)secondKey, lParam);
+             return IntPtr.Zero; // Tell cpu "I Handle down event" -> means block it 
+            }
+        }
+        if (msg == WM_KEYUP)
+        {
+            if (wParam.ToInt32() == (uint)firstKey)
+            {
+                Debug.WriteLine("Wnd proc first key UP");
 
-                
-                return IntPtr.Zero; // tell win32 the message was handled  //suppressed " i dealt with this" 
+                PostMessage(hwnd, WM_KEYUP, (nint)secondKey, lParam);
+               return IntPtr.Zero;
             }
       
         }
+         // Let windows handle all other messages normally . 
         return DefSubclassProc(hwnd, msg, wParam, lParam);
-        // Let windows handle all other messages normally . 
 
     }
 
@@ -295,4 +345,38 @@ public sealed partial class ReprogamKeys : Window
 
     [DllImport("user32.dll")]
     static extern bool UnregisterHotKey(IntPtr hWnd, int id); // HOTKEY ID WINDOW ID 
+
+
+
+
+    // Win32 API for hook procedure monitor keyboard input 
+    [DllImport("user32.dll")]
+    static extern IntPtr SetWindowsHookEx(
+    int idHook,
+    LowLevelKeyboardProc lpfn,
+    IntPtr hMod,
+    uint dwThreadId
+);
+
+    delegate IntPtr LowLevelKeyboardProc(
+int nCode,
+IntPtr wParam,
+IntPtr lParam);
+
+
+    //Unhook it 
+    [DllImport("user32.dll")]
+    static extern bool UnhookWindowsHookEx(IntPtr hhk);
+
+
+    // Pass the event to the next hook in the chain 
+    [DllImport("user32.dll")]
+    static extern IntPtr CallNextHookEx(
+    IntPtr hhk,
+    int nCode,
+    IntPtr wParam,
+    IntPtr lParam
+);
+
+
 }
