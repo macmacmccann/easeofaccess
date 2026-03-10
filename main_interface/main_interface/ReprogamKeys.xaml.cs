@@ -100,6 +100,45 @@ public sealed partial class ReprogamKeys : Window
         
     }
 
+    Dictionary<VirtualKey, VirtualKey> keysdictionary = new Dictionary<VirtualKey, VirtualKey>;
+
+    
+
+    public KeyValuePair<VirtualKey, VirtualKey> pairFocused; // One pair 
+
+
+    public KeyValuePair<VirtualKey,VirtualKey> searchCorrelatedKey(KeyValuePair<VirtualKey,VirtualKey> pair,nint msg) {
+
+
+
+
+
+        return pair;
+    }
+
+    public void AddCorrelatedKeys(KeyValuePair<VirtualKey, VirtualKey> pair)
+    {
+        keysdictionary.Add(pair.Key, pair.Value);
+    }
+
+    public void UpdateCorrelatedKeys(KeyValuePair<VirtualKey, VirtualKey> pair)
+    {
+        // S E already but want S D
+        // Input S D -> Find S as index ,equal it do D 
+        keysdictionary[pair.Key] = pair.Value;
+    }
+
+    public void DeleteCorrelatedKeys(KeyValuePair<VirtualKey, VirtualKey> pair)
+    {
+
+        keysdictionary.Remove(pair.Key); // not also value? 
+        // Please revert controls to static label text at compile time 
+    }
+
+
+
+
+
     private SubclassProc _windowProc; // Field is in scope of MainWindow - will live as long as MainWindow does !
 
     delegate IntPtr SubclassProc( // What SetWindowSublass Expects 
