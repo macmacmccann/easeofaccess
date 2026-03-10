@@ -86,12 +86,11 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
                 // a check should be here 
 
-
                 var matchedControl = FindKeyByVirtualKey(secondKey);
                 if (matchedControl != null)
                 {
                    
-                    matchedControl.Label = firstKey.ToString() ;
+                    matchedControl.Label = firstKey.ToString();
                     Debug.WriteLine($"Matched control name: {matchedControl.Name}");
 
                     // Matching ui control by the first key and change the label to second keys
