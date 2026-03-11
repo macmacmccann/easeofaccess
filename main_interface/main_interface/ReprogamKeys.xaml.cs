@@ -31,6 +31,15 @@ public sealed partial class ReprogamKeys : Window
 
 
     private static ReprogamKeys _instance;
+
+    // Lifetime management -> 
+    LowLevelKeyboardProc _keyboardProc;
+    // Store the win32 import globally 
+    // Store it so its not garbage collected
+
+    IntPtr _keyboardHook = IntPtr.Zero;
+
+
     public ReprogamKeys()
     {
 
@@ -73,44 +82,80 @@ public sealed partial class ReprogamKeys : Window
     {
         if (!_isHookUpSet)
         {
-            SetupSubclass(); // Hook into Win32 message loops 
+            InstallKeyboardHook(); // Install global keyboard hook
             _isHookUpSet = true; // now never try again 
 
         }
     
     }
 
-    VirtualKey? firstKey;
-    VirtualKey? secondKey;
+
+    Dictionary<VirtualKey, VirtualKey> keysdictionary = new();
+
+    VirtualKey firstKeyClassLevel;
+    VirtualKey secondKeyClassLevel;
 
     // virtualKeyExtension might be better your class - oems might not transger with direct 
     // Constructor 
-    public void TransferKeys(VirtualKey? firstKeyPassed ,VirtualKey? secondKeyPassed)
+    public void TransferKeys(VirtualKey firstKeyPassed ,VirtualKey secondKeyPassed)
     {
-        firstKey = firstKeyPassed;
-        secondKey = secondKeyPassed;
-        
+        // Normalize generic modifier keys to their left equivalents
+        firstKeyPassed = NormalizeKey(firstKeyPassed);
+        secondKeyPassed = NormalizeKey(secondKeyPassed);
+
+        firstKeyClassLevel = firstKeyPassed;
+        secondKeyClassLevel = secondKeyPassed;
+
+        AddCorrelatedKeys(firstKeyClassLevel, secondKeyClassLevel);
     }
 
-    Dictionary<VirtualKey, VirtualKey> keysdictionary = new Dictionary<VirtualKey, VirtualKey>;
-
-    
-
-    public KeyValuePair<VirtualKey, VirtualKey> pairFocused; // One pair 
-
-
-    public KeyValuePair<VirtualKey,VirtualKey> searchCorrelatedKey(KeyValuePair<VirtualKey,VirtualKey> pair,nint msg) {
-
-
-
-
-
-        return pair;
+    private VirtualKey NormalizeKey(VirtualKey key)
+    {
+        return key switch
+        {
+            VirtualKey.Control => VirtualKey.LeftControl,
+            VirtualKey.Shift => VirtualKey.LeftShift,
+            VirtualKey.Menu => VirtualKey.LeftMenu,
+            _ => key
+        };
     }
 
-    public void AddCorrelatedKeys(KeyValuePair<VirtualKey, VirtualKey> pair)
+
+    KeyValuePair<VirtualKey, VirtualKey> notInList = new KeyValuePair<VirtualKey, VirtualKey>(VirtualKey.None, VirtualKey.None);
+
+    public KeyValuePair<VirtualKey,VirtualKey> searchCorrelatedKey(Dictionary<VirtualKey,VirtualKey> pairs,uint keypressedCode) 
     {
-        keysdictionary.Add(pair.Key, pair.Value);
+
+        Debug.WriteLine($"Systems to match any code with {keypressedCode} from below :");
+        Debug.WriteLine($"Find code in list below- (your blocking this code) ");
+
+        foreach (KeyValuePair<VirtualKey,VirtualKey> pair in pairs)
+        {
+
+            Debug.WriteLine($" :: {pair.Key} -> {(uint)pair.Key} || {pair.Value} -> {(uint)pair.Value} ");
+
+
+            if ((uint)pair.Key == keypressedCode) // S -> A  yes found S 
+            {
+                return pair; 
+            }
+            if ((uint)pair.Value == keypressedCode) // S -> A  yes found A 
+            {
+                return pair;
+            }
+
+        }
+
+        Debug.WriteLine($"The key {keypressedCode} did not match any above: ");
+        return notInList; // PLEASE CHECK THE CALLBACK METHOD TO COVER THIS IF 
+
+    }
+
+    public void AddCorrelatedKeys(VirtualKey firstKey,VirtualKey secondKey)
+    {
+        KeyValuePair<VirtualKey, VirtualKey> TurnInToPair = new KeyValuePair<VirtualKey, VirtualKey>(VirtualKey.None, VirtualKey.None);
+      //  keysdictionary.Add(pair.Key, pair.Value);
+        keysdictionary.Add(firstKey,secondKey);
     }
 
     public void UpdateCorrelatedKeys(KeyValuePair<VirtualKey, VirtualKey> pair)
@@ -143,8 +188,6 @@ public sealed partial class ReprogamKeys : Window
 
 );
 
-
-
     void InstallKeyboardHook()
     {
         // This hook needs to live as long as the hook exists not to be g collected. 
@@ -152,45 +195,100 @@ public sealed partial class ReprogamKeys : Window
 
         _keyboardHook = SetWindowsHookEx(
 
-            WH_KEYBOARD_LL, // I 
+            WH_KEYBOARD_LL,
             _keyboardProc, // Keyboard callback method below 
             IntPtr.Zero,
             0
             );
     }
 
-
-
-
-
     const int WH_KEYBOARD_LL = 13;
+    const UIntPtr INJECTED_KEY_MARKER = 0xDEADBEEF;
+
+    [StructLayout(LayoutKind.Sequential)]
+    struct KBDLLHOOKSTRUCT
+    {
+        public uint vkCode;
+        public uint scanCode;
+        public uint flags;
+        public uint time;
+        public IntPtr dwExtraInfo;
+    }
+
+    public KeyValuePair<VirtualKey, VirtualKey> matchingPairKeyToBlockAndChange; // One pair 
 
     IntPtr KeyboardHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
     {
-        if (speed == null)
-        {
-            speed = 20;
-        }
-        // if windows tells us to skip process 
         if (nCode < 0)
         {
-
             return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);
         }
 
         if (!StateSettings.ReprogramKeysEnabled)
         {
-            // diabled - do nothing pass the event on 
+            Debug.WriteLine("ENABLE FEATURE FIRST");
             return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);
-
         }
+
         if (nCode >= 0)
         {
+            var keyInfo = Marshal.PtrToStructure<KBDLLHOOKSTRUCT>(lParam);
 
-            // HOOK LOGIC HERE 
+            if (keyInfo.dwExtraInfo == (IntPtr)INJECTED_KEY_MARKER)
+            {
+                return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);
+            }
+
+            matchingPairKeyToBlockAndChange = searchCorrelatedKey(keysdictionary,keyInfo.vkCode);
+
+            Debug.WriteLine($"Key pressed: {keyInfo.vkCode}, Found pair: {matchingPairKeyToBlockAndChange.Key} -> {matchingPairKeyToBlockAndChange.Value}");
+            
+            
+            if (matchingPairKeyToBlockAndChange.Key == VirtualKey.None)  // no key down not in list 
+            {
+                Debug.WriteLine("Not found primary key in pair value ");
+
+                return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);
+                // does this properly make the keys work naturally and not intercept 
+
+
+            }
+            uint firstKeyMatching = (uint)matchingPairKeyToBlockAndChange.Key;
+            uint secondKeyMatching = (uint)matchingPairKeyToBlockAndChange.Value;
+
+            // 1st key hit so run second 
+            if (wParam == (IntPtr)WM_KEYDOWN && keyInfo.vkCode == firstKeyMatching)
+            {
+                Debug.WriteLine($"Key pressed blocked: {keyInfo.vkCode} instead -> {secondKeyMatching}");
+
+                keybd_event((byte)secondKeyMatching, 0, 0, INJECTED_KEY_MARKER);
+                return (IntPtr)1;
+            }
+
+            if (wParam == (IntPtr)WM_KEYUP && keyInfo.vkCode == firstKeyMatching)
+            {
+                keybd_event((byte)secondKeyMatching, 0, KEYEVENTF_KEYUP, INJECTED_KEY_MARKER);
+                return (IntPtr)1;
+            }
+            // Or if second key hit then run first 
+            if (wParam == (IntPtr)WM_KEYDOWN && keyInfo.vkCode == secondKeyMatching)
+            {
+                Debug.WriteLine($"Key pressed blocked: {keyInfo.vkCode} instead -> {firstKeyMatching}");
+
+                keybd_event((byte)firstKeyMatching, 0, 0, INJECTED_KEY_MARKER);
+                return (IntPtr)1;
+            }
+
+            if (wParam == (IntPtr)WM_KEYUP && keyInfo.vkCode == secondKeyMatching)
+            {
+                keybd_event((byte)firstKeyMatching, 0, KEYEVENTF_KEYUP, INJECTED_KEY_MARKER);
+                return (IntPtr)1;
+            }
+
+
+
         }
         return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);
-
     }
 
 
@@ -199,7 +297,8 @@ public sealed partial class ReprogamKeys : Window
     {
         var hwnd = WindowNative.GetWindowHandle(this);
 
-        _windowProc = WndProc; // The delegate is not be garbage collected -
+        // UNCOMMNET IF USING THIS methos 
+       // _windowProc = WndProc; // The delegate is not be garbage collected -
 
         // Atatch to message handler for this handler
         SetWindowSubclass( // Subclass needed in winui to hook into window procesdure
@@ -219,6 +318,7 @@ public sealed partial class ReprogamKeys : Window
     const uint WM_KEYDOWN = 0x0100;// Constant code " key down " 
     const int  WM_KEYUP = 0x0101; 
     const int WM_CHAR = 0x0102;
+    const uint KEYEVENTF_KEYUP = 0x0002;
 
 
     [DllImport("user32.dll")]
@@ -227,6 +327,13 @@ public sealed partial class ReprogamKeys : Window
     [DllImport("user32.dll")]
     static extern IntPtr PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
+    [DllImport("user32.dll")]
+    static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+
+    /*
+     * 
+     * THIS IS NOT ALL WINDOWS THIS IS JUST THIS WINDOW - USing KEYBOARD HOOK() INSTEAD 
+     * 
     IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, IntPtr dwRefdata)
     // params = 1. window receiving the message 2,the type (VM_HOTKEY not VM_PAINT) 3, wparam extra info - the id of the hotkey - ,lparam extra key data , handled, if we used the message 
     {
@@ -260,6 +367,8 @@ public sealed partial class ReprogamKeys : Window
         return DefSubclassProc(hwnd, msg, wParam, lParam);
 
     }
+
+    */
 
 
     const int GWL_EXSTYLE = -20;

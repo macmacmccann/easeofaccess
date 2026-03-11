@@ -59,30 +59,75 @@ public sealed partial class ReprogramKeysControlPanel : Page
         this.IsTabStop = true;
         this.Focus(FocusState.Programmatic);
         this.KeyDown += OnKeyDown;
-       // this.KeyUp += OnKeyUp; leep it up for nmow 
+        this.KeyUp += OnKeyUp; //leep it up for nmow 
     }
 
-    VirtualKey? firstKey = null;
-    VirtualKey? secondKey = null;
+    private void RevertToUsualKeyStrokes()
+    {
+        this.KeyDown += OnKeyDown;
+        this.KeyUp += OnKeyUp;
+    }
+
+    VirtualKey firstKey = VirtualKey.None;
+    VirtualKey secondKey = VirtualKey.None;
+    bool _isCapturingKeys = false;
+
+    private void CapturingKeysActively(object sender,RoutedEventArgs e )
+    {
+        Debug.WriteLine("Clicked reprogamming button");
+        _isCapturingKeys = true;
+        this.KeyUp -= OnKeyUp; // if im capturing hold the heys up until done 
+
+
+
+    }
     private void OnKeyDown(object sender, KeyRoutedEventArgs e)
     {
+        Debug.WriteLine($"On key down main method called. computing logic  ");
+        Debug.WriteLine($"Raw e.Key pressed: {e.Key}");
+        if (_keyMap.TryGetValue(e.Key, out KeyboardKey keyControll))
+        {
+            Debug.WriteLine($"Found in map!");
+        }
+        else
+        {
+            Debug.WriteLine($"NOT found in map!");
+            return;
+        }
         if (_keyMap.TryGetValue(e.Key, out KeyboardKey keyControl))
         {
-            if(firstKey == null)
+            Debug.WriteLine($"e.Key {e.Key} KeyboardKey Control {keyControl} is raw key u hit   ");
+
+
+            if (_isCapturingKeys == false) // if not capturing first just do basic logic 
             {
-                this.KeyUp -= OnKeyUp; // If im starting back revert to held key ui 
+                keyControl.TriggerPressedVisual();
+                Debug.WriteLine($"Actively Cpautring : {_isCapturingKeys}");
+
+                return;
+
+            }
+
+            if (firstKey == VirtualKey.None)
+            {
+                Debug.WriteLine($"Actively Cpautring : {_isCapturingKeys}");
+
+                this.KeyUp -= OnKeyUp; // if im capturing hold the heys up until done 
                 firstKey = e.Key;
                 Debug.WriteLine($"First key: {firstKey}");
                 keyControl.TriggerPressedVisual();
 
 
             }
-            if (firstKey != null && secondKey == null && e.Key != firstKey)
+            if (firstKey != VirtualKey.None && secondKey == VirtualKey.None && e.Key != firstKey)
             {
                 secondKey = e.Key;
                 Debug.WriteLine($"Second key: {secondKey}");
                 keyControl.TriggerPressedVisual();
+
+                // Now tranferred 
                 ReprogamKeys.MakeInstance.TransferKeys(firstKey, secondKey);
+                Debug.WriteLine($"Dictionary: {firstKey} -> {secondKey}");
 
                 // a check should be here 
 
@@ -94,30 +139,32 @@ public sealed partial class ReprogramKeysControlPanel : Page
                     Debug.WriteLine($"Matched control name: {matchedControl.Name}");
 
                     // Matching ui control by the first key and change the label to second keys
-                    var matchedControlForFirstKey = FindKeyByVirtualKey(firstKey);
+                    var matchedControlForFirstKey = FindKeyByVirtualKey(firstKey); // Shift = null cant find "Shift" can find Z
+
+                    Debug.WriteLine($"Control Panel : Second key value is : {secondKey}");
+                   // Debug.WriteLine($"The controls Label is : {matchedControlForFirstKey.Label}");
+                    Debug.WriteLine($"Can it be put to string into the control ? ");
+
                     matchedControlForFirstKey.Label = secondKey.ToString();
 
-                }
-                // get x  VirtualKeyCode = x 
-                // var name = control.keyboard.X:name 
-                //  var keyboardKey = this.FindName(name) as KeyboardKey;
-                //keyboardKey.Label = "success";
+                    // You finished here 
+                    _isCapturingKeys = false;
+                    firstKey = VirtualKey.None;
+                    secondKey = VirtualKey.None;
+                    
+                    keyControl.TriggerPressedVisual();
+                    RevertToUsualKeyStrokes();
 
+                }
 
                 return;
 
             }
-            // This should actually be on second key success register
-            // then null both again after reigster anywhere as class level fields 
-            if (firstKey != null && secondKey != null ){
-                Debug.WriteLine($"Finished capturing ");
-
-                this.KeyUp += OnKeyUp; // THEN SOMEWHERE DROP KEYS AFTER SUCCESS  
-                keyControl.TriggerPressedVisual();
-
-            }
+            return;
 
         }
+        return;
+
     }
 
 
@@ -138,10 +185,12 @@ public sealed partial class ReprogramKeysControlPanel : Page
     }
 
     // then find the one matching firstKey
-    private KeyboardKey FindKeyByVirtualKey(VirtualKey? targetKey)
+    private KeyboardKey FindKeyByVirtualKey(VirtualKey targetKey)
     {
+        Debug.WriteLine($"Virtual Key = {targetKey}");
         return GetAllKeyboardKeys(this)
-            .FirstOrDefault(k => k.VirtualKeyCode == targetKey);
+            .FirstOrDefault(keyboardkey => keyboardkey.VirtualKeyCode == targetKey);
+
     }
 
 
@@ -281,10 +330,12 @@ public sealed partial class ReprogramKeysControlPanel : Page
     }
 
 
-
+    // Check these KeyRoutedEvent Args says Control not LeftControl - x:Name should be control to find it 
+    // then the control item has the keycode in it 
     public void ConstructDictionary()
     {
-        _keyMap = new Dictionary<VirtualKey, KeyboardKey>
+
+        _keyMap = new Dictionary<VirtualKey, KeyboardKey> // Virtual key and + X:Name of control 
         {
             // Row 0 - Function Keys
             { VirtualKey.Escape,        KeyEsc           },
@@ -352,7 +403,10 @@ public sealed partial class ReprogramKeysControlPanel : Page
             { VirtualKey.Enter,         KeyEnter         },
             
             // Row 4 - ZXCV Row
-            { VirtualKey.LeftShift,     KeyLeftShift     },
+            //{ VirtualKey.LeftShift,     KeyLeftShift     },
+            //{/VirtualKey.Shift,         KeyLeftShift     }, 
+            { VirtualKey.Shift,         Shift             },
+
             { VirtualKey.Z,             KeyZ             },
             { VirtualKey.X,             KeyX             },
             { VirtualKey.C,             KeyC             },
@@ -367,8 +421,10 @@ public sealed partial class ReprogramKeysControlPanel : Page
             
             // Row 5 - Bottom Row
             { VirtualKey.LeftControl,   KeyLeftCtrl      },
+            { VirtualKey.Control,       KeyLeftCtrl      }, // Generic Control maps to Left
             { VirtualKey.LeftWindows,   KeyLeftWin       },
             { VirtualKey.LeftMenu,      KeyLeftAlt       },
+            { VirtualKey.Menu,          KeyLeftAlt       }, // Generic Menu/Alt maps to Left
             { VirtualKey.Space,         KeySpace         },
             { VirtualKey.RightMenu,     KeyRightAlt      },
             { VirtualKey.RightWindows,  KeyRightWin      },

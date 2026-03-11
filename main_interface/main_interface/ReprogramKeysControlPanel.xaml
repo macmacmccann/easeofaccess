@@ -148,7 +148,7 @@ xmlns:system="using:Windows.System"
 
                     <Grid Grid.Row="4">
                         <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Top" Height="60" Padding="8" Margin="24,0,0,0">
-                            <controls:KeyboardKey x:Name="KeyLeftShift" Label="Shift" VirtualKeyCode="{local:VirtualKeyExtension Key=LeftShift}"/>
+                            <controls:KeyboardKey x:Name="Shift" Label="Shift" VirtualKeyCode="{local:VirtualKeyExtension Key=Shift}"/>
                             <controls:KeyboardKey x:Name="KeyZ" Label="Z" VirtualKeyCode="{local:VirtualKeyExtension Key=Z}"/>
                             <controls:KeyboardKey x:Name="KeyX" Label="X" VirtualKeyCode="{local:VirtualKeyExtension Key=X}"/>
                             <controls:KeyboardKey x:Name="KeyC" Label="C" VirtualKeyCode="{local:VirtualKeyExtension Key=C}"/>
@@ -178,9 +178,35 @@ xmlns:system="using:Windows.System"
 
 
 
+                    
 
 
                 </Grid>
+
+
+            </Grid>
+
+            <Grid Grid.Row="2">
+
+                <Border
+                   Grid.Row="0"
+                   Grid.Column="0"
+                   Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+                   PointerExited="Border_PointerExited">
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock x:Name="HotkeyText" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
+                            <TextBlock Text="See Commands w/" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+
+                        <Button Grid.Column="1" x:Name="ReprogramButton"  Content="Start Reprogramming" Click="CapturingKeysActively"></Button>
+                    </Grid>
+
+                </Border>
+
+
 
 
             </Grid>

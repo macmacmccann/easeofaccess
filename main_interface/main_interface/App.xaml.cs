@@ -82,11 +82,11 @@ namespace main_interface
                 {
                     main_window = new MainWindow(); // then actually go onto main window  - first init to an instance of such 
                     main_window.Activate();
+                    
                     var hwnd = WindowNative.GetWindowHandle(main_window); // Extacts the win32 hwnd from the winui window 
 
                     splash.Close();
                 });
-
             });
 
         } // onLanch end

@@ -52,8 +52,7 @@ namespace main_interface
             IntPtr hWnd = WindowNative.GetWindowHandle(this);
             WindowId windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
             AppWindow appWindowId = AppWindow.GetFromWindowId(windowId);
-           // appWindowId.Resize(new SizeInt32 { Width = 2600, Height = 1500 });
-
+            // appWindowId.Resize(new SizeInt32 { Width = 2600, Height = 1500 });
 
             var appWindow = this.AppWindow;
             appWindow.SetIcon("Assets/Images/WindowIcon.ico");
@@ -68,6 +67,8 @@ namespace main_interface
             //this.NavigationView_ItemInvoked += NavigationView_ItemInvoked;
             Activated += OnActivated; // we have to wait until the hwnd is created
             Closed += OnClosed;
+            ContentFrame.Navigate(typeof(HomePage));
+
 
             // lamba shorthand -> " just ignore object sender + Event Args its an enu, conditional case - not an event 
             this.Closed += (_, __) =>
