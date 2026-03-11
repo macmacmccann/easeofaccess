@@ -16,6 +16,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.System;
 using Windows.UI;
+using Windows.UI.Core;
 using Border = Microsoft.UI.Xaml.Controls.Border;
 
 
@@ -26,6 +27,19 @@ namespace main_interface;
 
 public sealed partial class ReprogramKeysControlPanel : Page
 {
+
+
+    /*
+     *  TO DO 
+     *  
+     *  if you want to do impressive you have the code for CapturedModifierKey
+     *      that means that you can program two mods to be one key 
+     *          eg., ctrl atl -> f1 
+     *          might have implications for keybord shortcut reservation saturation
+     *          think of the applied ways theres prob a mor creative way 
+     * 
+     * 
+     */
     public static ReprogramKeysControlPanel _ReprogramKeysPanel { get; private set; }
 
    // public ReprogamKeys _Window;
@@ -85,6 +99,11 @@ public sealed partial class ReprogramKeysControlPanel : Page
     {
         Debug.WriteLine($"On key down main method called. computing logic  ");
         Debug.WriteLine($"Raw e.Key pressed: {e.Key}");
+
+        VirtualKey rawKeyCaptured = e.Key;
+        // if capturig false do return 
+        ClarifyWhichModifierHandednessItIs(rawKeyCaptured);
+
         if (_keyMap.TryGetValue(e.Key, out KeyboardKey keyControll))
         {
             Debug.WriteLine($"Found in map!");
@@ -167,6 +186,125 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
     }
 
+    private VirtualKey ClarifyWhichModifierHandednessItIs(VirtualKey VagueModifierKey)
+    {
+
+        var state = Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread;
+
+        bool isLeftCtrl = state(VirtualKey.LeftControl).HasFlag(CoreVirtualKeyStates.Down);
+        bool isRightCtrl = state(VirtualKey.RightControl).HasFlag(CoreVirtualKeyStates.Down);
+
+                               // bool      // true if state says yes false if its rightcontrol 
+        VirtualKey actualKey = isLeftCtrl ? VirtualKey.LeftControl : VirtualKey.RightControl;
+        // Now use actualKey for lookup
+
+        
+
+    }
+
+    // CapturedModifers + bool needs to be check if the addrss is global - scope i can see might muddle me up 
+   // Some vars in this left in might be useful on other pages
+    private VirtualKey ModifierKeyAbstractLogic()
+    {
+
+
+        bool ModifiersBinary = false;
+        VirtualKey specificModHandedness = VirtualKey.None; // extra indirect return // if == None Not a mod 
+
+        // CapturedModiferKeys = 0; // Binary code 1 would mean control 
+        //   CapturedModiferKeys = Modifiers.None; // 0000
+        // CapturedVK = 0; // Reset back 
+
+      //means              0000 = 0000 | 0001 = 0001 = Crtl key = 1 is at what poistion ?
+        //3210 -> 0001 = at bit 0 
+        //Detech modifier keys current held 
+        var state = Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread;
+
+        if (state(Windows.System.VirtualKey.LeftControl).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
+            { 
+            specificModHandedness = VirtualKey.LeftControl;
+            CapturedModiferKeys |= Modifiers.MOD_CONTROL;
+            ModifiersBinary = true;
+            return specificModHandedness;
+            }
+        if (state(Windows.System.VirtualKey.RightControl).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
+        {
+            specificModHandedness = VirtualKey.RightControl;
+            CapturedModiferKeys |= Modifiers.MOD_CONTROL;
+            ModifiersBinary = true;
+            return specificModHandedness;
+        }
+
+
+        if (state(Windows.System.VirtualKey.LeftMenu).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
+        {
+            specificModHandedness = VirtualKey.LeftMenu;
+            CapturedModiferKeys |= Modifiers.MOD_ALT;
+            ModifiersBinary = true;
+            return specificModHandedness;
+        }
+        if (state(Windows.System.VirtualKey.RightMenu).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
+        {
+            specificModHandedness = VirtualKey.RightMenu;
+            CapturedModiferKeys |= Modifiers.MOD_ALT;
+            ModifiersBinary = true;
+            return specificModHandedness;
+        }
+
+
+        if (state(Windows.System.VirtualKey.LeftShift).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
+        {
+            specificModHandedness = VirtualKey.LeftShift;
+            CapturedModiferKeys |= Modifiers.MOD_SHIFT;
+            ModifiersBinary = true;
+            return specificModHandedness;
+        }
+        if (state(Windows.System.VirtualKey.RightShift).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
+        {
+            specificModHandedness = VirtualKey.RightShift;
+            CapturedModiferKeys |= Modifiers.MOD_SHIFT;
+            ModifiersBinary = true;
+            return specificModHandedness;
+        }
+
+
+        if (state(Windows.System.VirtualKey.LeftWindows).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
+        {
+            specificModHandedness = VirtualKey.LeftWindows;
+            CapturedModiferKeys |= Modifiers.MOD_WIN;
+            ModifiersBinary = true;
+            return specificModHandedness;
+        }
+        if (state(Windows.System.VirtualKey.RightShift).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
+        {
+            specificModHandedness = VirtualKey.RightWindows;
+            CapturedModiferKeys |= Modifiers.MOD_WIN;
+            ModifiersBinary = true;
+            return specificModHandedness;
+        }
+
+        // All these should be global pointers / class as 1 return type  - null chck shud be the one that safest - be careful you might muddle urself up 
+        specificModHandedness = VirtualKey.None;
+        CapturedModiferKeys |= Modifiers.None;
+        ModifiersBinary = false;
+        return specificModHandedness;
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // helper to walk the visual tree and find all KeyboardKey controls
     private IEnumerable<KeyboardKey> GetAllKeyboardKeys(DependencyObject parent)
@@ -187,7 +325,8 @@ public sealed partial class ReprogramKeysControlPanel : Page
     // then find the one matching firstKey
     private KeyboardKey FindKeyByVirtualKey(VirtualKey targetKey)
     {
-        Debug.WriteLine($"Virtual Key = {targetKey}");
+
+        Debug.WriteLine($"Virtual Key is = {targetKey} so xName's VkeyCode needs to be the same");
         return GetAllKeyboardKeys(this)
             .FirstOrDefault(keyboardkey => keyboardkey.VirtualKeyCode == targetKey);
 

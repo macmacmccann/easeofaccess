@@ -165,21 +165,16 @@ xmlns:system="using:Windows.System"
 
                     <Grid Grid.Row="5">
                         <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="60" Padding="8" Margin="24,0,0,0">
-                            <controls:KeyboardKey x:Name="KeyLeftCtrl" Label="Ctrl" VirtualKeyCode="{local:VirtualKeyExtension Key=LeftControl}"/>
+                            <controls:KeyboardKey x:Name="KeyLeftCtrl" Label="Ctrl" VirtualKeyCode="{local:VirtualKeyExtension Key=Control}"/>
                             <controls:KeyboardKey x:Name="KeyLeftWin" Label="Win" VirtualKeyCode="{local:VirtualKeyExtension Key=LeftWindows}"/>
-                            <controls:KeyboardKey x:Name="KeyLeftAlt" Label="Alt" VirtualKeyCode="{local:VirtualKeyExtension Key=LeftMenu}"/>
+                            <controls:KeyboardKey x:Name="KeyLeftAlt" Label="Alt" VirtualKeyCode="{local:VirtualKeyExtension Key=Menu}"/>
                             <controls:KeyboardKey x:Name="KeySpace" Label="Space" VirtualKeyCode="{local:VirtualKeyExtension Key=Space}"/>
-                            <controls:KeyboardKey x:Name="KeyRightAlt" Label="Alt" VirtualKeyCode="{local:VirtualKeyExtension Key=RightMenu}"/>
+                            <controls:KeyboardKey x:Name="KeyRightAlt" Label="Alt" VirtualKeyCode="{local:VirtualKeyExtension Key=Menu}"/>
                             <controls:KeyboardKey x:Name="KeyRightWin" Label="Win" VirtualKeyCode="{local:VirtualKeyExtension Key=RightWindows}"/>
                             <controls:KeyboardKey x:Name="KeyMenu" Label="Menu" VirtualKeyCode="{local:VirtualKeyExtension Key=Application}"/>
-                            <controls:KeyboardKey x:Name="KeyRightCtrl" Label="Ctrl" VirtualKeyCode="{local:VirtualKeyExtension Key=RightControl}"/>
+                            <controls:KeyboardKey x:Name="KeyRightCtrl" Label="Ctrl" VirtualKeyCode="{local:VirtualKeyExtension Key=Control}"/>
                         </StackPanel>
                     </Grid>
-
-
-
-                    
-
 
                 </Grid>
 
