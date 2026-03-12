@@ -48,29 +48,37 @@ public sealed partial class ReprogamKeys : Window
         Activate();
         HideFromTaskbar();
         MoveOffScreen();
+        _instance = this;
+        Debug.WriteLine("Ran constructor");
         Activated += OnActivated;
         Debug.WriteLine("reprogram windows created created ");
 
     }
 
 
-    public static ReprogamKeys MakeInstance
+    public static ReprogamKeys GetOrMakeInstance
     {
-        get// make sure only ONE overlay window exists 
+       get
         {
-            if (_instance == null)
-                _instance = new ReprogamKeys();
-            return _instance;
+
+         if (_instance == null)
+            {
+              _instance = new ReprogamKeys();
+                    return _instance;
+
+            }
+
+          return _instance;
+
         }
+
     }
 
     public static bool Exists()
     {
-        bool exists;
         if (_instance == null)
         {
-            exists = false;
-            return exists;
+            return false;
         }
         return true;
     }
@@ -90,6 +98,8 @@ public sealed partial class ReprogamKeys : Window
     }
 
 
+  
+
     Dictionary<VirtualKey, VirtualKey> keysdictionary = new();
 
     VirtualKey firstKeyClassLevel;
@@ -99,9 +109,7 @@ public sealed partial class ReprogamKeys : Window
     // Constructor 
     public void TransferKeys(VirtualKey firstKeyPassed ,VirtualKey secondKeyPassed)
     {
-        // Normalize generic modifier keys to their left equivalents
-        firstKeyPassed = NormalizeKey(firstKeyPassed);
-        secondKeyPassed = NormalizeKey(secondKeyPassed);
+      
 
         firstKeyClassLevel = firstKeyPassed;
         secondKeyClassLevel = secondKeyPassed;
@@ -125,30 +133,21 @@ public sealed partial class ReprogamKeys : Window
 
     public KeyValuePair<VirtualKey,VirtualKey> searchCorrelatedKey(Dictionary<VirtualKey,VirtualKey> pairs,uint keypressedCode) 
     {
-
         Debug.WriteLine($"Systems to match any code with {keypressedCode} from below :");
         Debug.WriteLine($"Find code in list below- (your blocking this code) ");
 
         foreach (KeyValuePair<VirtualKey,VirtualKey> pair in pairs)
         {
-
             Debug.WriteLine($" :: {pair.Key} -> {(uint)pair.Key} || {pair.Value} -> {(uint)pair.Value} ");
 
-
-            if ((uint)pair.Key == keypressedCode) // S -> A  yes found S 
+            if ((uint)pair.Key == keypressedCode)
             {
                 return pair; 
             }
-            if ((uint)pair.Value == keypressedCode) // S -> A  yes found A 
-            {
-                return pair;
-            }
-
         }
 
         Debug.WriteLine($"The key {keypressedCode} did not match any above: ");
-        return notInList; // PLEASE CHECK THE CALLBACK METHOD TO COVER THIS IF 
-
+        return notInList;
     }
 
     public void AddCorrelatedKeys(VirtualKey firstKey,VirtualKey secondKey)
@@ -187,6 +186,48 @@ public sealed partial class ReprogamKeys : Window
     IntPtr dwRefData
 
 );
+
+    public void UninstallKeyboardHook()
+    {
+        if (_keyboardHook != IntPtr.Zero)
+        {
+            UnhookWindowsHookEx(_keyboardHook);
+            _keyboardHook = IntPtr.Zero;
+            Debug.WriteLine("Keyboard hook uninstalled");
+        }
+    }
+
+    public void ClearAllMappings()
+    {
+        keysdictionary.Clear();
+        Debug.WriteLine("All key mappings cleared");
+    }
+
+    public void ResetAllModifierKeys()
+    {
+        keybd_event((byte)VirtualKey.LeftControl, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+        keybd_event((byte)VirtualKey.RightControl, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+        keybd_event((byte)VirtualKey.LeftShift, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+        keybd_event((byte)VirtualKey.RightShift, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+        keybd_event((byte)VirtualKey.LeftMenu, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+        keybd_event((byte)VirtualKey.RightMenu, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+        keybd_event((byte)VirtualKey.LeftWindows, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+        keybd_event((byte)VirtualKey.RightWindows, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+        Debug.WriteLine("All modifier keys reset");
+    }
+
+    public static void ClearInstance()
+    {
+        if (_instance != null)
+        {
+            _instance.ResetAllModifierKeys();
+            _instance.UninstallKeyboardHook();
+            _instance.ClearAllMappings();
+            _instance.Close();
+            _instance = null;
+            Debug.WriteLine("ReprogramKeys instance cleared");
+        }
+    }
 
     void InstallKeyboardHook()
     {
@@ -260,7 +301,6 @@ public sealed partial class ReprogamKeys : Window
             if (wParam == (IntPtr)WM_KEYDOWN && keyInfo.vkCode == firstKeyMatching)
             {
                 Debug.WriteLine($"Key pressed blocked: {keyInfo.vkCode} instead -> {secondKeyMatching}");
-
                 keybd_event((byte)secondKeyMatching, 0, 0, INJECTED_KEY_MARKER);
                 return (IntPtr)1;
             }
@@ -268,20 +308,6 @@ public sealed partial class ReprogamKeys : Window
             if (wParam == (IntPtr)WM_KEYUP && keyInfo.vkCode == firstKeyMatching)
             {
                 keybd_event((byte)secondKeyMatching, 0, KEYEVENTF_KEYUP, INJECTED_KEY_MARKER);
-                return (IntPtr)1;
-            }
-            // Or if second key hit then run first 
-            if (wParam == (IntPtr)WM_KEYDOWN && keyInfo.vkCode == secondKeyMatching)
-            {
-                Debug.WriteLine($"Key pressed blocked: {keyInfo.vkCode} instead -> {firstKeyMatching}");
-
-                keybd_event((byte)firstKeyMatching, 0, 0, INJECTED_KEY_MARKER);
-                return (IntPtr)1;
-            }
-
-            if (wParam == (IntPtr)WM_KEYUP && keyInfo.vkCode == secondKeyMatching)
-            {
-                keybd_event((byte)firstKeyMatching, 0, KEYEVENTF_KEYUP, INJECTED_KEY_MARKER);
                 return (IntPtr)1;
             }
 
@@ -369,6 +395,8 @@ public sealed partial class ReprogamKeys : Window
     }
 
     */
+
+
 
 
     const int GWL_EXSTYLE = -20;

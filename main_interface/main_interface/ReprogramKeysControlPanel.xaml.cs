@@ -89,73 +89,110 @@ public sealed partial class ReprogramKeysControlPanel : Page
     private void CapturingKeysActively(object sender,RoutedEventArgs e )
     {
         Debug.WriteLine("Clicked reprogamming button");
+        if (StateSettings.ReprogramKeysEnabled == false)
+        {
+            HotkeyText.Text = "Enable Feature First";
+            return;
+        }
         _isCapturingKeys = true;
         this.KeyUp -= OnKeyUp; // if im capturing hold the heys up until done 
 
 
 
     }
+
+    private void ModularCasting()
+    {
+
+    }
+
+    VirtualKey youJustPressedTheSameKeyIgnore = VirtualKey.None; // dont program same key + same key thats stupid 
     private void OnKeyDown(object sender, KeyRoutedEventArgs e)
     {
-        Debug.WriteLine($"On key down main method called. computing logic  ");
-        Debug.WriteLine($"Raw e.Key pressed: {e.Key}");
+
+     
+        ///////// Could be its own method its pure casting / filtering 
+        
+        Debug.WriteLine($"Raw e.Key pressed: {e.Key}"); // No handedness this way 
+        VirtualKey notAMod = e.Key;
 
         VirtualKey rawKeyCaptured = e.Key;
-        // if capturig false do return 
-        ClarifyWhichModifierHandednessItIs(rawKeyCaptured);
+        rawKeyCaptured = (VirtualKey)(uint)rawKeyCaptured; 
 
-        if (_keyMap.TryGetValue(e.Key, out KeyboardKey keyControll))
+        rawKeyCaptured = ModifierKeyAbstractLogic(); // Lets check if its a mod 
+
+        Debug.WriteLine($"Return value of modifers check its  {rawKeyCaptured}"); 
+
+        if (rawKeyCaptured == VirtualKey.None) // Not a mod if none 
         {
-            Debug.WriteLine($"Found in map!");
+            rawKeyCaptured = notAMod; // revert to usual key 
         }
-        else
+
+        Debug.WriteLine($"Now handedness  or reverted usual key : {rawKeyCaptured}");
+
+        if (youJustPressedTheSameKeyIgnore == rawKeyCaptured)
         {
-            Debug.WriteLine($"NOT found in map!");
+            Debug.WriteLine("Ignoring you holding down the same key");
+             youJustPressedTheSameKeyIgnore = rawKeyCaptured;
+
             return;
         }
-        if (_keyMap.TryGetValue(e.Key, out KeyboardKey keyControl))
-        {
-            Debug.WriteLine($"e.Key {e.Key} KeyboardKey Control {keyControl} is raw key u hit   ");
+        youJustPressedTheSameKeyIgnore = rawKeyCaptured;
 
+        ////////////
+
+
+
+        // Debug if the key you pressed found in dictionary or not 
+        /*
+        if (_keyMap.TryGetValue(rawKeyCaptured, out KeyboardKey keyControll))
+
+        {Debug.WriteLine($"Found in map!");  } else {Debug.WriteLine($"NOT found in map!"); return; 
+        }
+        */
+
+
+        if (_keyMap.TryGetValue(rawKeyCaptured, out KeyboardKey keyControl))
+        {
+
+            Debug.WriteLine($"x -> Passed Into  : {rawKeyCaptured}");
 
             if (_isCapturingKeys == false) // if not capturing first just do basic logic 
             {
                 keyControl.TriggerPressedVisual();
-                Debug.WriteLine($"Actively Cpautring : {_isCapturingKeys}");
-
                 return;
-
             }
 
-            if (firstKey == VirtualKey.None)
+            if (firstKey == VirtualKey.None) // If you started programmed read first key 
             {
-                Debug.WriteLine($"Actively Cpautring : {_isCapturingKeys}");
+                Debug.WriteLine($"Actively Capturing : {_isCapturingKeys}");
 
                 this.KeyUp -= OnKeyUp; // if im capturing hold the heys up until done 
-                firstKey = e.Key;
+                firstKey = rawKeyCaptured;
                 Debug.WriteLine($"First key: {firstKey}");
                 keyControl.TriggerPressedVisual();
 
 
             }
-            if (firstKey != VirtualKey.None && secondKey == VirtualKey.None && e.Key != firstKey)
+            if (firstKey != VirtualKey.None && secondKey == VirtualKey.None && rawKeyCaptured != firstKey)
             {
-                secondKey = e.Key;
+                secondKey = rawKeyCaptured;
                 Debug.WriteLine($"Second key: {secondKey}");
                 keyControl.TriggerPressedVisual();
 
                 // Now tranferred 
-                ReprogamKeys.MakeInstance.TransferKeys(firstKey, secondKey);
+
+                ReprogamKeys.GetOrMakeInstance.TransferKeys(firstKey, secondKey);
                 Debug.WriteLine($"Dictionary: {firstKey} -> {secondKey}");
 
                 // a check should be here 
 
-                var matchedControl = FindKeyByVirtualKey(secondKey);
-                if (matchedControl != null)
+                var matchedControlforSecondKey = FindKeyByVirtualKey(secondKey);
+                if (matchedControlforSecondKey != null)
                 {
                    
-                    matchedControl.Label = firstKey.ToString();
-                    Debug.WriteLine($"Matched control name: {matchedControl.Name}");
+                    //matchedControlforSecondKey.Label = firstKey.ToString();
+                    Debug.WriteLine($"Matched control name: {matchedControlforSecondKey.Name}");
 
                     // Matching ui control by the first key and change the label to second keys
                     var matchedControlForFirstKey = FindKeyByVirtualKey(firstKey); // Shift = null cant find "Shift" can find Z
@@ -197,7 +234,7 @@ public sealed partial class ReprogramKeysControlPanel : Page
                                // bool      // true if state says yes false if its rightcontrol 
         VirtualKey actualKey = isLeftCtrl ? VirtualKey.LeftControl : VirtualKey.RightControl;
         // Now use actualKey for lookup
-
+        return VagueModifierKey;
         
 
     }
@@ -337,10 +374,21 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
     private void OnKeyUp(object sender, KeyRoutedEventArgs e)
     {
+        Debug.WriteLine($"Key RELEASED  fired for: {e.Key}");
+        
         if (_keyMap.TryGetValue(e.Key, out KeyboardKey keyControl))
         {
             keyControl.TriggerReleasedVisual();
         }
+    }
+
+    private bool IsModifierKey(VirtualKey key)
+    {
+        return key == VirtualKey.LeftControl || key == VirtualKey.RightControl ||
+               key == VirtualKey.LeftShift || key == VirtualKey.RightShift ||
+               key == VirtualKey.LeftMenu || key == VirtualKey.RightMenu ||
+               key == VirtualKey.LeftWindows || key == VirtualKey.RightWindows ||
+               key == VirtualKey.Control || key == VirtualKey.Shift || key == VirtualKey.Menu;
     }
 
 
@@ -440,8 +488,27 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
     private void ReprogamKeysIsEnabled_Toggled(object sender, RoutedEventArgs e)
     {
+
         StateSettings.ReprogramKeysEnabled = ReprogamKeysIsEnabledToggle.IsOn;
-        HeaderColour(sender, e);
+
+        if (StateSettings.ReprogramKeysEnabled == true)
+        {
+            var instance = ReprogamKeys.GetOrMakeInstance;
+            HeaderColour(sender, e);
+
+        }
+
+
+        if (StateSettings.ReprogramKeysEnabled == false)
+        {
+            if (ReprogamKeys.Exists())
+            {
+                ReprogamKeys.ClearInstance();
+                HeaderColour(sender, e);
+            }
+        }
+
+
 
     }
 
@@ -467,7 +534,7 @@ public sealed partial class ReprogramKeysControlPanel : Page
         DesignGlobalCode.Border_PointerExited(sender, e);
 
     }
-
+    
 
     // Check these KeyRoutedEvent Args says Control not LeftControl - x:Name should be control to find it 
     // then the control item has the keycode in it 
@@ -542,9 +609,7 @@ public sealed partial class ReprogramKeysControlPanel : Page
             { VirtualKey.Enter,         KeyEnter         },
             
             // Row 4 - ZXCV Row
-            //{ VirtualKey.LeftShift,     KeyLeftShift     },
-            //{/VirtualKey.Shift,         KeyLeftShift     }, 
-            { VirtualKey.Shift,         Shift             },
+            { VirtualKey.LeftShift,     KeyLeftShift     },
 
             { VirtualKey.Z,             KeyZ             },
             { VirtualKey.X,             KeyX             },
@@ -563,11 +628,12 @@ public sealed partial class ReprogramKeysControlPanel : Page
             { VirtualKey.Control,       KeyLeftCtrl      }, // Generic Control maps to Left
             { VirtualKey.LeftWindows,   KeyLeftWin       },
             { VirtualKey.LeftMenu,      KeyLeftAlt       },
-            { VirtualKey.Menu,          KeyLeftAlt       }, // Generic Menu/Alt maps to Left
+           
             { VirtualKey.Space,         KeySpace         },
-            { VirtualKey.RightMenu,     KeyRightAlt      },
+
+            { VirtualKey.RightMenu,     KeyRightAlt       },
             { VirtualKey.RightWindows,  KeyRightWin      },
-            { VirtualKey.Application,   KeyMenu          },
+            { VirtualKey.Application,   KeyMenu          }, // Vague Alt 
             { VirtualKey.RightControl,  KeyRightCtrl     }
         };
     }
