@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.DirectoryServices;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace main_interface;
 public sealed partial class ReprogamKeys : Window
 {
 
-
+    public static ReprogramKeysControlPanel panel;
     private static ReprogamKeys _instance;
 
     // Lifetime management -> 
@@ -52,6 +53,8 @@ public sealed partial class ReprogamKeys : Window
         Debug.WriteLine("Ran constructor");
         Activated += OnActivated;
         Debug.WriteLine("reprogram windows created created ");
+
+        panel = ReprogramKeysControlPanel.GetInstance;
 
     }
 
@@ -100,7 +103,7 @@ public sealed partial class ReprogamKeys : Window
 
   
 
-    Dictionary<VirtualKey, VirtualKey> keysdictionary = new();
+    public Dictionary<VirtualKey, VirtualKey> keysdictionary = new();
 
     VirtualKey firstKeyClassLevel;
     VirtualKey secondKeyClassLevel;
@@ -114,22 +117,57 @@ public sealed partial class ReprogamKeys : Window
         firstKeyClassLevel = firstKeyPassed;
         secondKeyClassLevel = secondKeyPassed;
 
+        
+        if(panel.singleResetActive == true)
+        {
+            RemoveOneCorrelatedKey(keysdictionary, firstKeyPassed);
+
+            return;
+        }
+     
+
         AddCorrelatedKeys(firstKeyClassLevel, secondKeyClassLevel);
     }
 
-    private VirtualKey NormalizeKey(VirtualKey key)
-    {
-        return key switch
-        {
-            VirtualKey.Control => VirtualKey.LeftControl,
-            VirtualKey.Shift => VirtualKey.LeftShift,
-            VirtualKey.Menu => VirtualKey.LeftMenu,
-            _ => key
-        };
-    }
 
 
     KeyValuePair<VirtualKey, VirtualKey> notInList = new KeyValuePair<VirtualKey, VirtualKey>(VirtualKey.None, VirtualKey.None);
+
+    
+    public void RemoveOneCorrelatedKey(Dictionary<VirtualKey, VirtualKey> pairs,VirtualKey keyPressedToFind)
+    {
+        ListPairsInDictionary();
+
+        foreach (KeyValuePair<VirtualKey, VirtualKey> pair in pairs)
+        {
+            Debug.WriteLine($" Procesing match ...  {pair.Key} == {keyPressedToFind} ");
+
+            if (pair.Key == keyPressedToFind)
+            {
+                Debug.WriteLine($"  FOUND :: {pair.Key} == {keyPressedToFind} ");
+
+              
+                pairs.Remove(pair.Key);
+                break;
+            }
+        }
+        panel.singleResetActive = false;
+
+        ListPairsInDictionary();
+
+
+    }
+
+
+    /* more modular if you didnt put for each in every method 
+    public KeyValuePair FindPairByKeys(VirtualKey firstKey, VirtualKey secondKey)
+    {
+
+    }
+
+    */
+
+
 
     public KeyValuePair<VirtualKey,VirtualKey> searchCorrelatedKey(Dictionary<VirtualKey,VirtualKey> pairs,uint keypressedCode) 
     {
@@ -150,6 +188,23 @@ public sealed partial class ReprogamKeys : Window
         return notInList;
     }
 
+    public void ListPairsInDictionary()
+    {
+        Debug.WriteLine("List Now:::::");
+        foreach (KeyValuePair<VirtualKey, VirtualKey> pair in keysdictionary)
+        {
+            Debug.WriteLine($" :: {pair.Key} -> {(uint)pair.Key} || {pair.Value} -> {(uint)pair.Value} ");
+
+        }
+    }
+
+
+
+
+
+
+
+
     public void AddCorrelatedKeys(VirtualKey firstKey,VirtualKey secondKey)
     {
         KeyValuePair<VirtualKey, VirtualKey> TurnInToPair = new KeyValuePair<VirtualKey, VirtualKey>(VirtualKey.None, VirtualKey.None);
@@ -164,12 +219,7 @@ public sealed partial class ReprogamKeys : Window
         keysdictionary[pair.Key] = pair.Value;
     }
 
-    public void DeleteCorrelatedKeys(KeyValuePair<VirtualKey, VirtualKey> pair)
-    {
 
-        keysdictionary.Remove(pair.Key); // not also value? 
-        // Please revert controls to static label text at compile time 
-    }
 
 
 

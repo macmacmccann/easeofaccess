@@ -41,6 +41,7 @@ public sealed partial class ReprogramKeysControlPanel : Page
      * 
      */
     public static ReprogramKeysControlPanel _ReprogramKeysPanel { get; private set; }
+    private ReprogamKeys windowBehind;
 
    // public ReprogamKeys _Window;
     private Modifiers CapturedModiferKeys; // not uint casting problem its cast to None in enum method below 
@@ -55,7 +56,8 @@ public sealed partial class ReprogramKeysControlPanel : Page
         _ReprogramKeysPanel = this;
         LoadPreferencesOnStart();
        KeyListenerConstructor();
-       
+
+        windowBehind = ReprogamKeys.GetOrMakeInstance;
         Headertop.BackgroundTransition = new BrushTransition() { Duration = TimeSpan.FromMilliseconds(300) };
         DesignGlobalCode.HeaderColour(Headertop);
 
@@ -101,6 +103,34 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
     }
 
+
+    public bool singleResetActive = false;
+    private void ResetOneKey(object sender, RoutedEventArgs e)
+    {
+
+        if(windowBehind.keysdictionary.Count == 0)
+        {
+            HotkeyText2.Text = "You didnt set anything";
+            singleResetActive = false;
+            return;
+        }
+
+    singleResetActive = true;
+
+    }
+
+
+    private void ResetAllKeys(object sender, RoutedEventArgs e)
+    {
+        windowBehind.ClearAllMappings();
+    }
+
+    private void ShowOriginalKeys(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+
     private void ModularCasting()
     {
 
@@ -130,6 +160,14 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
         Debug.WriteLine($"Now handedness  or reverted usual key : {rawKeyCaptured}");
 
+
+
+        /* This is great for is someone holds down a key to prevent refiring in any usecase
+         * 
+         *  class level var 
+         *     VirtualKey youJustPressedTheSameKeyIgnore = VirtualKey.None; // dont program same key + same key thats stupid 
+
+        public void StopFiringIfUserHeldDown() {
         if (youJustPressedTheSameKeyIgnore == rawKeyCaptured)
         {
             Debug.WriteLine("Ignoring you holding down the same key");
@@ -138,6 +176,9 @@ public sealed partial class ReprogramKeysControlPanel : Page
             return;
         }
         youJustPressedTheSameKeyIgnore = rawKeyCaptured;
+        }
+        */
+
 
         ////////////
 
@@ -159,9 +200,35 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
             if (_isCapturingKeys == false) // if not capturing first just do basic logic 
             {
+                if (singleResetActive == true)
+                {
+                    Debug.WriteLine($"Your going to check this key to delete   : {rawKeyCaptured}");
+
+                    keyControl.TriggerPressedVisual();
+                    ReprogamKeys.GetOrMakeInstance.TransferKeys(rawKeyCaptured, VirtualKey.None);
+
+                }
+
                 keyControl.TriggerPressedVisual();
                 return;
             }
+
+
+            if (_isCapturingKeys == true && singleResetActive == true)
+            {
+                HotkeyText.Text = "Choose One Button only";
+                HotkeyText2.Text = "Choose one button only ";
+
+                _isCapturingKeys = false;
+                singleResetActive = false;
+                DontClickBoth();
+
+                return;
+                    
+            }
+
+
+              
 
             if (firstKey == VirtualKey.None) // If you started programmed read first key 
             {
@@ -174,6 +241,7 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
 
             }
+
             if (firstKey != VirtualKey.None && secondKey == VirtualKey.None && rawKeyCaptured != firstKey)
             {
                 secondKey = rawKeyCaptured;
@@ -638,4 +706,55 @@ public sealed partial class ReprogramKeysControlPanel : Page
         };
     }
 
+
+
+
+
+
+    public static ReprogramKeysControlPanel GetInstance
+    {
+        get
+        {
+            if (_ReprogramKeysPanel == null)
+            {
+                _ReprogramKeysPanel = new ReprogramKeysControlPanel();
+                return _ReprogramKeysPanel;
+            }
+            return _ReprogramKeysPanel;
+
+        }
+    }
+
+
+
+    public static bool Exists()
+    {
+        if (_ReprogramKeysPanel == null)
+        {
+            return false;
+        }
+        return true;
+    }
+
+
+
+    public async void DontClickBoth()
+    {
+        string error_text = "\n You cant create and delete at the same time .Please choose one ";
+
+        var dialog = new ContentDialog
+        {
+            Title = "You just pressed all buttons ",
+            Content = error_text,
+            PrimaryButtonText = "Hit Enter ",
+            //DefaultButton = ContentDialogButton.Close,
+            DefaultButton = ContentDialogButton.Primary,
+            XamlRoot = this.Content.XamlRoot // this pages ui not some other pages 
+        };
+
+    
+        await dialog.ShowAsync();
+
+
+    }
 }

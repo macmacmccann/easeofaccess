@@ -183,23 +183,48 @@ xmlns:system="using:Windows.System"
 
             <Grid Grid.Row="2">
 
-                <Border
-                   Grid.Row="0"
-                   Grid.Column="0"
-                   Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
-                   PointerExited="Border_PointerExited">
+                <StackPanel>
 
-                    <Grid ColumnDefinitions="*,*">
+                    <Border
+                       Grid.Row="0"
+                       Grid.Column="0"
+                       Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+                       PointerExited="Border_PointerExited">
 
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                            <TextBlock x:Name="HotkeyText" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
-                            <TextBlock Text="See Commands w/" FontSize="12" Opacity="0.9" Foreground="White" />
-                        </StackPanel>
+                        <Grid ColumnDefinitions="*,*">
 
-                        <Button Grid.Column="1" x:Name="ReprogramButton"  Content="Start Reprogramming" Click="CapturingKeysActively"></Button>
-                    </Grid>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock x:Name="HotkeyText" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
+                                <TextBlock Text="See Commands w/" FontSize="12" Opacity="0.9" Foreground="White" />
+                            </StackPanel>
 
-                </Border>
+                            <Button Grid.Column="1" x:Name="ReprogramButton"  Content="Start Reprogramming" Click="CapturingKeysActively"></Button>
+                        </Grid>
+
+                    </Border>
+
+
+                    <Border
+                       Grid.Row="0"
+                       Grid.Column="0"
+                       Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+                       PointerExited="Border_PointerExited">
+
+                        <Grid ColumnDefinitions="*,*">
+
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock x:Name="HotkeyText2" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
+                                <TextBlock Text="Just Click On One Key " FontSize="12" Opacity="0.9" Foreground="White" />
+                            </StackPanel>
+
+                            <Button Grid.Column="1" x:Name="ResetOneButton"  Content="Click To Reset One Key" Click="ResetOneKey"></Button>
+                        </Grid>
+
+                    </Border>
+
+
+                </StackPanel>
+              
 
 
 
