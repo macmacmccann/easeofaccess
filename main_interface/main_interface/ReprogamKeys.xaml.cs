@@ -101,8 +101,6 @@ public sealed partial class ReprogamKeys : Window
     }
 
 
-  
-
     public Dictionary<VirtualKey, VirtualKey> keysdictionary = new();
 
     VirtualKey firstKeyClassLevel;
@@ -117,7 +115,6 @@ public sealed partial class ReprogamKeys : Window
         firstKeyClassLevel = firstKeyPassed;
         secondKeyClassLevel = secondKeyPassed;
 
-        
         if(panel.singleResetActive == true)
         {
             RemoveOneCorrelatedKey(keysdictionary, firstKeyPassed);
@@ -142,7 +139,8 @@ public sealed partial class ReprogamKeys : Window
         {
             Debug.WriteLine($" Procesing match ...  {pair.Key} == {keyPressedToFind} ");
 
-            if (pair.Key == keyPressedToFind)
+            // If user has S S S it - clicking on any S removes all S ( but doesn allow for differenitation / mutiple stable S's  
+            if (pair.Value == keyPressedToFind)
             {
                 Debug.WriteLine($"  FOUND :: {pair.Key} == {keyPressedToFind} ");
 
