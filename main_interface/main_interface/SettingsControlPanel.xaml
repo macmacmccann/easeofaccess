@@ -33,7 +33,27 @@
             Width="550">
 
 
-            <!-- NICE TOGGLE BAR BORDER WRAPPED -->
+            <!-- Run on Startup -->
+            <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+        PointerExited="Border_PointerExited">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                        <TextBlock Text="Run on Startup" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                        <TextBlock Text="App will launch automatically when you log in" FontSize="12" Opacity="0.9" Foreground="White" />
+                    </StackPanel>
+                    <ToggleSwitch
+                        Grid.Column="1"
+                        x:Name="RunOnStartupToggle"
+                        Header="Apply"
+                        OffContent="Disabled"
+                        OnContent="Enabled"
+                        Toggled="RunOnStartup_Toggled"
+                        VerticalAlignment="Center"
+                        Margin="16,0,0,0" />
+                </Grid>
+            </Border>
+
+            <!-- Keep in background -->
             <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
         PointerExited="Border_PointerExited">
                 <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
@@ -41,7 +61,7 @@
 
                     <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
                         <TextBlock Text="Keep Program running in background" FontSize="14" FontWeight="SemiBold" Foreground="White" />
-                        <TextBlock Text="Running features will be terminated on exit" FontSize="12" Opacity="0.9" Foreground="White" />
+                        <TextBlock Text="Closing the window hides it instead of exiting" FontSize="12" Opacity="0.9" Foreground="White" />
                     </StackPanel>
 
                     <!-- GRID COL 2 TOGGLE -->

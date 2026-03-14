@@ -223,6 +223,48 @@ xmlns:system="using:Windows.System"
                     </Border>
 
 
+
+                    <Border
+                       Grid.Row="0"
+                       Grid.Column="0"
+                       Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+                       PointerExited="Border_PointerExited">
+
+                        <Grid ColumnDefinitions="*,*">
+
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock x:Name="HotkeyText3" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
+                                <TextBlock Text="Reset all Mappings " FontSize="12" Opacity="0.9" Foreground="White" />
+                            </StackPanel>
+
+                            <Button Grid.Column="1" x:Name="ResetAllButtons"  Content="Revert all keys " Click="ResetAllKeys"></Button>
+                        </Grid>
+
+                    </Border>
+
+                    <!-- Mouse Mapping Row -->
+                    <Border
+                       Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
+                       PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+
+                        <Grid ColumnDefinitions="*,*">
+
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock x:Name="MouseMappingText" Text="Ready ..." />
+                                <TextBlock Text="Press a key, then click a mouse button" FontSize="12" Opacity="0.9" Foreground="White" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <Button x:Name="StartMouseMappingButton" Content="Map Key → Mouse" Click="StartMouseMapping" />
+                                <Button x:Name="LeftClickButton"   Content="Left Click"   Click="MapToLeftClick"   IsEnabled="False" />
+                                <Button x:Name="RightClickButton"  Content="Right Click"  Click="MapToRightClick"  IsEnabled="False" />
+                                <Button x:Name="MiddleClickButton" Content="Middle Click" Click="MapToMiddleClick" IsEnabled="False" />
+                            </StackPanel>
+
+                        </Grid>
+
+                    </Border>
+
                 </StackPanel>
               
 

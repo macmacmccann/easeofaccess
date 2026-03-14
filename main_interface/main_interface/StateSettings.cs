@@ -54,7 +54,7 @@ namespace main_interface
 
 
         // Settings Page
-
+        public static bool RunOnStartupEnabled = false;
         public static bool BackgroundProcessActiveEnabled = false;
         public static bool SyncActiveEnabled = false;
 

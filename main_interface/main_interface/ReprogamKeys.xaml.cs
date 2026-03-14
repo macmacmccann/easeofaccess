@@ -102,12 +102,23 @@ public sealed partial class ReprogamKeys : Window
 
 
     public Dictionary<VirtualKey, VirtualKey> keysdictionary = new();
+    public Dictionary<VirtualKey, MouseAction> mousedictionary = new();
+
+    public enum MouseAction { LeftDown, RightDown, MiddleDown }
 
     VirtualKey firstKeyClassLevel;
     VirtualKey secondKeyClassLevel;
 
     // virtualKeyExtension might be better your class - oems might not transger with direct 
     // Constructor 
+    public void TransferMouseKey(VirtualKey key, MouseAction action)
+    {
+        if (mousedictionary.ContainsKey(key))
+            mousedictionary[key] = action;
+        else
+            mousedictionary.Add(key, action);
+    }
+
     public void TransferKeys(VirtualKey firstKeyPassed ,VirtualKey secondKeyPassed)
     {
       
@@ -130,7 +141,9 @@ public sealed partial class ReprogamKeys : Window
 
     KeyValuePair<VirtualKey, VirtualKey> notInList = new KeyValuePair<VirtualKey, VirtualKey>(VirtualKey.None, VirtualKey.None);
 
-    
+    // IM finding by resulted key - 2 original keys to s = all erased s
+    // if just one key find by pair.Key (underlying key) - but hook needs to turned off as its inaccessible 
+    // also orginal key needs to be shown th the user or porgrammed red if set 
     public void RemoveOneCorrelatedKey(Dictionary<VirtualKey, VirtualKey> pairs,VirtualKey keyPressedToFind)
     {
         ListPairsInDictionary();
@@ -248,6 +261,7 @@ public sealed partial class ReprogamKeys : Window
     public void ClearAllMappings()
     {
         keysdictionary.Clear();
+        mousedictionary.Clear();
         Debug.WriteLine("All key mappings cleared");
     }
 
@@ -328,6 +342,22 @@ public sealed partial class ReprogamKeys : Window
                 return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);
             }
 
+            // Check mouse dictionary first
+            var pressedVk = (VirtualKey)keyInfo.vkCode;
+            if (mousedictionary.TryGetValue(pressedVk, out MouseAction mouseAction))
+            {
+                if (wParam == (IntPtr)WM_KEYDOWN)
+                {
+                    mouse_event(MouseDownFlag(mouseAction), 0, 0, 0, UIntPtr.Zero);
+                    return (IntPtr)1;
+                }
+                if (wParam == (IntPtr)WM_KEYUP)
+                {
+                    mouse_event(MouseUpFlag(mouseAction), 0, 0, 0, UIntPtr.Zero);
+                    return (IntPtr)1;
+                }
+            }
+
             matchingPairKeyToBlockAndChange = searchCorrelatedKey(keysdictionary,keyInfo.vkCode);
 
             Debug.WriteLine($"Key pressed: {keyInfo.vkCode}, Found pair: {matchingPairKeyToBlockAndChange.Key} -> {matchingPairKeyToBlockAndChange.Value}");
@@ -338,9 +368,6 @@ public sealed partial class ReprogamKeys : Window
                 Debug.WriteLine("Not found primary key in pair value ");
 
                 return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);
-                // does this properly make the keys work naturally and not intercept 
-
-
             }
             uint firstKeyMatching = (uint)matchingPairKeyToBlockAndChange.Key;
             uint secondKeyMatching = (uint)matchingPairKeyToBlockAndChange.Value;
@@ -403,6 +430,32 @@ public sealed partial class ReprogamKeys : Window
 
     [DllImport("user32.dll")]
     static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+
+    [DllImport("user32.dll")]
+    static extern void mouse_event(uint dwFlags, int dx, int dy, uint dwData, UIntPtr dwExtraInfo);
+
+    private const uint MOUSEEVENTF_LEFTDOWN   = 0x0002;
+    private const uint MOUSEEVENTF_LEFTUP     = 0x0004;
+    private const uint MOUSEEVENTF_RIGHTDOWN  = 0x0008;
+    private const uint MOUSEEVENTF_RIGHTUP    = 0x0010;
+    private const uint MOUSEEVENTF_MIDDLEDOWN = 0x0020;
+    private const uint MOUSEEVENTF_MIDDLEUP   = 0x0040;
+
+    private static uint MouseDownFlag(MouseAction action) => action switch
+    {
+        MouseAction.LeftDown   => MOUSEEVENTF_LEFTDOWN,
+        MouseAction.RightDown  => MOUSEEVENTF_RIGHTDOWN,
+        MouseAction.MiddleDown => MOUSEEVENTF_MIDDLEDOWN,
+        _ => MOUSEEVENTF_LEFTDOWN
+    };
+
+    private static uint MouseUpFlag(MouseAction action) => action switch
+    {
+        MouseAction.LeftDown   => MOUSEEVENTF_LEFTUP,
+        MouseAction.RightDown  => MOUSEEVENTF_RIGHTUP,
+        MouseAction.MiddleDown => MOUSEEVENTF_MIDDLEUP,
+        _ => MOUSEEVENTF_LEFTUP
+    };
 
     /*
      * 

@@ -8,135 +8,110 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-
-        <Grid Padding="24">
-            <!-- 2 rows and 3 columns -->
+        <Grid Padding="32,24,32,32">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-
-                <RowDefinition Height="*"/>
-
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
 
-            <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
-                Background="Transparent" CornerRadius="8" Padding="16" Margin="0,0,0,24">
-                <TextBlock Text="Home" 
-                       FontSize="32" 
-                       FontWeight="Bold" 
-                       Foreground="White" 
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"/>
-            </Border>
+            <!-- Header -->
+            <StackPanel Grid.Row="0" Spacing="4" Margin="0,0,0,32">
+                <TextBlock Text="Ease of Access" FontSize="36" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="Your accessibility control centre" FontSize="14" Opacity="0.6" Foreground="White"/>
+            </StackPanel>
 
-            <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" 
-       Background="Transparent" CornerRadius="8" Padding="16" Margin="0,0,0,24">
-                <TextBlock Text="Control Panel To help you with the important stuff" 
-              FontSize="20" 
-              FontWeight="Bold" 
-              Foreground="White" 
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"/>
-            </Border>
+            <!-- Row 1 -->
+            <Grid Grid.Row="1" Margin="0,0,0,16"
+                  ColumnDefinitions="*,*,*" ColumnSpacing="16">
 
-
-
-            <!-- Box 1 -->
-            <Border Grid.Row="2" Grid.Column="0" Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,12,8"
-        PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
-                <Grid>
-                    <StackPanel VerticalAlignment="Center" Spacing="8">
-                        <!-- Title -->
-                        <TextBlock Text="For Developers" 
-                       FontSize="16" 
-                       FontWeight="SemiBold" 
-                       Foreground="White" 
-                       TextAlignment="Center"/>
-
-                        <!-- Description -->
-                        <TextBlock Text="See how tools on this app can overflow to help you while you are working." 
-                       FontSize="12" 
-                       Opacity="0.9" 
-                       Foreground="White" 
-                       TextAlignment="Center"
-                       TextWrapping="Wrap"/>
-
-                        <!-- Navigation Links -->
-                        <StackPanel Spacing="8" Margin="0,8,0,0">
-                            <Button Content="Code Fast" 
-                        HorizontalAlignment="Stretch" 
-                        Click="Commands_Click"/>
-                            <Button Content="" 
-                        HorizontalAlignment="Stretch" 
-                        Click="LoginPage2_Click"/>
-                        </StackPanel>
+                <!-- Key Reprogramming -->
+                <Border Grid.Column="0" Background="Transparent" CornerRadius="12" Padding="20"
+                        PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="⌨" FontSize="28"/>
+                        <TextBlock Text="Key Reprogramming" FontSize="15" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Remap any key to another key or mouse button system-wide."
+                                   FontSize="12" Opacity="0.6" Foreground="White" TextWrapping="Wrap"/>
+                        <Button Content="Open" HorizontalAlignment="Stretch"
+                                Margin="0,8,0,0" Click="ReprogramKeys_Click"/>
                     </StackPanel>
-                </Grid>
-            </Border>
+                </Border>
 
-            <!-- Box 2 -->
-            <Border Grid.Row="2" Grid.Column="1" Background="Transparent" CornerRadius="8" Padding="16" Margin="12,8,12,8"
-                PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
-                <Grid>
-                    <StackPanel VerticalAlignment="Center" Spacing="4">
-                        <Button Content="Toggle" HorizontalAlignment="Stretch" Click="Box2_Click"/>
-                        <TextBlock Text="Description for Box 2" FontSize="12" Opacity="0.9" Foreground="White" TextAlignment="Center"/>
+                <!-- Tiling Manager -->
+                <Border Grid.Column="1" Background="Transparent" CornerRadius="12" Padding="20"
+                        PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="▦" FontSize="28"/>
+                        <TextBlock Text="Tiling Manager" FontSize="15" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Snap and organise windows into tiled layouts automatically."
+                                   FontSize="12" Opacity="0.6" Foreground="White" TextWrapping="Wrap"/>
+                        <Button Content="Open" HorizontalAlignment="Stretch"
+                                Margin="0,8,0,0" Click="TilingManager_Click"/>
                     </StackPanel>
-                </Grid>
-            </Border>
+                </Border>
 
-            <!-- Box 3 -->
-            <Border Grid.Row="2" Grid.Column="2" Background="Transparent" CornerRadius="8" Padding="16" Margin="12,8,0,8"
-                PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
-                <Grid>
-                    <StackPanel VerticalAlignment="Center" Spacing="4">
-                        <Button Content="Box 3" HorizontalAlignment="Stretch" Click="Box3_Click"/>
-                        <TextBlock Text="Description for Box 3" FontSize="12" Opacity="0.9" Foreground="White" TextAlignment="Center"/>
+                <!-- Mouseless -->
+                <Border Grid.Column="2" Background="Transparent" CornerRadius="12" Padding="20"
+                        PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="🖱" FontSize="28"/>
+                        <TextBlock Text="Mouseless" FontSize="15" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Control your mouse cursor entirely from the keyboard."
+                                   FontSize="12" Opacity="0.6" Foreground="White" TextWrapping="Wrap"/>
+                        <Button Content="Open" HorizontalAlignment="Stretch"
+                                Margin="0,8,0,0" Click="Mouseless_Click"/>
                     </StackPanel>
-                </Grid>
-            </Border>
+                </Border>
 
-            <!-- Box 4 -->
-            <Border Grid.Row="3" Grid.Column="0" Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,12,8"
-                PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
-                <Grid>
-                    <StackPanel VerticalAlignment="Center" Spacing="4">
-                        <Button Content="Box 4" HorizontalAlignment="Stretch" Click="Box4_Click"/>
-                        <TextBlock Text="Description for Box 4" FontSize="12" Opacity="0.9" Foreground="White" TextAlignment="Center"/>
-                    </StackPanel>
-                </Grid>
-            </Border>
+            </Grid>
 
-            <!-- Box 5 -->
-            <Border Grid.Row="3" Grid.Column="1" Background="Transparent" CornerRadius="8" Padding="16" Margin="12,8,12,8"
-                PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
-                <Grid>
-                    <StackPanel VerticalAlignment="Center" Spacing="4">
-                        <Button Content="Box 5" HorizontalAlignment="Stretch" Click="Box5_Click"/>
-                        <TextBlock Text="Description for Box 5" FontSize="12" Opacity="0.9" Foreground="White" TextAlignment="Center"/>
-                    </StackPanel>
-                </Grid>
-            </Border>
+            <!-- Row 2 -->
+            <Grid Grid.Row="2"
+                  ColumnDefinitions="*,*,*" ColumnSpacing="16">
 
-            <!-- Box 6 -->
-            <Border Grid.Row="3" Grid.Column="2" Background="Transparent" CornerRadius="8" Padding="16" Margin="12,8,0,8"
-                PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
-                <Grid>
-                    <StackPanel VerticalAlignment="Center" Spacing="4">
-                        <Button Content="Box 6" HorizontalAlignment="Stretch" Click="Box6_Click"/>
-                        <TextBlock Text="Description for Box 6" FontSize="12" Opacity="0.9" Foreground="White" TextAlignment="Center"/>
+                <!-- Commands -->
+                <Border Grid.Column="0" Background="Transparent" CornerRadius="12" Padding="20"
+                        PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="⚡" FontSize="28"/>
+                        <TextBlock Text="Commands" FontSize="15" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Bind hotkeys to launch apps, scripts and custom actions fast."
+                                   FontSize="12" Opacity="0.6" Foreground="White" TextWrapping="Wrap"/>
+                        <Button Content="Open" HorizontalAlignment="Stretch"
+                                Margin="0,8,0,0" Click="Commands_Click"/>
                     </StackPanel>
-                </Grid>
-            </Border>
+                </Border>
+
+                <!-- Eyesight -->
+                <Border Grid.Column="1" Background="Transparent" CornerRadius="12" Padding="20"
+                        PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="👁" FontSize="28"/>
+                        <TextBlock Text="Eyesight" FontSize="15" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Visual aids and screen enhancements for easier reading."
+                                   FontSize="12" Opacity="0.6" Foreground="White" TextWrapping="Wrap"/>
+                        <Button Content="Open" HorizontalAlignment="Stretch"
+                                Margin="0,8,0,0" Click="Eyesight_Click"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Assistant -->
+                <Border Grid.Column="2" Background="Transparent" CornerRadius="12" Padding="20"
+                        PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="🤖" FontSize="28"/>
+                        <TextBlock Text="Assistant" FontSize="15" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="AI-powered assistant to help you navigate and use the app."
+                                   FontSize="12" Opacity="0.6" Foreground="White" TextWrapping="Wrap"/>
+                        <Button Content="Open" HorizontalAlignment="Stretch"
+                                Margin="0,8,0,0" Click="Assistant_Click"/>
+                    </StackPanel>
+                </Border>
+
+            </Grid>
+
         </Grid>
-
     </ScrollViewer>
 </Page>

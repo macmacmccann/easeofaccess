@@ -37,8 +37,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="H.NotifyIcon.WinUI" Version="2.1.2" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6584" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.250916003" />
+    <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
     <PackageReference Include="Supabase" Version="1.1.1" />
     <PackageReference Include="supabase-csharp" Version="0.16.2" />
     <PackageReference Include="Supabase.Postgrest" Version="4.1.0" />

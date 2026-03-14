@@ -17,6 +17,7 @@ using Windows.Foundation.Collections;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Core;
+using static main_interface.ReprogamKeys;
 using Border = Microsoft.UI.Xaml.Controls.Border;
 
 
@@ -88,6 +89,50 @@ public sealed partial class ReprogramKeysControlPanel : Page
     VirtualKey secondKey = VirtualKey.None;
     bool _isCapturingKeys = false;
 
+    private bool _isCapturingMouseKey = false;
+    private VirtualKey _mouseMappingKey = VirtualKey.None;
+
+    private void StartMouseMapping(object sender, RoutedEventArgs e)
+    {
+        if (StateSettings.ReprogramKeysEnabled == false)
+        {
+            MouseMappingText.Text = "Enable Feature First";
+            return;
+        }
+        _isCapturingMouseKey = true;
+        _mouseMappingKey = VirtualKey.None;
+        MouseMappingText.Text = "Press a key...";
+        LeftClickButton.IsEnabled = false;
+        RightClickButton.IsEnabled = false;
+        MiddleClickButton.IsEnabled = false;
+    }
+
+    private void CaptureMouseMappingKey(VirtualKey key)
+    {
+        if (!_isCapturingMouseKey) return;
+        _mouseMappingKey = key;
+        _isCapturingMouseKey = false;
+        MouseMappingText.Text = $"{FormatKeyLabel(key)} → ?";
+        LeftClickButton.IsEnabled = true;
+        RightClickButton.IsEnabled = true;
+        MiddleClickButton.IsEnabled = true;
+    }
+
+    private void MapToLeftClick(object sender, RoutedEventArgs e)   => CommitMouseMapping(ReprogamKeys.MouseAction.LeftDown);
+    private void MapToRightClick(object sender, RoutedEventArgs e)  => CommitMouseMapping(ReprogamKeys.MouseAction.RightDown);
+    private void MapToMiddleClick(object sender, RoutedEventArgs e) => CommitMouseMapping(ReprogamKeys.MouseAction.MiddleDown);
+
+    private void CommitMouseMapping(ReprogamKeys.MouseAction action)
+    {
+        if (_mouseMappingKey == VirtualKey.None) return;
+        ReprogamKeys.GetOrMakeInstance.TransferMouseKey(_mouseMappingKey, action);
+        MouseMappingText.Text = $"{FormatKeyLabel(_mouseMappingKey)} → {action}";
+        _mouseMappingKey = VirtualKey.None;
+        LeftClickButton.IsEnabled = false;
+        RightClickButton.IsEnabled = false;
+        MiddleClickButton.IsEnabled = false;
+    }
+
     private void CapturingKeysActively(object sender,RoutedEventArgs e )
     {
         Debug.WriteLine("Clicked reprogamming button");
@@ -96,6 +141,9 @@ public sealed partial class ReprogramKeysControlPanel : Page
             HotkeyText.Text = "Enable Feature First";
             return;
         }
+        ReprogamKeys.GetOrMakeInstance.TransferMouseKey(VirtualKey.F, MouseAction.RightDown);
+
+
         _isCapturingKeys = true;
         this.KeyUp -= OnKeyUp; // if im capturing hold the heys up until done 
 
@@ -107,7 +155,6 @@ public sealed partial class ReprogramKeysControlPanel : Page
     public bool singleResetActive = false;
     private void ResetOneKey(object sender, RoutedEventArgs e)
     {
-
         if(windowBehind.keysdictionary.Count == 0)
         {
             HotkeyText2.Text = "You didnt set anything";
@@ -121,11 +168,69 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
     }
 
-
     private void ResetAllKeys(object sender, RoutedEventArgs e)
     {
         windowBehind.ClearAllMappings();
+        ResetAllKeyLabels();
     }
+
+    private void ResetAllKeyLabels()
+    {
+        foreach (var kvp in _keyMap)
+            kvp.Value.Label = FormatKeyLabel(kvp.Key);
+    }
+
+    private static string FormatKeyLabel(VirtualKey key) => key switch
+    {
+        // Numbers
+        VirtualKey.Number0 => "0",
+        VirtualKey.Number1 => "1",
+        VirtualKey.Number2 => "2",
+        VirtualKey.Number3 => "3",
+        VirtualKey.Number4 => "4",
+        VirtualKey.Number5 => "5",
+        VirtualKey.Number6 => "6",
+        VirtualKey.Number7 => "7",
+        VirtualKey.Number8 => "8",
+        VirtualKey.Number9 => "9",
+        
+        // Modifiers
+        VirtualKey.LeftControl or VirtualKey.Control  => "Ctrl",
+        VirtualKey.RightControl                       => "Ctrl",
+        VirtualKey.LeftShift or VirtualKey.Shift      => "Shift",
+        VirtualKey.RightShift                         => "Shift",
+        VirtualKey.LeftMenu or VirtualKey.Menu        => "Alt",
+        VirtualKey.RightMenu                          => "Alt",
+        VirtualKey.LeftWindows                        => "Win",
+        VirtualKey.RightWindows                       => "Win",
+        // Common specials
+        VirtualKey.CapitalLock  => "Caps",
+        VirtualKey.Back         => "Backspace",
+        VirtualKey.Space        => "Space",
+        VirtualKey.Enter        => "Enter",
+        VirtualKey.Escape       => "Esc",
+        VirtualKey.Tab          => "Tab",
+        VirtualKey.Snapshot     => "PrtSc",
+        VirtualKey.Scroll       => "Scroll",
+        VirtualKey.Pause        => "Pause",
+        VirtualKey.Application  => "Menu",
+        // OEM punctuation keys
+        (VirtualKey)186 => ";",
+        (VirtualKey)187 => "=",
+        (VirtualKey)188 => ",",
+        (VirtualKey)189 => "-",
+        (VirtualKey)190 => ".",
+        (VirtualKey)191 => "/",
+        (VirtualKey)192 => "`",
+        (VirtualKey)219 => "[",
+        (VirtualKey)220 => "\\",
+        (VirtualKey)221 => "]",
+        (VirtualKey)222 => "'",
+        _ => key.ToString()
+    };
+
+
+ 
 
     private void ShowOriginalKeys(object sender, RoutedEventArgs e)
     {
@@ -194,6 +299,12 @@ public sealed partial class ReprogramKeysControlPanel : Page
         }
         */
 
+
+        if (_isCapturingMouseKey)
+        {
+            CaptureMouseMappingKey(rawKeyCaptured);
+            return;
+        }
 
         if (_keyMap.TryGetValue(rawKeyCaptured, out KeyboardKey keyControl))
         {

@@ -6,39 +6,47 @@
     xmlns:local="using:main_interface"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tb="using:H.NotifyIcon"
     mc:Ignorable="d"
     Title="main_interface">
 
-
-
     <Grid>
-        <Image Source="/Assets/gifs/colorslowed.gif"
-               Stretch="UniformToFill"
-               />
+        <Image Source="/Assets/gifs/colorslowed.gif" Stretch="UniformToFill"/>
 
-        <Grid x:Name ="grid2"/>
+        <Grid x:Name="grid2"/>
 
+        <!-- System Tray Icon -->
+        <tb:TaskbarIcon x:Name="TrayIcon"
+                        IconSource="/Assets/Images/WindowIcon.ico"
+                        ToolTipText="Ease of Access"
+                        NoLeftClickDelay="True">
+            <tb:TaskbarIcon.ContextMenuMode>PopupMenu</tb:TaskbarIcon.ContextMenuMode>
+            <tb:TaskbarIcon.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="Show" Click="TrayShow_Click"/>
+                    <MenuFlyoutSeparator/>
+                    <MenuFlyoutItem Text="Exit" Click="TrayExit_Click"/>
+                </MenuFlyout>
+            </tb:TaskbarIcon.ContextFlyout>
+        </tb:TaskbarIcon>
 
-        <NavigationView x:Name="NavigationView" 
-                        IsBackButtonVisible="Collapsed" 
-                        IsBackEnabled="False" 
-                        PaneDisplayMode="Left" 
+        <NavigationView x:Name="NavigationView"
+                        IsBackButtonVisible="Collapsed"
+                        IsBackEnabled="False"
+                        PaneDisplayMode="Left"
                         IsPaneOpen="True"
                         IsPaneToggleButtonVisible="False"
-                          ItemInvoked="NavigationView_ItemInvoked"
-              
-                        
-                        >
+                        ItemInvoked="NavigationView_ItemInvoked">
 
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="Home" Icon="Home" Tag="HomePage"/>
                 <NavigationViewItem Content="Login" Icon="Contact" Tag="LoginPage"/>
                 <NavigationViewItem Content="Account" Icon="Account" Tag="AccountWindow"/>
                 <NavigationViewItem Content="Register" Icon="People" Tag="RegisterPage"/>
-                <NavigationViewItem Content="Typing Control " Icon="UnSyncFolder" Tag="Command"/>
+                <NavigationViewItem Content="Typing Control" Icon="UnSyncFolder" Tag="Command"/>
                 <NavigationViewItem Content="Ease your eyes" Icon="Target" Tag="Screen"/>
                 <NavigationViewItem Content="Mouseless" Icon="TouchPointer" Tag="Mouseless"/>
-                <NavigationViewItem Content="Tiling Manager" Icon= "GoToStart" Tag="TilingManager"/>
+                <NavigationViewItem Content="Tiling Manager" Icon="GoToStart" Tag="TilingManager"/>
                 <NavigationViewItem Content="Key Control" Icon="Link" Tag="ReprogramKeys"/>
                 <NavigationViewItem Content="Terminal Control" Icon="Link" Tag="TerminalControl"/>
                 <NavigationViewItem Content="Assistant" Icon="Help" Tag="Assistant"/>
@@ -48,11 +56,8 @@
         </NavigationView>
     </Grid>
 
-
-
     <Window.SystemBackdrop>
         <MicaBackdrop />
     </Window.SystemBackdrop>
-
 
 </Window>
