@@ -110,6 +110,13 @@ namespace main_interface.Controls
             DesignGlobalCode.Key_PointerExited(RootBorder, null);
         }
 
+        public void SetMappedColour(bool isMapped)
+        {
+            RootBorder.Background = isMapped
+                ? new SolidColorBrush(Windows.UI.Color.FromArgb(180, 34, 197, 94))  // green
+                : new SolidColorBrush(Windows.UI.Color.FromArgb(0, 0, 0, 0));       // transparent
+        }
+
 
 
 

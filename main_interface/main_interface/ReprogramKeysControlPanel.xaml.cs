@@ -89,8 +89,47 @@ public sealed partial class ReprogramKeysControlPanel : Page
     VirtualKey secondKey = VirtualKey.None;
     bool _isCapturingKeys = false;
 
+    private List<MissingKeyItem> _missingList = new();
+
+    private void Check()
+    {
+        var allValues = new HashSet<VirtualKey>(windowBehind.keysdictionary.Values);
+        _missingList.Clear();
+        foreach (var key in windowBehind.keysdictionary.Keys)
+            if (!allValues.Contains(key))
+                _missingList.Add(new MissingKeyItem(key, FormatKeyLabel(key)));
+        UpdateMissingKeysCard();
+    }
+
+    private void UpdateMissingKeysCard()
+    {
+        MissingKeysList.ItemsSource = null;
+        MissingKeysList.ItemsSource = _missingList;
+        MissingKeysEmpty.Visibility = _missingList.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void MissingKeyButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is VirtualKey key)
+            StartCapturingFromCard(key);
+    }
+
     private bool _isCapturingMouseKey = false;
     private VirtualKey _mouseMappingKey = VirtualKey.None;
+
+    private bool _isCapturingFromCard = false;
+    private VirtualKey _cardSecondKey = VirtualKey.None;
+
+    public void StartCapturingFromCard(VirtualKey missingKey)
+    {
+        _cardSecondKey = missingKey;
+        _isCapturingFromCard = true;
+        _isCapturingKeys = true;
+        firstKey = VirtualKey.None;
+        secondKey = VirtualKey.None;
+        this.KeyUp -= OnKeyUp;
+        this.Focus(FocusState.Programmatic);
+    }
 
     private void StartMouseMapping(object sender, RoutedEventArgs e)
     {
@@ -122,15 +161,31 @@ public sealed partial class ReprogramKeysControlPanel : Page
     private void MapToRightClick(object sender, RoutedEventArgs e)  => CommitMouseMapping(ReprogamKeys.MouseAction.RightDown);
     private void MapToMiddleClick(object sender, RoutedEventArgs e) => CommitMouseMapping(ReprogamKeys.MouseAction.MiddleDown);
 
+    private static readonly Dictionary<MouseAction, string> _mouseLabels = new()
+    {
+        { MouseAction.LeftDown,   "LClick" },
+        { MouseAction.RightDown,  "RClick" },
+        { MouseAction.MiddleDown, "MClick" },
+    };
+
     private void CommitMouseMapping(ReprogamKeys.MouseAction action)
     {
         if (_mouseMappingKey == VirtualKey.None) return;
         ReprogamKeys.GetOrMakeInstance.TransferMouseKey(_mouseMappingKey, action);
-        MouseMappingText.Text = $"{FormatKeyLabel(_mouseMappingKey)} → {action}";
+        MouseMappingText.Text = $"{FormatKeyLabel(_mouseMappingKey)} → {_mouseLabels[action]}";
+
+        var control = FindKeyByVirtualKey(_mouseMappingKey);
+        if (control != null)
+        {
+            control.Label = _mouseLabels[action];
+            control.SetMappedColour(true);
+        }
+
         _mouseMappingKey = VirtualKey.None;
         LeftClickButton.IsEnabled = false;
         RightClickButton.IsEnabled = false;
         MiddleClickButton.IsEnabled = false;
+        Check();
     }
 
     private void CapturingKeysActively(object sender,RoutedEventArgs e )
@@ -172,12 +227,16 @@ public sealed partial class ReprogramKeysControlPanel : Page
     {
         windowBehind.ClearAllMappings();
         ResetAllKeyLabels();
+        Check();
     }
 
     private void ResetAllKeyLabels()
     {
         foreach (var kvp in _keyMap)
+        {
             kvp.Value.Label = FormatKeyLabel(kvp.Key);
+            kvp.Value.SetMappedColour(false);
+        }
     }
 
     private static string FormatKeyLabel(VirtualKey key) => key switch
@@ -306,6 +365,29 @@ public sealed partial class ReprogramKeysControlPanel : Page
             return;
         }
 
+        if (_isCapturingFromCard)
+        {
+            if (!_keyMap.TryGetValue(rawKeyCaptured, out KeyboardKey cardKeyControl)) return;
+            firstKey = rawKeyCaptured;
+            secondKey = _cardSecondKey;
+            _isCapturingFromCard = false;
+            _cardSecondKey = VirtualKey.None;
+            ReprogamKeys.GetOrMakeInstance.TransferKeys(firstKey, secondKey);
+            var matchedFirst = FindKeyByVirtualKey(firstKey);
+            if (matchedFirst != null)
+            {
+                matchedFirst.Label = FormatKeyLabel(secondKey);
+                matchedFirst.SetMappedColour(true);
+            }
+            cardKeyControl.TriggerPressedVisual();
+            _isCapturingKeys = false;
+            firstKey = VirtualKey.None;
+            secondKey = VirtualKey.None;
+            RevertToUsualKeyStrokes();
+            Check();
+            return;
+        }
+
         if (_keyMap.TryGetValue(rawKeyCaptured, out KeyboardKey keyControl))
         {
 
@@ -376,21 +458,22 @@ public sealed partial class ReprogramKeysControlPanel : Page
                     Debug.WriteLine($"Matched control name: {matchedControlforSecondKey.Name}");
 
                     // Matching ui control by the first key and change the label to second keys
+                    Debug.WriteLine($"Matched control name: {firstKey}");
                     var matchedControlForFirstKey = FindKeyByVirtualKey(firstKey); // Shift = null cant find "Shift" can find Z
 
                     Debug.WriteLine($"Control Panel : Second key value is : {secondKey}");
                    // Debug.WriteLine($"The controls Label is : {matchedControlForFirstKey.Label}");
                     Debug.WriteLine($"Can it be put to string into the control ? ");
 
-                    matchedControlForFirstKey.Label = secondKey.ToString();
+                    matchedControlForFirstKey.Label = FormatKeyLabel(secondKey);
+                    matchedControlForFirstKey.SetMappedColour(true);
 
-                    // You finished here 
                     _isCapturingKeys = false;
                     firstKey = VirtualKey.None;
                     secondKey = VirtualKey.None;
-                    
                     keyControl.TriggerPressedVisual();
                     RevertToUsualKeyStrokes();
+                    Check();
 
                 }
 
@@ -425,6 +508,7 @@ public sealed partial class ReprogramKeysControlPanel : Page
     private VirtualKey ModifierKeyAbstractLogic()
     {
 
+      
 
         bool ModifiersBinary = false;
         VirtualKey specificModHandedness = VirtualKey.None; // extra indirect return // if == None Not a mod 
@@ -871,3 +955,5 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
     }
 }
+
+public record MissingKeyItem(VirtualKey KeyCode, string Label);

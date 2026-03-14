@@ -165,14 +165,14 @@ xmlns:system="using:Windows.System"
 
                     <Grid Grid.Row="5">
                         <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="60" Padding="8" Margin="24,0,0,0">
-                            <controls:KeyboardKey x:Name="KeyLeftCtrl" Label="Ctrl" VirtualKeyCode="{local:VirtualKeyExtension Key=Control}"/>
+                            <controls:KeyboardKey x:Name="KeyLeftCtrl" Label="Ctrl" VirtualKeyCode="{local:VirtualKeyExtension Key=LeftControl}"/>
                             <controls:KeyboardKey x:Name="KeyLeftWin" Label="Win" VirtualKeyCode="{local:VirtualKeyExtension Key=LeftWindows}"/>
                             <controls:KeyboardKey x:Name="KeyLeftAlt" Label="Alt" VirtualKeyCode="{local:VirtualKeyExtension Key=LeftMenu}"/>
                             <controls:KeyboardKey x:Name="KeySpace" Label="Space" VirtualKeyCode="{local:VirtualKeyExtension Key=Space}"/>
                             <controls:KeyboardKey x:Name="KeyRightAlt" Label="Alt" VirtualKeyCode="{local:VirtualKeyExtension Key=RightMenu}"/>
                             <controls:KeyboardKey x:Name="KeyRightWin" Label="Win" VirtualKeyCode="{local:VirtualKeyExtension Key=RightWindows}"/>
                             <controls:KeyboardKey x:Name="KeyMenu" Label="Menu" VirtualKeyCode="{local:VirtualKeyExtension Key=Application}"/>
-                            <controls:KeyboardKey x:Name="KeyRightCtrl" Label="Ctrl" VirtualKeyCode="{local:VirtualKeyExtension Key=Control}"/>
+                            <controls:KeyboardKey x:Name="KeyRightCtrl" Label="Ctrl" VirtualKeyCode="{local:VirtualKeyExtension Key=RightControl}"/>
                         </StackPanel>
                     </Grid>
 
@@ -181,9 +181,9 @@ xmlns:system="using:Windows.System"
 
             </Grid>
 
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="2" ColumnDefinitions="*,280">
 
-                <StackPanel>
+                <StackPanel Grid.Column="0">
 
                     <Border
                        Grid.Row="0"
@@ -266,10 +266,31 @@ xmlns:system="using:Windows.System"
                     </Border>
 
                 </StackPanel>
-              
 
-
-
+                <!-- Missing Keys Card -->
+                <Border Grid.Column="1" Background="Transparent" CornerRadius="12" Padding="16" Margin="12,8,24,8"
+                        PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited"
+                        VerticalAlignment="Top">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="⚠ Inaccessible Keys" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Programmed over but not mapped to" FontSize="11" Opacity="0.6" Foreground="White" TextWrapping="Wrap"/>
+                        <ScrollViewer MaxHeight="240" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl x:Name="MissingKeysList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="local:MissingKeyItem">
+                                        <Button Content="{Binding Label}" Tag="{Binding KeyCode}"
+                                                Click="MissingKeyButton_Click"
+                                                FontSize="12" Margin="0,2"
+                                                HorizontalAlignment="Stretch"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                        <TextBlock x:Name="MissingKeysEmpty" Text="All keys accounted for ✓"
+                                   FontSize="12" Opacity="0.5" Foreground="White"
+                                   Visibility="Visible"/>
+                    </StackPanel>
+                </Border>
 
             </Grid>
 
