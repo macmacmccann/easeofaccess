@@ -9,174 +9,88 @@
     mc:Ignorable="d"
     xmlns:controls="using:main_interface.Controls">
 
-
     <Grid RowDefinitions="0.2*,*">
 
         <Border x:Name="Headertop">
-
-
-            <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Top"  Height="120" Padding="16" Margin="24,24,0,0">
+            <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Top" Height="120" Padding="16" Margin="24,24,0,0">
                 <StackPanel Spacing="4">
-
-                    <TextBlock
-                        Text="Enable Mouseless Interaction"
-                        FontSize="30"
-                        FontWeight="SemiBold" />
-
-                    <TextBlock
-                        Text="Move through typing"
-                        FontSize="14"
-                        Opacity="0.7" />
+                    <TextBlock Text="Enable Mouseless Interaction" FontSize="30" FontWeight="SemiBold" />
+                    <TextBlock Text="Move through typing" FontSize="14" Opacity="0.7" />
                 </StackPanel>
-                <ToggleSwitch     
-                            Grid.Column="1"
-                               x:Name="MouselessToggle"
-                             OffContent="Disabled"
-                             OnContent="Enabled"
-                             Toggled="MouselessToggle_Toggled"
-                             FontSize="16"
-                            MinHeight="48"
-                               Padding="4"
-                              VerticalAlignment="Center"
-                           PointerEntered="Border_PointerEntered"
-                            PointerExited="Border_PointerExited"
-                    >
-
-
+                <ToggleSwitch
+                    Grid.Column="1"
+                    x:Name="MouselessToggle"
+                    OffContent="Disabled" OnContent="Enabled"
+                    Toggled="MouselessToggle_Toggled"
+                    FontSize="16" MinHeight="48" Padding="4" VerticalAlignment="Center"
+                    PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                     <ToggleSwitch.RenderTransform>
-                                    <ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
-                                    </ToggleSwitch.RenderTransform>
-                                </ToggleSwitch> 
-
+                        <ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
+                    </ToggleSwitch.RenderTransform>
+                </ToggleSwitch>
             </StackPanel>
-
         </Border>
-        
+
         <Grid Grid.Row="1" ColumnDefinitions="*,*" Padding="16" Margin="24,24,0,0">
 
             <StackPanel Grid.Column="0" Spacing="8">
-                <TextBlock
-                    Text="Move around without any issues "
-                    FontSize="20"
-                    Opacity="0.7"
-                    VerticalAlignment="Top" />
-
-                <!-- gif -->
-
+                <TextBlock Text="Move around without any issues" FontSize="20" Opacity="0.7" VerticalAlignment="Top" />
                 <Image Source="/Assets/gifs/Mouseless.gif" />
-
-                <!-- -->
-
-
-
             </StackPanel>
 
-
             <StackPanel Grid.Column="1" Spacing="8">
-                <TextBlock
-                    Grid.Column="1"
-                    Text="Features"
-                    FontSize="20"
-                    Opacity="0.7"
-                    VerticalAlignment="Top" />
+                <TextBlock Text="Features" FontSize="20" Opacity="0.7" VerticalAlignment="Top" />
 
-                <!-- toggles -->
-
-
-
-                <!-- NICE TOGGLE BAR BORDER WRAPPED -->
-                <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
-                        PointerExited="Border_PointerExited">
-                    <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
+                        PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                     <Grid ColumnDefinitions="*,Auto">
-
                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
                             <TextBlock Text="Fast Mouse Speed" FontSize="14" FontWeight="SemiBold" Foreground="White" />
                             <TextBlock Text="Higher speed lower control" FontSize="12" Opacity="0.9" Foreground="White" />
                         </StackPanel>
-
-                        <!-- GRID COL 2 TOGGLE -->
-                        <ToggleSwitch 
-                            Grid.Column="1"
-                             x:Name="SpeedFastToggle"
-                           Header="Fast Speed"
-                           OffContent="Disabled"
-                           OnContent="Enabled"
-                           Toggled="FastSpeedToggle_Toggled" 
-                            VerticalAlignment="Center"
-                            Margin="16,0,0,0" />
+                        <ToggleSwitch Grid.Column="1" x:Name="SpeedFastToggle"
+                            Header="Fast Speed" OffContent="Disabled" OnContent="Enabled"
+                            Toggled="FastSpeedToggle_Toggled" VerticalAlignment="Center" Margin="16,0,0,0" />
                     </Grid>
                 </Border>
 
-
-
-                <!-- NICE TOGGLE BAR BORDER WRAPPED -->
-                <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
-               PointerExited="Border_PointerExited">
-                    <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
+                        PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                     <Grid ColumnDefinitions="*,Auto">
-
                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
                             <TextBlock Text="Medium Mouse Speed" FontSize="14" FontWeight="SemiBold" Foreground="White" />
                             <TextBlock Text="Controlled speed balanced ergonomics" FontSize="12" Opacity="0.9" Foreground="White" />
                         </StackPanel>
-
-                        <!-- GRID COL 2 TOGGLE -->
-                        <ToggleSwitch 
-                   Grid.Column="1"
-                    x:Name="SpeedMedToggle"
-                  Header="Medium Speed"
-                  OffContent="Disabled"
-                  OnContent="Enabled"
-                  Toggled="MedSpeedToggle_Toggled" 
-                   VerticalAlignment="Center"
-                   Margin="16,0,0,0" />
+                        <ToggleSwitch Grid.Column="1" x:Name="SpeedMedToggle"
+                            Header="Medium Speed" OffContent="Disabled" OnContent="Enabled"
+                            Toggled="MedSpeedToggle_Toggled" VerticalAlignment="Center" Margin="16,0,0,0" />
                     </Grid>
                 </Border>
 
-
-
-                <!-- NICE TOGGLE BAR BORDER WRAPPED -->
-                <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
-               PointerExited="Border_PointerExited">
-                    <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
+                        PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                     <Grid ColumnDefinitions="*,Auto">
-
                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
                             <TextBlock Text="Slow Mouse Speed" FontSize="14" FontWeight="SemiBold" Foreground="White" />
                             <TextBlock Text="Slower speed high control" FontSize="12" Opacity="0.9" Foreground="White" />
                         </StackPanel>
-
-                        <!-- GRID COL 2 TOGGLE -->
-                        <ToggleSwitch 
-                   Grid.Column="1"
-                    x:Name="SpeedSlowToggle"
-                  Header="Slow Speed"
-                  OffContent="Disabled"
-                  OnContent="Enabled"
-                  Toggled="SlowSpeedToggle_Toggled" 
-                   VerticalAlignment="Center"
-                   Margin="16,0,0,0" />
+                        <ToggleSwitch Grid.Column="1" x:Name="SpeedSlowToggle"
+                            Header="Slow Speed" OffContent="Disabled" OnContent="Enabled"
+                            Toggled="SlowSpeedToggle_Toggled" VerticalAlignment="Center" Margin="16,0,0,0" />
                     </Grid>
                 </Border>
 
 
-
-                <StackPanel>
-                    <controls:HotKeyCaptureControl
-           x:Name="HotKeyCapture"
-        />
-                </StackPanel>
+                <Button Content="🖱 Program Clicks" Click="ProgramClicks_Click"
+                        HorizontalAlignment="Stretch" Margin="0,16,24,0"
+                        Padding="0,16" FontSize="16" FontWeight="SemiBold"
+                        Style="{StaticResource AccentButtonStyle}"/>
 
             </StackPanel>
 
         </Grid>
-
+                <controls:HotKeyCaptureControl x:Name="HotKeyCapture"/>
 
     </Grid>
-
-
-
-
 
 </Page>

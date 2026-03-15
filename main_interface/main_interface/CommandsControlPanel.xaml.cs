@@ -132,6 +132,7 @@ public sealed partial class CommandsControlPanel : Page
         OverlayEnabledToggle.IsOn = StateSettings.OverlayEnabled;
         AlwaysOnTopEnabledToggle.IsOn = StateSettings.AlwaysOnTopEnabled;
         AutoPasteEnabledToggle.IsOn = StateSettings.AutoPasteEnabled;
+        SearchAutoFocusToggle.IsOn = StateSettings.SearchBoxAutoFocusEnabled;
 
         
         if (Commands.Exists()) {
@@ -169,7 +170,11 @@ public sealed partial class CommandsControlPanel : Page
     {
         StateSettings.AutoPasteEnabled = AutoPasteEnabledToggle.IsOn;
         Commands.Instance.ApplySettings();
+    }
 
+    private void SearchAutoFocus_Toggled(object sender, RoutedEventArgs e)
+    {
+        StateSettings.SearchBoxAutoFocusEnabled = SearchAutoFocusToggle.IsOn;
     }
     // Not relevant enough removed 
     /*
@@ -193,8 +198,12 @@ public sealed partial class CommandsControlPanel : Page
     private async void AssignHotkey_Clicked(object sender, RoutedEventArgs e)
     {
         _isCapturingHotKey = true; // Capture mode 
-        PopupKeyboard pop = PopupKeyboard.MakeInstance;
-        pop.Toggle();
+
+
+        // DO I WANT POP UP 
+
+      //  PopupKeyboard pop = PopupKeyboard.MakeInstance;
+        //pop.Toggle();
         _waitingForPrimaryKey = false;
         CapturedModiferKeys = Modifiers.None;
         CapturedVK = 0;
@@ -409,7 +418,7 @@ public sealed partial class CommandsControlPanel : Page
                 else
                 {
 
-                    _activeHotkeyTextBlock.Text = DescribeHotKey(CapturedModiferKeys, 0) + " + …";
+                    _activeHotkeyTextBlock.Text = DescribeHotKey(CapturedModiferKeys, 0) + " + ï¿½";
                 return; // if a modifer then keep capturing mods 
                 }
 
@@ -428,7 +437,7 @@ public sealed partial class CommandsControlPanel : Page
 
             if (!isCurrentKeyModifier)
             {
-                _activeHotkeyTextBlock.Text = DescribeHotKey(CapturedModiferKeys, 0) + " …";
+                _activeHotkeyTextBlock.Text = DescribeHotKey(CapturedModiferKeys, 0) + " ï¿½";
                 _waitingForPrimaryKey = true;
 
             }
@@ -548,8 +557,8 @@ public sealed partial class CommandsControlPanel : Page
     private async Task OnHotkeyCaptured(Modifiers modifiers, uint vk)  // Changed from uint to Modifiers
     {
 
-        PopupKeyboard pop = PopupKeyboard.MakeInstance;
-        pop.Toggle();
+       // PopupKeyboard pop = PopupKeyboard.MakeInstance;
+        //pop.Toggle();
         Debug.WriteLine($"checking combo: mod={modifiers}, vk={vk}");
         Debug.WriteLine($"currently taken: {string.Join(", ", TakenCombinations._taken)}");
 

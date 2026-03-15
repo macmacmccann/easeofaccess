@@ -27,6 +27,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using WinRT.Interop; // This allows access to the underlying hwnd of winui window 
 using static main_interface.TakenCombinations;
+using static System.Net.Mime.MediaTypeNames;
 
 
 
@@ -105,38 +106,184 @@ namespace main_interface
 
         void LoadCommands()
         {
+            // Git
+            CommandStore.Add("git commit -m \"\"");
+            CommandStore.Add("git push origin main");
+            CommandStore.Add("git pull --rebase");
+            CommandStore.Add("git stash && git pull && git stash pop");
+            CommandStore.Add("git log --oneline --graph --all");
+            CommandStore.Add("git checkout -b feature/");
 
-            CommandList.Items.Add("Get-Process |\r\n    Group-Object Name |\r\n    Sort-Object Count -Descending |\r\n    Select-Object -First 15 Name, Count");
-            CommandList.Items.Add("Get-ChildItem 'C:\\Users' -Recurse -File -ErrorAction SilentlyContinue |\r\n    Where-Object { $_.Length -gt 100MB } |\r\n    Sort-Object Length -Descending |\r\n    Select-Object -First 20 FullName, Length, LastWriteTime\r\n");
+            // dotnet / C#
+            CommandStore.Add("dotnet build --configuration Release");
+            CommandStore.Add("dotnet run --project main_interface");
+            CommandStore.Add("dotnet clean && dotnet restore");
+            CommandStore.Add("Debug.WriteLine($\" \");");
+            CommandStore.Add("var instance = ReprogamKeys.GetOrMakeInstance;");
+            CommandStore.Add("this.NavigationCacheMode = NavigationCacheMode.Enabled;");
+            CommandStore.Add("DispatcherQueue.TryEnqueue(() => { });");
+            CommandStore.Add("await Task.Delay(50);");
+            CommandStore.Add("var hwnd = WindowNative.GetWindowHandle(this);");
 
+            // PowerShell
+            CommandStore.Add("Get-Process | Sort-Object CPU -Descending | Select-Object -First 10");
+            CommandStore.Add("Get-ChildItem -Recurse | Where-Object { $_.Extension -eq '.cs' }");
+            CommandStore.Add("Set-ExecutionPolicy RemoteSigned -Scope CurrentUser");
+            CommandStore.Add("Get-EventLog -LogName Application -Newest 20");
 
+            // Windows / system
+            CommandStore.Add("ipconfig /flushdns");
+            CommandStore.Add("netstat -ano | findstr :8080");
+            CommandStore.Add("taskkill /F /IM devenv.exe");
+            CommandStore.Add("sfc /scannow");
+            CommandStore.Add("winget upgrade --all");
+
+            // npm / node
+            CommandStore.Add("npm install && npm run dev");
+            CommandStore.Add("npm run build -- --watch");
+            CommandStore.Add("npx kill-port 3000");
+
+            // misc dev
+            CommandStore.Add("ssh -i ~/.ssh/id_rsa user@host");
+            CommandStore.Add("curl -X POST https://api.example.com/v1/ -H \"Content-Type: application/json\"");
+            CommandStore.Add("docker ps -a && docker system prune -f");
+            RefreshList();
+
+            // Wire keyboard shortcut handler to the window content
+            if (Content is FrameworkElement root)
+                root.KeyDown += OnWindowKeyDown;
+        }
+
+        private void RefreshList(string filter = "")
+        {
+            var items = CommandStore.All()
+                .Where(kvp => string.IsNullOrEmpty(filter) || kvp.Value.Contains(filter, StringComparison.OrdinalIgnoreCase))
+                .Select((kvp, i) => new CommandItem(kvp.Key, kvp.Value, $"[{i + 2}]"))
+                .ToList();
+            CommandList.ItemsSource = items;
+        }
+
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
+            => RefreshList(SearchBox.Text);
+
+        private string _numberBuffer = "";
+        private DispatcherTimer _numberTimer;
+
+        private void OnWindowKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Number1)
+            {
+                SearchBox.Focus(FocusState.Programmatic);
+                e.Handled = true;
+                return;
+            }
+
+            if (e.Key == Windows.System.VirtualKey.Escape)
+            {
+                Toggle();
+                e.Handled = true;
+                return;
+            }
+
+            // digits 2-9 feed the buffer
+            int digit = e.Key switch
+            {
+                Windows.System.VirtualKey.Number2 => 2,
+                Windows.System.VirtualKey.Number3 => 3,
+                Windows.System.VirtualKey.Number4 => 4,
+                Windows.System.VirtualKey.Number5 => 5,
+                Windows.System.VirtualKey.Number6 => 6,
+                Windows.System.VirtualKey.Number7 => 7,
+                Windows.System.VirtualKey.Number8 => 8,
+                Windows.System.VirtualKey.Number9 => 9,
+                Windows.System.VirtualKey.Number0 => 0,
+                _ => -1
+            };
+
+            if (digit >= 0)
+            {
+                _numberBuffer += digit.ToString();
+                _numberTimer?.Stop();
+                _numberTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(400) };
+                _numberTimer.Tick += (s, ev) =>
+                {
+                    _numberTimer.Stop();
+                    if (int.TryParse(_numberBuffer, out int index) && index >= 2)
+                    {
+                        int listIndex = index - 2; // [2] = index 0
+                        if (CommandList.ItemsSource is List<CommandItem> items && listIndex < items.Count)
+                            SelectCommand(items[listIndex].Text);
+                    }
+                    _numberBuffer = "";
+                };
+                _numberTimer.Start();
+                e.Handled = true;
+            }
+        }
+
+        private void SearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                RootGrid.Focus(FocusState.Programmatic);
+                e.Handled = true;
+            }
         }
 
         public void Command_Clicked(object sender, PointerRoutedEventArgs e)
         {
+            if (sender is TextBlock tb)
+                SelectCommand(tb.Text);
+        }
 
-            var textBlock = sender as TextBlock;
-            if (textBlock == null)
-            {
-                return; // simple null check 
-            }
-            var commandText = textBlock.Text; // The bound command string 
-
-            var dataPackage = new Windows.ApplicationModel.DataTransfer.DataPackage(); // Represents clipboard content 
-
-            dataPackage.SetText(commandText); // put the text into the clipbaord container 
-
-            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage); // Push cobntent onto system clipboard 
-
+        private void SelectCommand(string text)
+        {
+            CopyToClipboard(text);
             MoveOffScreen();
             SetForegroundWindow(_previousforground);
             Sleep(50);
-
             if (StateSettings.AutoPasteEnabled)
-            {
-                PasteIntoActiveApp(commandText);
-            }
+                PasteIntoActiveApp(text);
+        }
 
+        private void AddCommand_Clicked(object sender, RoutedEventArgs e)
+        {
+            var text = NewCommandBox.Text.Trim();
+            if (string.IsNullOrEmpty(text)) return;
+            CommandStore.Add(text);
+            NewCommandBox.Text = string.Empty;
+            RefreshList(SearchBox.Text);
+        }
+
+        private async void EditCommand_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button btn || btn.Tag is not int id) return;
+            if (!CommandStore.TryGet(id, out var current)) return;
+
+            var box = new TextBox { Text = current, AcceptsReturn = false };
+            var dialog = new ContentDialog
+            {
+                Title = "Edit Command",
+                Content = box,
+                PrimaryButtonText = "Save",
+                CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Primary,
+                XamlRoot = Content.XamlRoot
+            };
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            {
+                CommandStore.Edit(id, box.Text.Trim());
+                RefreshList(SearchBox.Text);
+            }
+        }
+
+        private void DeleteCommand_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is int id)
+            {
+                CommandStore.Delete(id);
+                RefreshList(SearchBox.Text);
+            }
         }
 
 
@@ -396,6 +543,8 @@ namespace main_interface
                 if (wParam.ToInt32() == HOTKEY_ID_OVERLAY) // 
                 {
                     Debug.WriteLine("Overlay Called");
+                    _previousforground = GetForegroundWindow();
+
                     ToggleOverlay(); //Lets open our overlay screen
                     return IntPtr.Zero; // tell win32 the message was handled  
                 }
@@ -447,20 +596,27 @@ namespace main_interface
             if (!StateSettings.OverlayEnabled)
             {
                 MoveOffScreen();
-
-                //run event that has inherited OnClosed ( in construct) 
-                // this.Close();
-
-                //  var appWindow = GetAppWindowForCurrentWindow();
-                // appWindow.Hide();
-
                 return;
             }
 
-            if (StateSettings.BackdropEnabled)
+      
+
+            if (StateSettings.SearchBoxAutoFocusEnabled)
             {
-                EnableAcrylic();
+                SearchBox.Focus(FocusState.Programmatic);
+            } else if (!StateSettings.SearchBoxAutoFocusEnabled)
+            {
+                Debug.WriteLine("defocusing search bar ");
+                RootGrid.Focus(FocusState.Programmatic);
             }
+
+
+            /* this state management lives in this method 
+             * Commanf clicked method
+            if (StateSettings.AutoPasteEnabled)
+                PasteIntoActiveApp(text);
+          */
+
         }
 
 
@@ -472,8 +628,10 @@ namespace main_interface
             }
             else
             {
-                _previousforground = GetForegroundWindow();
-                ShowOnScreen(); // Hide or show the window if currently visible . 
+                ApplySettings();
+                ShowOnScreen();
+
+       
             }
             _visible = !_visible;
         }
@@ -482,27 +640,20 @@ namespace main_interface
         DispatcherTimer _animationTimer;
         double _opacity;
 
-        void ShowOnScreen() // Always on top is show on screen here 
+        void ShowOnScreen()
         {
+            var hwnd = WindowNative.GetWindowHandle(this);
 
+            var displayArea = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(
+                Win32Interop.GetWindowIdFromWindow(hwnd),
+                Microsoft.UI.Windowing.DisplayAreaFallback.Primary);
+            int w = displayArea.WorkArea.Width;
+            int h = displayArea.WorkArea.Height;
 
-            // var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
-            /*
-            SetWindowPos(
-                hwnd,
-                IntPtr.Zero, // dont change the index i set on onTop
-                100, 100, // x and y screen postions 
-                400, 300, // width heigh 
-                0x0040); // Dont activate the window 
-            */
-            if (StateSettings.AlwaysOnTopEnabled)
-            {
-                AlwaysOnTop();
-            }
-            else
-            {
-                RemoveOnTopSetToDefault();
-            }
+            // No SWP_NOACTIVATE here — we want focus
+            SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, w, h, 0);
+            SetForegroundWindow(hwnd); // pop up is is focus 
+            FadeIn();
         }
 
 
@@ -758,5 +909,30 @@ namespace main_interface
 
     }
 
+    public static class CommandStore
+    {
+        private static readonly Dictionary<int, string> _commands = new();
+        private static int _nextId = 1;
+
+        public static void Add(string text)
+        {
+            if (!string.IsNullOrWhiteSpace(text))
+                _commands[_nextId++] = text;
+        }
+
+        public static void Edit(int id, string text)
+        {
+            if (_commands.ContainsKey(id) && !string.IsNullOrWhiteSpace(text))
+                _commands[id] = text;
+        }
+
+        public static void Delete(int id) => _commands.Remove(id);
+
+        public static bool TryGet(int id, out string text) => _commands.TryGetValue(id, out text);
+
+        public static IEnumerable<KeyValuePair<int, string>> All() => _commands;
+    }
+
+    public record CommandItem(int Id, string Text, string ShortcutLabel);
 
 }

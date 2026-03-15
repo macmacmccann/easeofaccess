@@ -18,7 +18,11 @@ xmlns:system="using:Windows.System"
     <ScrollViewer>
         <Grid RowDefinitions="0.2*,*,Auto,Auto">
 
-            <Border x:Name="Headertop" Background="Transparent">
+            <Border x:Name="Headertop">
+                <Border.Background>
+                    <ImageBrush ImageSource="/Assets/Images/keyboard.jfif" Stretch="UniformToFill" Opacity="0.45"/>
+                </Border.Background>
+                <Border.BackgroundSizing>InnerBorderEdge</Border.BackgroundSizing>
 
 
                 <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Top"  Height="120" Padding="16" Margin="24,24,0,0">
@@ -183,87 +187,65 @@ xmlns:system="using:Windows.System"
 
             <Grid Grid.Row="2" ColumnDefinitions="*,280">
 
-                <StackPanel Grid.Column="0">
+                <StackPanel Grid.Column="0" Margin="24,8,24,8" Spacing="4">
 
-                    <Border
-                       Grid.Row="0"
-                       Grid.Column="0"
-                       Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
-                       PointerExited="Border_PointerExited">
-
-                        <Grid ColumnDefinitions="*,*">
-
-                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                                <TextBlock x:Name="HotkeyText" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
-                                <TextBlock Text="See Commands w/" FontSize="12" Opacity="0.9" Foreground="White" />
+                    <Border Background="Transparent" CornerRadius="8" Padding="12,10"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock x:Name="HotkeyText" Text="Ready ..." FontSize="13"/>
+                                <TextBlock Text="Press two keys to remap" FontSize="11" Opacity="0.6" Foreground="White"/>
                             </StackPanel>
-
-                            <Button Grid.Column="1" x:Name="ReprogramButton"  Content="Start Reprogramming" Click="CapturingKeysActively"></Button>
+                            <Button Grid.Column="1" x:Name="ReprogramButton" Content="Start Reprogramming" Click="CapturingKeysActively" HorizontalAlignment="Right"/>
                         </Grid>
-
                     </Border>
 
 
-                    <Border
-                       Grid.Row="0"
-                       Grid.Column="0"
-                       Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
-                       PointerExited="Border_PointerExited">
-
-                        <Grid ColumnDefinitions="*,*">
-
-                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                                <TextBlock x:Name="HotkeyText2" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
-                                <TextBlock Text="Just Click On One Key " FontSize="12" Opacity="0.9" Foreground="White" />
+                    <Border Background="Transparent" CornerRadius="8" Padding="12,10"
+             PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock x:Name="MouseMappingText" Text="Ready ..." FontSize="13"/>
+                                <TextBlock Text="Press a key, then pick a mouse button" FontSize="11" Opacity="0.6" Foreground="White"/>
                             </StackPanel>
-
-                            <Button Grid.Column="1" x:Name="ResetOneButton"  Content="Click To Reset One Key" Click="ResetOneKey"></Button>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <Button x:Name="StartMouseMappingButton" Content="Map Key → Mouse" Click="StartMouseMapping"/>
+                                <Button x:Name="LeftClickButton"   Content="LClick" Click="MapToLeftClick"   IsEnabled="False"/>
+                                <Button x:Name="RightClickButton"  Content="RClick" Click="MapToRightClick"  IsEnabled="False"/>
+                                <Button x:Name="MiddleClickButton" Content="MClick" Click="MapToMiddleClick" IsEnabled="False"/>
+                            </StackPanel>
                         </Grid>
-
                     </Border>
 
 
 
-                    <Border
-                       Grid.Row="0"
-                       Grid.Column="0"
-                       Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
-                       PointerExited="Border_PointerExited">
 
-                        <Grid ColumnDefinitions="*,*">
 
-                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                                <TextBlock x:Name="HotkeyText3" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
-                                <TextBlock Text="Reset all Mappings " FontSize="12" Opacity="0.9" Foreground="White" />
+
+
+                    <Border Background="Transparent" CornerRadius="8" Padding="12,10"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock x:Name="HotkeyText2" Text="Ready ..." FontSize="13"/>
+                                <TextBlock Text="Click then press a key to reset it" FontSize="11" Opacity="0.6" Foreground="White"/>
                             </StackPanel>
-
-                            <Button Grid.Column="1" x:Name="ResetAllButtons"  Content="Revert all keys " Click="ResetAllKeys"></Button>
+                            <Button Grid.Column="1" x:Name="ResetOneButton" Content="Reset One Key" Click="ResetOneKey" HorizontalAlignment="Right"/>
                         </Grid>
-
                     </Border>
 
-                    <!-- Mouse Mapping Row -->
-                    <Border
-                       Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
-                       PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
-
-                        <Grid ColumnDefinitions="*,*">
-
-                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                                <TextBlock x:Name="MouseMappingText" Text="Ready ..." />
-                                <TextBlock Text="Press a key, then click a mouse button" FontSize="12" Opacity="0.9" Foreground="White" />
+                    <Border Background="Transparent" CornerRadius="8" Padding="12,10"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock x:Name="HotkeyText3" Text="Ready ..." FontSize="13"/>
+                                <TextBlock Text="Revert all keys to default" FontSize="11" Opacity="0.6" Foreground="White"/>
                             </StackPanel>
-
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                <Button x:Name="StartMouseMappingButton" Content="Map Key → Mouse" Click="StartMouseMapping" />
-                                <Button x:Name="LeftClickButton"   Content="Left Click"   Click="MapToLeftClick"   IsEnabled="False" />
-                                <Button x:Name="RightClickButton"  Content="Right Click"  Click="MapToRightClick"  IsEnabled="False" />
-                                <Button x:Name="MiddleClickButton" Content="Middle Click" Click="MapToMiddleClick" IsEnabled="False" />
-                            </StackPanel>
-
+                            <Button Grid.Column="1" x:Name="ResetAllButtons" Content="Reset All" Click="ResetAllKeys" HorizontalAlignment="Right"/>
                         </Grid>
-
                     </Border>
+
+               
 
                 </StackPanel>
 

@@ -15,6 +15,7 @@ namespace main_interface
         public static bool AlwaysOnTopEnabled = true;
         public static bool AutoPasteEnabled = false;   
         public static bool BackdropEnabled = false;
+        public static bool SearchBoxAutoFocusEnabled = true;
 
 
         // Color gradients 

@@ -71,7 +71,7 @@ public sealed partial class Mouseless : Window
 
 
 
-    int speed;
+    int speed = 15;
 
     public void ApplySettings()
     {
@@ -203,31 +203,14 @@ public sealed partial class Mouseless : Window
     void MoveMouseLeft(int amount)
     {
         INPUT input = new INPUT();
-        // Create a new input event
-
         input.type = INPUT_MOUSE;
-        // Specify that this is mouse input
-
-        input.mi.dx = -10;
-        //  horizontal movement
-
+        input.mi.dx = -amount;
         input.mi.dy = 0;
-        // Negative Y moves the mouse upward
-
         input.mi.mouseData = 0;
-        // Not used for movement
-
         input.mi.dwFlags = MOUSEEVENTF_MOVE;
-        // Tell Windows this is a movement event
-
         input.mi.time = 0;
-        // Let Windows set the timestamp
-
         input.mi.dwExtraInfo = IntPtr.Zero;
-        // No extra info
-
         SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
-        // Inject the mouse input into the OS
     }
 
 
@@ -235,31 +218,14 @@ public sealed partial class Mouseless : Window
     void MoveMouseRight(int amount)
     {
         INPUT input = new INPUT();
-        // Create a new input event
-
         input.type = INPUT_MOUSE;
-        // Specify that this is mouse input
-
-        input.mi.dx = 10;
-        //  horizontal movement
-
+        input.mi.dx = amount;
         input.mi.dy = 0;
-        // Negative Y moves the mouse upward
-
         input.mi.mouseData = 0;
-        // Not used for movement
-
         input.mi.dwFlags = MOUSEEVENTF_MOVE;
-        // Tell Windows this is a movement event
-
         input.mi.time = 0;
-        // Let Windows set the timestamp
-
         input.mi.dwExtraInfo = IntPtr.Zero;
-        // No extra info
-
         SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
-        // Inject the mouse input into the OS
     }
 
 
@@ -344,23 +310,11 @@ public sealed partial class Mouseless : Window
 
     IntPtr KeyboardHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
     {
-        if (speed == null)
-        {
-            speed = 20;
-        }
-        // if windows tells us to skip process 
         if (nCode < 0)
-        {
-
-            return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);
-        }
-
-        if(!StateSettings.MouselessEnabled)
-        {
-            // diabled - do nothing pass the event on 
             return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);
 
-        }
+        if (!StateSettings.MouselessEnabled)
+            return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);
         if (nCode >=0)
         {
             // Convert raw pointer to usable struct we made 

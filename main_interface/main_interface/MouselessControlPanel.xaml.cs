@@ -178,16 +178,15 @@ public sealed partial class MouselessControlPanel : Page
 
     public void EnsureWindow()
     {
-
         if (_mouselesswindow == null)
         {
             _mouselesswindow = new Mouseless();
-            _mouselesswindow.Activate(); // shows the window
-
+            _mouselesswindow.Activate();
         }
-
-
     }
+
+    private void ProgramClicks_Click(object sender, RoutedEventArgs e)
+        => Frame.Navigate(typeof(ReprogramKeysControlPanel));
 
 
 

@@ -141,8 +141,22 @@ PointerExited="Border_PointerExited">
                     </Grid>
                 </Border>
                 <!-- END ONE TOGGLE BAR BORDER WRAPPED -->
-                
-                
+
+                <!-- Search Auto Focus Toggle -->
+                <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+PointerExited="Border_PointerExited">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock Text="Auto Focus Search" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Focus search bar automatically when commands window opens" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+                        <ToggleSwitch
+                            x:Name="SearchAutoFocusToggle"
+                            OffContent="Off" OnContent="On"
+                            Toggled="SearchAutoFocus_Toggled"
+                            Grid.Column="1" VerticalAlignment="Center" Margin="16,0,0,0" />
+                    </Grid>
+                </Border>
 
                 <!--  TOGGLE 2  BAR BORDER WRAPPED -->
                 <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"

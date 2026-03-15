@@ -8,54 +8,63 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="Transparent" CornerRadius="1" Padding="12">
-   
+    <Grid Background="Transparent" Padding="0" x:Name="RootGrid" IsTabStop="True">
 
-        <Border
-             x:Name="RootPanel"
-                Opacity="0"
-    Background="Transparent"
-    CornerRadius="12"
-    Padding="12">
+        <Border x:Name="RootPanel" Opacity="0" Background="Transparent" CornerRadius="0" Padding="24">
 
-            <StackPanel Spacing="8">
+            <Grid RowDefinitions="Auto,Auto,*,Auto">
 
-                <TextBlock
-            Text="Saved Commands"
-            FontSize="16"
-            FontWeight="SemiBold"
-            Foreground="White"/>
+                <!-- Title -->
+                <TextBlock Grid.Row="0" Text="Saved Commands" FontSize="22" FontWeight="SemiBold"
+                           Foreground="White" Margin="0,0,0,16"/>
 
-                <ListView
-            x:Name="CommandList"
-            Background="Transparent"
-            BorderThickness="0">
+                <!-- Row 1: Search -->
+                <Grid Grid.Row="1" ColumnDefinitions="Auto,*" Margin="0,0,0,12">
+                    <TextBlock Grid.Column="0" Text="[1]" Foreground="White" Opacity="0.5"
+                               FontFamily="Consolas" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBox Grid.Column="1" x:Name="SearchBox" PlaceholderText=" [ 1 ] Search commands... Press Enter - then the number"
+                             Background="Transparent" Foreground="White" FontFamily="Consolas"
+                             TextChanged="SearchBox_TextChanged" KeyDown="SearchBox_KeyDown"/>
+                </Grid>
 
+                <!-- Command List -->
+                <ListView Grid.Row="2" x:Name="CommandList" Background="Transparent" BorderThickness="0"
+                          SelectionMode="None">
                     <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Border
-                        Background="Transparent"
-                        CornerRadius="6"
-                        Padding="8"
-                        Margin="0,2">
+                        <DataTemplate x:DataType="local:CommandItem">
+                            <Grid ColumnDefinitions="Auto,*,Auto,Auto" Margin="0,2">
 
-                                <TextBlock
-                            Text="{Binding}"
-                            Foreground="White"
-                            FontFamily="Consolas"
-                               PointerPressed="Command_Clicked"     
-                                    />
-                            </Border>
+                                <TextBlock Grid.Column="0" Text="{Binding ShortcutLabel}"
+                                           Foreground="White" Opacity="0.5" FontFamily="Consolas"
+                                           FontSize="14" VerticalAlignment="Center" Margin="0,0,12,0"/>
+
+                                <TextBlock Grid.Column="1" Text="{Binding Text}"
+                                           Foreground="White" FontFamily="Consolas" FontSize="14"
+                                           VerticalAlignment="Center" TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis"
+                                           PointerPressed="Command_Clicked" Tag="{Binding Id}"/>
+
+                                <Button Grid.Column="2" Content="Edit" Tag="{Binding Id}"
+                                        Click="EditCommand_Clicked" Margin="8,0,4,0"
+                                        FontSize="12" Padding="8,4"/>
+
+                                <Button Grid.Column="3" Content="✕" Tag="{Binding Id}"
+                                        Click="DeleteCommand_Clicked" FontSize="12" Padding="8,4"/>
+                            </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
-
                 </ListView>
 
-            </StackPanel>
+                <!-- Add new command -->
+                <Grid Grid.Row="3" ColumnDefinitions="*,Auto" Margin="0,12,0,0">
+                    <TextBox x:Name="NewCommandBox" PlaceholderText="New command..."
+                             Background="Transparent" Foreground="White" FontFamily="Consolas"
+                             AcceptsReturn="False"/>
+                    <Button Grid.Column="1" Content="Add" Click="AddCommand_Clicked"
+                            Margin="8,0,0,0" Style="{StaticResource AccentButtonStyle}"/>
+                </Grid>
+
+            </Grid>
         </Border>
-
-
-
-
     </Grid>
 </Window>
