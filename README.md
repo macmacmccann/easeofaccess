@@ -1,5 +1,5 @@
-# easeofaccess
-Control Panel for Accessability Features
+# Ease Of Access
+## Smart hub for Accessability Features
 
 
 Ease of Access aims to bridge the gap between traditional accessibility tools and modern AI‑driven interaction, giving users new ways to navigate and control their system when standard I/O devices fail or users that find it diifucult to use them properly in the first place.
