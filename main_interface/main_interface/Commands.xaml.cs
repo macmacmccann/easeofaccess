@@ -491,7 +491,6 @@ namespace main_interface
             resultingCombo = newCombo;
             return true;
         }
-
         public bool UpdateHotkey(int id, uint modkey, uint vk)
         {
             var hwnd = WindowNative.GetWindowHandle(this);
