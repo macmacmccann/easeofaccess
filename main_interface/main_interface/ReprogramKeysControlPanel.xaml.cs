@@ -196,9 +196,6 @@ public sealed partial class ReprogramKeysControlPanel : Page
             HotkeyText.Text = "Enable Feature First";
             return;
         }
-        ReprogamKeys.GetOrMakeInstance.TransferMouseKey(VirtualKey.F, MouseAction.RightDown);
-
-
         _isCapturingKeys = true;
         this.KeyUp -= OnKeyUp; // if im capturing hold the heys up until done 
 
@@ -400,8 +397,18 @@ public sealed partial class ReprogramKeysControlPanel : Page
                     Debug.WriteLine($"Your going to check this key to delete   : {rawKeyCaptured}");
 
                     keyControl.TriggerPressedVisual();
+
+                    // Find the source key (the one remapped FROM) before it gets removed
+                    var sourceKVP = windowBehind.keysdictionary.FirstOrDefault(p => p.Value == rawKeyCaptured);
                     ReprogamKeys.GetOrMakeInstance.TransferKeys(rawKeyCaptured, VirtualKey.None);
 
+                    // Reset that source key's label and colour back to its original
+                    if (sourceKVP.Key != VirtualKey.None && _keyMap.TryGetValue(sourceKVP.Key, out KeyboardKey sourceControl))
+                    {
+                        sourceControl.Label = FormatKeyLabel(sourceKVP.Key);
+                        sourceControl.SetMappedColour(false);
+                    }
+                    Check();
                 }
 
                 keyControl.TriggerPressedVisual();
@@ -423,8 +430,6 @@ public sealed partial class ReprogramKeysControlPanel : Page
             }
 
 
-              
-
             if (firstKey == VirtualKey.None) // If you started programmed read first key 
             {
                 Debug.WriteLine($"Actively Capturing : {_isCapturingKeys}");
@@ -436,6 +441,8 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
 
             }
+
+
 
             if (firstKey != VirtualKey.None && secondKey == VirtualKey.None && rawKeyCaptured != firstKey)
             {
@@ -587,7 +594,7 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
         // All these should be global pointers / class as 1 return type  - null chck shud be the one that safest - be careful you might muddle urself up 
         specificModHandedness = VirtualKey.None;
-        CapturedModiferKeys |= Modifiers.None;
+        CapturedModiferKeys = Modifiers.None;
         ModifiersBinary = false;
         return specificModHandedness;
 

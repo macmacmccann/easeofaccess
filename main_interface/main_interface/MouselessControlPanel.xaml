@@ -89,7 +89,6 @@
             </StackPanel>
 
         </Grid>
-                <controls:HotKeyCaptureControl x:Name="HotKeyCapture"/>
 
     </Grid>
 

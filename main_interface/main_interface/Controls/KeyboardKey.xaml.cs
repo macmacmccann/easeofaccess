@@ -82,11 +82,13 @@ namespace main_interface.Controls
         private void Key_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
             DesignGlobalCode.Key_PointerEntered(sender, e);
+            if (_isMapped) RootBorder.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(180, 34, 197, 94));
         }
 
         private void Key_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             DesignGlobalCode.Key_PointerExited(sender, e);
+            if (_isMapped) RootBorder.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(180, 34, 197, 94));
         }
 
         private void OnPointerEntered(object sender, PointerRoutedEventArgs e) => VisualStateManager.GoToState(this, "PointerOver", true);
@@ -110,8 +112,11 @@ namespace main_interface.Controls
             DesignGlobalCode.Key_PointerExited(RootBorder, null);
         }
 
+        private bool _isMapped = false;
+
         public void SetMappedColour(bool isMapped)
         {
+            _isMapped = isMapped;
             RootBorder.Background = isMapped
                 ? new SolidColorBrush(Windows.UI.Color.FromArgb(180, 34, 197, 94))  // green
                 : new SolidColorBrush(Windows.UI.Color.FromArgb(0, 0, 0, 0));       // transparent

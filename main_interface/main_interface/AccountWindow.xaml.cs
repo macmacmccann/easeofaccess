@@ -63,12 +63,12 @@ namespace main_interface
             // this.Activated += AccountWindow_Activated;
         }
 
-        public void Activate()
-        {
-            var hwnd = WindowNative.GetWindowHandle(this);
-            SetForegroundWindow(hwnd);  
-
-        }
+    
+public void Activate()
+{
+    var hwnd = WindowNative.GetWindowHandle(this);
+    SetForegroundWindow(hwnd);  
+}
         private void AccountWindow_Activated(object sender, WindowActivatedEventArgs args)
         {
             if (args.WindowActivationState == WindowActivationState.Deactivated)
