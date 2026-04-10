@@ -53,6 +53,11 @@ namespace main_interface
         public static bool ReprogramKeysEnabled = false;
 
 
+        // Hand Movement Agent
+
+        public static bool HandAgentEnabled = false;
+
+
 
         // Settings Page
         public static bool RunOnStartupEnabled = false;
