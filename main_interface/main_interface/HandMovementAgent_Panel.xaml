@@ -9,6 +9,19 @@
     mc:Ignorable="d">
 
     <Grid>
-
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16">
+            <TextBlock Text="Hand Gesture State" FontSize="18" HorizontalAlignment="Center"/>
+            <TextBlock x:Name="GestureLabel"
+                       Text="none"
+                       FontSize="48"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+            <TextBlock x:Name="StatusLabel"
+                       Text="Waiting for Python to connect..."
+                       FontSize="14"
+                       HorizontalAlignment="Center"
+                       Opacity="0.6"/>
+        </StackPanel>
     </Grid>
 </Page>

@@ -50,6 +50,7 @@
                 <NavigationViewItem Content="Key Control" Icon="Link" Tag="ReprogramKeys"/>
                 <NavigationViewItem Content="Terminal Control" Icon="Link" Tag="TerminalControl"/>
                 <NavigationViewItem Content="Assistant" Icon="Help" Tag="Assistant"/>
+                <NavigationViewItem Content="Hand Gestures" Icon="RotateCamera" Tag="HandMovement"/>
             </NavigationView.MenuItems>
 
             <Frame x:Name="ContentFrame"/>

@@ -211,6 +211,7 @@ namespace main_interface
                 case "Assistant":       ContentFrame.Navigate(typeof(AssistantControlPanel));   break;
                 case "TerminalControl": ContentFrame.Navigate(typeof(TerminalControlPanel));    break;
                 case "about":           ContentFrame.Navigate(typeof(About));                   break;
+                case "HandMovement":    ContentFrame.Navigate(typeof(HandMovementAgent_Panel));  break;
             }
         }
     }
