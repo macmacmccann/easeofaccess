@@ -31,61 +31,75 @@
             </StackPanel>
         </Border>
 
-        <Grid Grid.Row="1" ColumnDefinitions="*,*" Padding="16" Margin="24,24,0,0">
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" Padding="16" Margin="24,16,0,0">
 
-            <StackPanel Grid.Column="0" Spacing="8">
-                <TextBlock Text="Move around without any issues" FontSize="20" Opacity="0.7" VerticalAlignment="Top" />
-                <Image Source="/Assets/gifs/Mouseless.gif" />
+            <!-- Left: gif framed in a card -->
+            <StackPanel Grid.Column="0" Spacing="12" Margin="0,0,16,0">
+                <TextBlock Text="Control your cursor with arrow keys"
+                           FontSize="14" Opacity="0.55" />
+                <Border CornerRadius="12" Padding="8"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                    <Image Source="/Assets/gifs/Mouseless.gif" Stretch="Uniform"/>
+                </Border>
             </StackPanel>
 
+            <!-- Right: speed options -->
             <StackPanel Grid.Column="1" Spacing="8">
-                <TextBlock Text="Features" FontSize="20" Opacity="0.7" VerticalAlignment="Top" />
+                <TextBlock Text="Speed" FontSize="16" FontWeight="SemiBold"
+                           Opacity="0.8" Margin="0,0,24,4"/>
 
-                <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
+                <!-- Fast -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="8" Padding="16" Margin="0,0,24,0"
+                        BorderBrush="#F97316" BorderThickness="3,0,0,0"
                         PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                     <Grid ColumnDefinitions="*,Auto">
                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                            <TextBlock Text="Fast Mouse Speed" FontSize="14" FontWeight="SemiBold" Foreground="White" />
-                            <TextBlock Text="Higher speed lower control" FontSize="12" Opacity="0.9" Foreground="White" />
+                            <TextBlock Text="Fast" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="High speed, lower precision" FontSize="12" Opacity="0.6" Foreground="White" />
                         </StackPanel>
                         <ToggleSwitch Grid.Column="1" x:Name="SpeedFastToggle"
-                            Header="Fast Speed" OffContent="Disabled" OnContent="Enabled"
+                            OffContent="Off" OnContent="On"
                             Toggled="FastSpeedToggle_Toggled" VerticalAlignment="Center" Margin="16,0,0,0" />
                     </Grid>
                 </Border>
 
-                <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
+                <!-- Medium -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="8" Padding="16" Margin="0,0,24,0"
+                        BorderBrush="#3B82F6" BorderThickness="3,0,0,0"
                         PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                     <Grid ColumnDefinitions="*,Auto">
                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                            <TextBlock Text="Medium Mouse Speed" FontSize="14" FontWeight="SemiBold" Foreground="White" />
-                            <TextBlock Text="Controlled speed balanced ergonomics" FontSize="12" Opacity="0.9" Foreground="White" />
+                            <TextBlock Text="Medium" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Balanced speed and control" FontSize="12" Opacity="0.6" Foreground="White" />
                         </StackPanel>
                         <ToggleSwitch Grid.Column="1" x:Name="SpeedMedToggle"
-                            Header="Medium Speed" OffContent="Disabled" OnContent="Enabled"
+                            OffContent="Off" OnContent="On"
                             Toggled="MedSpeedToggle_Toggled" VerticalAlignment="Center" Margin="16,0,0,0" />
                     </Grid>
                 </Border>
 
-                <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
+                <!-- Slow -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="8" Padding="16" Margin="0,0,24,0"
+                        BorderBrush="#22C55E" BorderThickness="3,0,0,0"
                         PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                     <Grid ColumnDefinitions="*,Auto">
                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                            <TextBlock Text="Slow Mouse Speed" FontSize="14" FontWeight="SemiBold" Foreground="White" />
-                            <TextBlock Text="Slower speed high control" FontSize="12" Opacity="0.9" Foreground="White" />
+                            <TextBlock Text="Slow" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Low speed, high precision" FontSize="12" Opacity="0.6" Foreground="White" />
                         </StackPanel>
                         <ToggleSwitch Grid.Column="1" x:Name="SpeedSlowToggle"
-                            Header="Slow Speed" OffContent="Disabled" OnContent="Enabled"
+                            OffContent="Off" OnContent="On"
                             Toggled="SlowSpeedToggle_Toggled" VerticalAlignment="Center" Margin="16,0,0,0" />
                     </Grid>
                 </Border>
 
-
                 <Button Content="🖱 Program Clicks" Click="ProgramClicks_Click"
-                        HorizontalAlignment="Stretch" Margin="0,16,24,0"
-                        Padding="0,16" FontSize="16" FontWeight="SemiBold"
+                        HorizontalAlignment="Stretch" Margin="0,8,24,0"
+                        Padding="0,14" FontSize="15" FontWeight="SemiBold"
                         Style="{StaticResource AccentButtonStyle}"/>
-
             </StackPanel>
 
         </Grid>

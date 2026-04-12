@@ -181,6 +181,12 @@ namespace main_interface
 
             if (tag == "AccountWindow")
             {
+                if (Services.AuthService.GetCurrentUser() == null)
+                {
+                    ContentFrame.Navigate(typeof(LoginPage));
+                    return;
+                }
+
                 if (AccountWindow_Instance_Singleton == null)
                 {
                     AccountWindow_Instance_Singleton = AccountWindow.Instance;

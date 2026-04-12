@@ -8,20 +8,185 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16">
-            <TextBlock Text="Hand Gesture State" FontSize="18" HorizontalAlignment="Center"/>
-            <TextBlock x:Name="GestureLabel"
-                       Text="none"
-                       FontSize="48"
-                       FontWeight="Bold"
-                       HorizontalAlignment="Center"
-                       Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
-            <TextBlock x:Name="StatusLabel"
-                       Text="Waiting for Python to connect..."
-                       FontSize="14"
-                       HorizontalAlignment="Center"
-                       Opacity="0.6"/>
-        </StackPanel>
-    </Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+
+        <Grid RowDefinitions="0.2*,*">
+
+            <!-- HEADER -->
+            <Border x:Name="Headertop">
+                <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Top" Height="120" Padding="16" Margin="24,24,0,0">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Hand Gesture Control" FontSize="30" FontWeight="SemiBold" />
+                        <TextBlock Text="Control your computer with hand gestures — no mouse or keyboard needed" FontSize="14" Opacity="0.7" />
+                    </StackPanel>
+
+                    <ToggleSwitch
+                        x:Name="GesturesEnabledToggle"
+                        OffContent="Off"
+                        OnContent="On"
+                        Toggled="GesturesEnabledToggled"
+                        FontSize="16" MinHeight="48" Padding="4" VerticalAlignment="Center">
+                        <ToggleSwitch.RenderTransform>
+                            <ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
+                        </ToggleSwitch.RenderTransform>
+                    </ToggleSwitch>
+                </StackPanel>
+            </Border>
+            <!-- END HEADER -->
+
+            <!-- BODY: left image + right toggles -->
+            <Grid Grid.Row="1" ColumnDefinitions="*,*" Padding="16" Margin="24,24,0,0">
+
+                <!-- LEFT: status display + gesture reference image -->
+                <StackPanel Grid.Column="0" Spacing="16">
+
+                    <TextBlock Text="Live gesture feed" FontSize="20" Opacity="0.7" />
+
+                    <!-- Live gesture readout -->
+                    <Border Background="#20FFFFFF" CornerRadius="12" Padding="24">
+                        <StackPanel Spacing="8" HorizontalAlignment="Center">
+                            <TextBlock Text="Current gesture" FontSize="13" Opacity="0.6" HorizontalAlignment="Center"/>
+                            <TextBlock
+                                x:Name="GestureLabel"
+                                Text="none"
+                                FontSize="48"
+                                FontWeight="Bold"
+                                HorizontalAlignment="Center"
+                                Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                            <TextBlock
+                                x:Name="StatusLabel"
+                                Text="Waiting for Python to connect..."
+                                FontSize="12"
+                                HorizontalAlignment="Center"
+                                Opacity="0.5"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Gesture reference card -->
+                    <Border Background="#20FFFFFF" CornerRadius="12" Padding="16" Margin="0,0,16,0">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Gesture reference" FontSize="14" FontWeight="SemiBold" Opacity="0.8"/>
+
+                            <TextBlock Text="✋  open_hand  →  Minimize window"  FontSize="12" Opacity="0.7"/>
+                            <TextBlock Text="✊  fist        →  Maximize window"  FontSize="12" Opacity="0.7"/>
+                            <TextBlock Text="☝  pointing    →  Left click"        FontSize="12" Opacity="0.7"/>
+                            <TextBlock Text="✌  peace       →  Volume up"         FontSize="12" Opacity="0.7"/>
+                            <TextBlock Text="🤙  pinky       →  Volume down"      FontSize="12" Opacity="0.7"/>
+                            <TextBlock Text="👈  swipe_left  →  Prev desktop"     FontSize="12" Opacity="0.7"/>
+                            <TextBlock Text="👉  swipe_right →  Next desktop"     FontSize="12" Opacity="0.7"/>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+
+                <!-- RIGHT: per-gesture toggles -->
+                <StackPanel Grid.Column="1" Spacing="8">
+                    <TextBlock Text="Gesture actions" FontSize="20" Opacity="0.7" VerticalAlignment="Top" />
+
+                    <!-- open_hand -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="✋  Open Hand" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
+                                <TextBlock Text="Minimize the focused window" FontSize="12" Opacity="0.9" Foreground="White"/>
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" x:Name="OpenHandToggle"
+                                          OffContent="Disabled" OnContent="Enabled"
+                                          VerticalAlignment="Center" Margin="16,0,0,0"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- fist -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="✊  Fist" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
+                                <TextBlock Text="Maximize the focused window" FontSize="12" Opacity="0.9" Foreground="White"/>
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" x:Name="FistToggle"
+                                          OffContent="Disabled" OnContent="Enabled"
+                                          VerticalAlignment="Center" Margin="16,0,0,0"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- pointing -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="☝  Pointing" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
+                                <TextBlock Text="Left click at current cursor position" FontSize="12" Opacity="0.9" Foreground="White"/>
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" x:Name="PointingToggle"
+                                          OffContent="Disabled" OnContent="Enabled"
+                                          VerticalAlignment="Center" Margin="16,0,0,0"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- peace -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="✌  Peace" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
+                                <TextBlock Text="Volume up" FontSize="12" Opacity="0.9" Foreground="White"/>
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" x:Name="PeaceToggle"
+                                          OffContent="Disabled" OnContent="Enabled"
+                                          VerticalAlignment="Center" Margin="16,0,0,0"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- pinky -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="🤙  Pinky" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
+                                <TextBlock Text="Volume down" FontSize="12" Opacity="0.9" Foreground="White"/>
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" x:Name="PinkyToggle"
+                                          OffContent="Disabled" OnContent="Enabled"
+                                          VerticalAlignment="Center" Margin="16,0,0,0"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- swipe_left -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="👈  Swipe Left" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
+                                <TextBlock Text="Switch to previous virtual desktop" FontSize="12" Opacity="0.9" Foreground="White"/>
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" x:Name="SwipeLeftToggle"
+                                          OffContent="Disabled" OnContent="Enabled"
+                                          VerticalAlignment="Center" Margin="16,0,0,0"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- swipe_right -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="👉  Swipe Right" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
+                                <TextBlock Text="Switch to next virtual desktop" FontSize="12" Opacity="0.9" Foreground="White"/>
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" x:Name="SwipeRightToggle"
+                                          OffContent="Disabled" OnContent="Enabled"
+                                          VerticalAlignment="Center" Margin="16,0,0,0"/>
+                        </Grid>
+                    </Border>
+
+                </StackPanel>
+
+            </Grid>
+
+        </Grid>
+
+    </ScrollViewer>
+
 </Page>

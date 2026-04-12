@@ -752,7 +752,6 @@ namespace main_interface
             return string.Join(" ", keyschosen);
         }
 
-
         private const int HOTKEY_ID_1 = 1;
         private const int HOTKEY_ID_2 = 2;
         private const int HOTKEY_ID_OVERLAY = 9000;

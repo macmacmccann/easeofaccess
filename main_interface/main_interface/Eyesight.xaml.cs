@@ -282,20 +282,16 @@ public sealed partial class Eyesight : Window
         SetWindowStyle();
         var hwnd = WindowNative.GetWindowHandle(this);
 
-
         var grid = new Grid
         {
             Background = new SolidColorBrush(
-           Windows.UI.Color.FromArgb(255, 0, 0, 0) 
-       )
+                Windows.UI.Color.FromArgb(255, 4, 5, 14) // near-black with a tiny cool tint — less harsh than pure black at night
+            )
         };
 
         Content = grid;
 
-        // Optional: Set opacity (param 3 255 = opaque, 0 = fully transparent)
-        // old
-         SetLayeredWindowAttributes(hwnd, 0,150, LWA_ALPHA);
-
+        SetLayeredWindowAttributes(hwnd, 0, 150, LWA_ALPHA);
     }
 
 
@@ -319,7 +315,6 @@ public sealed partial class Eyesight : Window
 
     void MakeDyslexiaOverlay()
     {
-
         System.Diagnostics.Debug.WriteLine("Strength", strength);
 
         SetWindowStyle();
@@ -328,7 +323,7 @@ public sealed partial class Eyesight : Window
         var grid = new Grid
         {
             Background = new SolidColorBrush(
-                Windows.UI.Color.FromArgb(strength, 255, 230, 204)
+                Windows.UI.Color.FromArgb(strength, 255, 248, 195) // warm butter-yellow — reduces white contrast that causes letter-swimming
             )
         };
 
@@ -347,13 +342,13 @@ public sealed partial class Eyesight : Window
         var grid = new Grid
         {
             Background = new SolidColorBrush(
-                Windows.UI.Color.FromArgb(strength, 255, 229, 204)
+                Windows.UI.Color.FromArgb(strength, 255, 147, 41) // deep amber — cuts blue light wavelengths, same principle as f.lux night mode
             )
         };
 
         Content = grid;
 
-        SetLayeredWindowAttributes(hwnd, 0, 180, LWA_ALPHA);
+        SetLayeredWindowAttributes(hwnd, 0, 200, LWA_ALPHA);
     }
 
     void MakeMigraineOverlay()
@@ -366,13 +361,13 @@ public sealed partial class Eyesight : Window
         var grid = new Grid
         {
             Background = new SolidColorBrush(
-                Windows.UI.Color.FromArgb(strength, 255, 230, 240)
+                Windows.UI.Color.FromArgb(strength, 230, 120, 160) // saturated FL-41 rose — the clinical tint used for migraine glasses
             )
         };
 
         Content = grid;
 
-        SetLayeredWindowAttributes(hwnd, 0, 180, LWA_ALPHA);
+        SetLayeredWindowAttributes(hwnd, 0, 200, LWA_ALPHA);
     }
 
 
@@ -409,7 +404,7 @@ public sealed partial class Eyesight : Window
 
             // first p[aram controls opaque , red , green , blue 
             // 80 as first 
-            Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(strength, 180, 60, 0))
+            Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(strength, 255, 95, 10)) // vivid orange-red — actual fire colour rather than dull brick
             //                                              ^      ^    ^   ^
             //                                              |      |    |   blue (keep low)
             //                                              |      |    green (low-mid for orange)

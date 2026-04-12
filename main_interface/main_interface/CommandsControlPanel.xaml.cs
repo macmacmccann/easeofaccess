@@ -579,7 +579,8 @@ public sealed partial class CommandsControlPanel : Page
                 
 
         }
-                // Try to update
+        // ->->->
+                // Try to update 
                 bool success = commandsWindow.TryUpdateHotkey(hotkeyId, modifiers, vk, out var resultingCombo);
 
  

@@ -47,10 +47,11 @@ public sealed partial class Mouseless : Window
         Activate(); // Create a native window(hwnd) for this object !
         HideFromTaskbar();
 
-        SetOverlayStyle(); // Attach a win32 message listener to this window 
+        SetOverlayStyle(); // Attach a win32 message listener to this window
         MoveOffScreen();
 
-        //ApplySettings();
+        // 60fps timer drives smooth velocity-based movement
+        _moveTimer = new System.Threading.Timer(OnMoveTick, null, 0, 16);
 
     }
 
@@ -71,22 +72,76 @@ public sealed partial class Mouseless : Window
 
 
 
-    int speed = 15;
+    // ── Smooth movement ──────────────────────────────────────────────────────
+    // Instead of moving once per keydown event (jittery keyboard-repeat rate),
+    // a 60fps timer builds velocity while a key is held and bleeds it off with
+    // friction when released — short tap = small precise step, hold = smooth glide.
+
+    private bool _upHeld, _downHeld, _leftHeld, _rightHeld;
+    private float _velocityX, _velocityY;
+
+    private const float Friction    = 0.78f; // velocity multiplier per tick when key released (lower = stops faster)
+    private const float StopEpsilon = 0.4f;  // snap to zero below this speed
+
+    private float _acceleration = 2.5f;      // pixels added to velocity per tick while key held
+    private float _maxVelocity  = 20f;       // peak speed in pixels per tick
+
+    private System.Threading.Timer _moveTimer;
 
     public void ApplySettings()
     {
-        if( StateSettings.SpeedFastEnabled)
+        if (StateSettings.SpeedFastEnabled)
         {
-            speed = 30;
+            _acceleration = 4.5f;
+            _maxVelocity  = 32f;
         }
         if (StateSettings.SpeedMedEnabled)
         {
-            speed = 15;
+            _acceleration = 2.5f;
+            _maxVelocity  = 20f;
         }
         if (StateSettings.SpeedSlowEnabled)
         {
-            speed = 10;
+            _acceleration = 1.2f;
+            _maxVelocity  = 10f;
         }
+    }
+
+    private void OnMoveTick(object state)
+    {
+        if (!StateSettings.MouselessEnabled) return;
+
+        if (_upHeld)    _velocityY -= _acceleration;
+        if (_downHeld)  _velocityY += _acceleration;
+        if (_leftHeld)  _velocityX -= _acceleration;
+        if (_rightHeld) _velocityX += _acceleration;
+
+        _velocityX = Math.Clamp(_velocityX, -_maxVelocity, _maxVelocity);
+        _velocityY = Math.Clamp(_velocityY, -_maxVelocity, _maxVelocity);
+
+        // Bleed off velocity when key is released
+        if (!_leftHeld && !_rightHeld) _velocityX *= Friction;
+        if (!_upHeld   && !_downHeld)  _velocityY *= Friction;
+
+        // Snap to zero so the cursor doesn't drift forever
+        if (Math.Abs(_velocityX) < StopEpsilon) _velocityX = 0;
+        if (Math.Abs(_velocityY) < StopEpsilon) _velocityY = 0;
+
+        int dx = (int)_velocityX;
+        int dy = (int)_velocityY;
+
+        if (dx != 0 || dy != 0)
+            MoveMouse(dx, dy);
+    }
+
+    void MoveMouse(int dx, int dy)
+    {
+        var input = new INPUT
+        {
+            type = INPUT_MOUSE,
+            mi   = new MOUSEINPUT { dx = dx, dy = dy, dwFlags = MOUSEEVENTF_MOVE }
+        };
+        SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
     }
 
 
@@ -320,25 +375,19 @@ public sealed partial class Mouseless : Window
             // Convert raw pointer to usable struct we made 
             var keyInfo = Marshal.PtrToStructure<KBDLLHOOKSTRUCT>(lParam);
             
-            // if any key was pressed down  
             if (wParam == (IntPtr)WM_KEYDOWN)
             {
-                if (keyInfo.vkCode == 38) // if the key pressed is up arrow (num 38)
-                {
-                    MoveMouseUp(speed);
-                }
-                if (keyInfo.vkCode == (uint)Keys.Down) // cast
-                {
-                    MoveMouseDown(speed);
-                }
-                if (keyInfo.vkCode == (uint)Keys.Left) 
-                {
-                    MoveMouseLeft(speed);
-                }
-                if (keyInfo.vkCode == (uint)Keys.Right)
-                {
-                    MoveMouseRight(speed);
-                }
+                if (keyInfo.vkCode == 38)                  _upHeld    = true;
+                if (keyInfo.vkCode == (uint)Keys.Down)     _downHeld  = true;
+                if (keyInfo.vkCode == (uint)Keys.Left)     _leftHeld  = true;
+                if (keyInfo.vkCode == (uint)Keys.Right)    _rightHeld = true;
+            }
+            if (wParam == (IntPtr)WM_KEYUP)
+            {
+                if (keyInfo.vkCode == 38)                  _upHeld    = false;
+                if (keyInfo.vkCode == (uint)Keys.Down)     _downHeld  = false;
+                if (keyInfo.vkCode == (uint)Keys.Left)     _leftHeld  = false;
+                if (keyInfo.vkCode == (uint)Keys.Right)    _rightHeld = false;
             }
         }
         return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);

@@ -114,58 +114,73 @@
         </StackPanel>
 
 
-        <StackPanel 
-            Grid.Row="2"
-           Orientation="Horizontal"
-            VerticalAlignment="Top"
-            HorizontalAlignment="Center"
-            Spacing="20"
-            Width="700">    
-            <!-- Buttons -->
-            
-        <Button 
-            Content="Log Out"
-            Padding="15,10"
-            FontSize="16"
-            Height="50"
-            HorizontalAlignment="Center"
-            Margin="0,0,0,20"
-            Click="LogOutButton_Click"/>
+        <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*" ColumnSpacing="12" Margin="24,0,24,24">
 
+            <!-- Log Out -->
+            <Border Grid.Column="0" CornerRadius="12" Padding="16,14"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="#64748B" BorderThickness="0,3,0,0"
+                    PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="🚪" FontSize="22"/>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Log Out" FontSize="13" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Sign out of your account" FontSize="11" Opacity="0.55" Foreground="White" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <Button Content="Log Out" HorizontalAlignment="Stretch"
+                            Margin="0,4,0,0" Click="LogOutButton_Click"/>
+                </StackPanel>
+            </Border>
 
+            <!-- Sync Data -->
+            <Border Grid.Column="1" CornerRadius="12" Padding="16,14"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="#3B82F6" BorderThickness="0,3,0,0"
+                    PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="🔄" FontSize="22"/>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Sync Data" FontSize="13" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Push your settings to the cloud" FontSize="11" Opacity="0.55" Foreground="White" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <Button Content="Sync" HorizontalAlignment="Stretch"
+                            Margin="0,4,0,0" Click="LogOutButton_Click"/>
+                </StackPanel>
+            </Border>
 
-            <Button 
-            Content="Sync Data"
-            Padding="15,10"
-            FontSize="16"
-            Height="50"
-            HorizontalAlignment="Center"
-            Margin="0,0,0,20"
-            Click="LogOutButton_Click"/>
+            <!-- Close and Kill -->
+            <Border Grid.Column="2" CornerRadius="12" Padding="16,14"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="#F97316" BorderThickness="0,3,0,0"
+                    PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="⚠" FontSize="22"/>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Close &amp; Kill" FontSize="13" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Shut down the window and all background processes" FontSize="11" Opacity="0.55" Foreground="White" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <Button Content="Kill Processes" HorizontalAlignment="Stretch"
+                            Margin="0,4,0,0" Click="LogOutButton_Click"/>
+                </StackPanel>
+            </Border>
 
+            <!-- Delete Account -->
+            <Border Grid.Column="3" CornerRadius="12" Padding="16,14"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="#EF4444" BorderThickness="0,3,0,0"
+                    PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="🗑" FontSize="22"/>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Delete Account" FontSize="13" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Permanently remove your account and data" FontSize="11" Opacity="0.55" Foreground="White" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <Button Content="Delete" HorizontalAlignment="Stretch"
+                            Margin="0,4,0,0" Click="LogOutButton_Click"/>
+                </StackPanel>
+            </Border>
 
-            <Button 
-              Content="Close Window and Kill Processes"
-              Padding="15,10"
-              FontSize="16"
-              Height="50"
-              HorizontalAlignment="Center"
-              Margin="0,0,0,20"
-              Click="LogOutButton_Click"/>
-
-
-            <Button 
-            Content="Delete Account"
-            Padding="15,10"
-            FontSize="16"
-            Height="50"
-            HorizontalAlignment="Center"
-            Margin="0,0,0,20"
-            Click="LogOutButton_Click"/>
-
-       
-
-           </StackPanel>
+        </Grid>
 
 
     </Grid>

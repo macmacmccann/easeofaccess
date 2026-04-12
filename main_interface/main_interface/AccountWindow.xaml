@@ -8,15 +8,34 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <Window.SystemBackdrop>
+        <MicaBackdrop/>
+    </Window.SystemBackdrop>
+
     <Grid x:Name="maingrid">
 
-        <Image Source="/Assets/gifs/colorslowed.gif"
-         Stretch="UniformToFill"
-         />
-        <TextBlock Text="Hello, World!" FontSize="24" FontWeight="Bold" 
-           Foreground="Blue" HorizontalAlignment="Center" Margin="20"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Grid Padding="24,20,24,28" RowSpacing="16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
+                <!-- Header -->
+                <Border Grid.Row="0" CornerRadius="12" Padding="20,16"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="System Status" FontSize="22" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="Every toggle currently active on your machine"
+                                   FontSize="12" Opacity="0.55" Foreground="White"/>
+                    </StackPanel>
+                </Border>
 
+                <!-- Status cards built in code-behind -->
+                <StackPanel Grid.Row="1" x:Name="StatusContainer" Spacing="12"/>
+
+            </Grid>
+        </ScrollViewer>
 
     </Grid>
 </Window>

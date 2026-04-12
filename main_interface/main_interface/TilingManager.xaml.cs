@@ -411,7 +411,8 @@ namespace main_interface
                     title == "Microsoft Text Input Application" ||
                     title == "Command Palette" ||
                     title == "Ease Of Access" ||
-                    title == "Sticky Notes"
+                    title == "Sticky Notes" ||
+                    title == "Clock"
                     )
                     return true;
                 // Find which monitor this window is currently on 
