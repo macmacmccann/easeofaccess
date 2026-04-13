@@ -35,19 +35,23 @@ steps:
       projects: '$(solution)'
       arguments: '-p:Platform=$(buildPlatform)'
 
-  #  Build runs built-in .NET analyzers
-  - task: DotNetCoreCLI@2
-    displayName: 'Build solution'
-    inputs:
-      command: build
-      projects: '$(solution)'
-      arguments: >
-        --configuration $(buildConfiguration)
-        --no-restore
-        -p:Platform=$(buildPlatform)
-        -p:EnableNETAnalyzers=true
-        -p:AnalysisLevel=latest
 
+
+# Build solution (skip Package.wapproj)
+- task: DotNetCoreCLI@2
+  displayName: 'Build solution'
+  inputs:
+    command: build
+    projects: '$(solution)'
+    arguments: >
+      --configuration $(buildConfiguration)
+      --no-restore
+      -p:Platform=$(buildPlatform)
+      -p:EnableNETAnalyzers=true
+      -p:AnalysisLevel=latest
+      /p:BuildingInsideVisualStudio=true
+      /p:SkipDesktopBridgeBuild=true
+      
   #  Run tests with code coverage
   - task: DotNetCoreCLI@2
     displayName: 'Run unit tests'
