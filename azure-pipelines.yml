@@ -1,0 +1,82 @@
+trigger:
+  branches:
+    include:
+      - main
+      - iteration_no.*
+
+pr:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: windows-latest
+
+variables:
+  solution: 'main_interface/main_interface.sln'
+  testProject: 'main_interface/main_interface.Tests/main_interface.Tests.csproj'
+  buildConfiguration: 'Release'
+  buildPlatform: 'x64'
+
+steps:
+
+  # install netsdk
+  - task: UseDotNet@2
+    displayName: 'Use .NET 8 SDK'
+    inputs:
+      packageType: sdk
+      version: '8.x'
+
+  # restore packages
+  - task: DotNetCoreCLI@2
+    displayName: 'Restore packages'
+    inputs:
+      command: restore
+      projects: '$(solution)'
+      arguments: '-p:Platform=$(buildPlatform)'
+
+  #  Build runs built-in .NET analyzers
+  - task: DotNetCoreCLI@2
+    displayName: 'Build solution'
+    inputs:
+      command: build
+      projects: '$(solution)'
+      arguments: >
+        --configuration $(buildConfiguration)
+        --no-restore
+        -p:Platform=$(buildPlatform)
+        -p:EnableNETAnalyzers=true
+        -p:AnalysisLevel=latest
+
+  #  Run tests with code coverage
+  - task: DotNetCoreCLI@2
+    displayName: 'Run unit tests'
+    inputs:
+      command: test
+      projects: '$(testProject)'
+      arguments: >
+        --configuration $(buildConfiguration)
+        --no-build
+        -p:Platform=$(buildPlatform)
+        --collect:"XPlat Code Coverage"
+        --results-directory $(Agent.TempDirectory)/TestResults
+        --logger trx
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+  #  publish test results
+  - task: PublishTestResults@2
+    displayName: 'Publish test results'
+    condition: always()
+    inputs:
+      testResultsFormat: VSTest
+      testResultsFiles: '$(Agent.TempDirectory)/TestResults/**/*.trx'
+      mergeTestResults: true
+      testRunTitle: 'Unit Tests - $(buildConfiguration)'
+
+  # publish code coverage 
+  - task: PublishCodeCoverageResults@2
+    displayName: 'Publish code coverage'
+    condition: always()
+    inputs:
+      summaryFileLocation: '$(Agent.TempDirectory)/TestResults/**/coverage.cobertura.xml'
