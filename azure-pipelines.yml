@@ -55,20 +55,13 @@ steps:
   # Install Windows App SDK runtime (required for WinUI3 assembly loading in tests)
   - task: PowerShell@2
     displayName: 'Install Windows App SDK Runtime'
+    continueOnError: true
     inputs:
       targetType: inline
       script: |
-        $ProgressPreference = 'SilentlyContinue'
-        $installer = "$env:TEMP\WinAppRuntimeInstall.exe"
-        Invoke-WebRequest `
-          -Uri 'https://aka.ms/windowsappsdk/1.8/latest/windowsappruntimeinstall-x64.exe' `
-          -OutFile $installer
-        $result = Start-Process $installer -ArgumentList '--quiet' -Wait -PassThru
-        Write-Host "Installer exit code: $($result.ExitCode)"
-        # Exit code 0x00000000 = success, 0x00000001 = already installed — both are fine
-        if ($result.ExitCode -ne 0 -and $result.ExitCode -ne 1) {
-          exit $result.ExitCode
-        }
+        winget install --id Microsoft.WindowsAppRuntime.1.8 `
+          --silent --accept-source-agreements --accept-package-agreements
+        Write-Host "winget exit code: $LASTEXITCODE"
 
   #  Run tests with code coverage
   - task: DotNetCoreCLI@2
@@ -78,7 +71,6 @@ steps:
       projects: '$(testProject)'
       arguments: >
         --configuration $(buildConfiguration)
-        --no-build
         -p:Platform=$(buildPlatform)
         --collect:"XPlat Code Coverage"
         --results-directory $(Agent.TempDirectory)/TestResults
