@@ -21,6 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\main_interface\main_interface.csproj" />
+    <ProjectReference Include="..\main_interface.Core\main_interface.Core.csproj" />
   </ItemGroup>
 </Project>

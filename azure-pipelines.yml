@@ -14,6 +14,7 @@ pool:
 
 variables:
   mainProject: 'main_interface/main_interface/main_interface.csproj'
+  coreProject: 'main_interface/main_interface.Core/main_interface.Core.csproj'
   testProject: 'main_interface/main_interface.Tests/main_interface.Tests.csproj'
   buildConfiguration: 'Release'
   buildPlatform: 'x64'
@@ -33,6 +34,7 @@ steps:
     inputs:
       command: restore
       projects: |
+        $(coreProject)
         $(mainProject)
         $(testProject)
       arguments: '-p:Platform=$(buildPlatform)'
@@ -43,6 +45,7 @@ steps:
     inputs:
       command: build
       projects: |
+        $(coreProject)
         $(mainProject)
         $(testProject)
       arguments: >
@@ -51,17 +54,6 @@ steps:
         -p:Platform=$(buildPlatform)
         -p:EnableNETAnalyzers=true
         -p:AnalysisLevel=latest
-
-  # Install Windows App SDK runtime (required for WinUI3 assembly loading in tests)
-  - task: PowerShell@2
-    displayName: 'Install Windows App SDK Runtime'
-    continueOnError: true
-    inputs:
-      targetType: inline
-      script: |
-        winget install --id Microsoft.WindowsAppRuntime.1.8 `
-          --silent --accept-source-agreements --accept-package-agreements
-        Write-Host "winget exit code: $LASTEXITCODE"
 
   #  Run tests with code coverage
   - task: DotNetCoreCLI@2

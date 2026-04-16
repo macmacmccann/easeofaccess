@@ -37,6 +37,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="StateSettings.cs" />
+    <Compile Remove="TakenCombinations.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\main_interface.Core\main_interface.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="H.NotifyIcon.WinUI" Version="2.1.2" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6584" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.250916003" />

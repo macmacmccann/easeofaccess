@@ -2,6 +2,7 @@
 demos/
 /demos/
 long_video.txt
+short_video.txt
 main_interface/bin/
 main_interface/obj/
 main_interface/.vs/
