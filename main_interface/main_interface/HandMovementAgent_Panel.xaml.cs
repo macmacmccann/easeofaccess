@@ -269,7 +269,7 @@ namespace main_interface
             keybd_event(VK_VOLUME_DOWN, 0, KEYEVENTF_KEYUP, 0);
             Debug.WriteLine("[HandMovement] Action: volume down");
         }
-
+        // modular 
         private void PrevDesktop()
         {
             // Ctrl + Win + Left
