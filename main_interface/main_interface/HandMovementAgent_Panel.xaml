@@ -34,10 +34,10 @@
             </Border>
             <!-- END HEADER -->
 
-            <!-- BODY: left image + right toggles -->
+            <!-- BODY: left status + right gesture mappings -->
             <Grid Grid.Row="1" ColumnDefinitions="*,*" Padding="16" Margin="24,24,0,0">
 
-                <!-- LEFT: status display + gesture reference image -->
+                <!-- LEFT: live feed + gesture shape guide -->
                 <StackPanel Grid.Column="0" Spacing="16">
 
                     <TextBlock Text="Live gesture feed" FontSize="20" Opacity="0.7" />
@@ -62,24 +62,23 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Gesture reference card -->
+                    <!-- Gesture shape guide -->
                     <Border Background="#20FFFFFF" CornerRadius="12" Padding="16" Margin="0,0,16,0">
                         <StackPanel Spacing="6">
-                            <TextBlock Text="Gesture reference" FontSize="14" FontWeight="SemiBold" Opacity="0.8"/>
-
-                            <TextBlock Text="✋  open_hand  →  Minimize window"  FontSize="12" Opacity="0.7"/>
-                            <TextBlock Text="✊  fist        →  Maximize window"  FontSize="12" Opacity="0.7"/>
-                            <TextBlock Text="☝  pointing    →  Left click"        FontSize="12" Opacity="0.7"/>
-                            <TextBlock Text="✌  peace       →  Volume up"         FontSize="12" Opacity="0.7"/>
-                            <TextBlock Text="🤙  pinky       →  Volume down"      FontSize="12" Opacity="0.7"/>
-                            <TextBlock Text="👈  swipe_left  →  Prev desktop"     FontSize="12" Opacity="0.7"/>
-                            <TextBlock Text="👉  swipe_right →  Next desktop"     FontSize="12" Opacity="0.7"/>
+                            <TextBlock Text="How to make each gesture" FontSize="14" FontWeight="SemiBold" Opacity="0.8"/>
+                            <TextBlock Text="✋  open_hand   — all fingers extended"       FontSize="12" Opacity="0.7"/>
+                            <TextBlock Text="✊  fist        — all fingers closed"          FontSize="12" Opacity="0.7"/>
+                            <TextBlock Text="☝  pointing    — index finger raised"          FontSize="12" Opacity="0.7"/>
+                            <TextBlock Text="✌  peace       — index + middle raised"        FontSize="12" Opacity="0.7"/>
+                            <TextBlock Text="🤙  pinky      — pinky + thumb extended"       FontSize="12" Opacity="0.7"/>
+                            <TextBlock Text="👈  swipe_left  — hand sweeps left"            FontSize="12" Opacity="0.7"/>
+                            <TextBlock Text="👉  swipe_right — hand sweeps right"           FontSize="12" Opacity="0.7"/>
                         </StackPanel>
                     </Border>
 
                 </StackPanel>
 
-                <!-- RIGHT: per-gesture toggles -->
+                <!-- RIGHT: per-gesture action dropdowns -->
                 <StackPanel Grid.Column="1" Spacing="8">
                     <TextBlock Text="Gesture actions" FontSize="20" Opacity="0.7" VerticalAlignment="Top" />
 
@@ -87,13 +86,19 @@
                     <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
                             PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                         <Grid ColumnDefinitions="*,Auto">
-                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                                <TextBlock Text="✋  Open Hand" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
-                                <TextBlock Text="Minimize the focused window" FontSize="12" Opacity="0.9" Foreground="White"/>
-                            </StackPanel>
-                            <ToggleSwitch Grid.Column="1" x:Name="OpenHandToggle"
-                                          OffContent="Disabled" OnContent="Enabled"
-                                          VerticalAlignment="Center" Margin="16,0,0,0"/>
+                            <TextBlock Grid.Column="0" Text="✋  Open Hand" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="White" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" x:Name="OpenHandCombo" SelectedIndex="0"
+                                      VerticalAlignment="Center" Margin="16,0,0,0" MinWidth="170">
+                                <ComboBoxItem Content="None"/>
+                                <ComboBoxItem Content="Minimize Window"/>
+                                <ComboBoxItem Content="Maximize Window"/>
+                                <ComboBoxItem Content="Left Click"/>
+                                <ComboBoxItem Content="Volume Up"/>
+                                <ComboBoxItem Content="Volume Down"/>
+                                <ComboBoxItem Content="Previous Desktop"/>
+                                <ComboBoxItem Content="Next Desktop"/>
+                            </ComboBox>
                         </Grid>
                     </Border>
 
@@ -101,13 +106,19 @@
                     <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
                             PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                         <Grid ColumnDefinitions="*,Auto">
-                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                                <TextBlock Text="✊  Fist" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
-                                <TextBlock Text="Maximize the focused window" FontSize="12" Opacity="0.9" Foreground="White"/>
-                            </StackPanel>
-                            <ToggleSwitch Grid.Column="1" x:Name="FistToggle"
-                                          OffContent="Disabled" OnContent="Enabled"
-                                          VerticalAlignment="Center" Margin="16,0,0,0"/>
+                            <TextBlock Grid.Column="0" Text="✊  Fist" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="White" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" x:Name="FistCombo" SelectedIndex="0"
+                                      VerticalAlignment="Center" Margin="16,0,0,0" MinWidth="170">
+                                <ComboBoxItem Content="None"/>
+                                <ComboBoxItem Content="Minimize Window"/>
+                                <ComboBoxItem Content="Maximize Window"/>
+                                <ComboBoxItem Content="Left Click"/>
+                                <ComboBoxItem Content="Volume Up"/>
+                                <ComboBoxItem Content="Volume Down"/>
+                                <ComboBoxItem Content="Previous Desktop"/>
+                                <ComboBoxItem Content="Next Desktop"/>
+                            </ComboBox>
                         </Grid>
                     </Border>
 
@@ -115,13 +126,19 @@
                     <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
                             PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                         <Grid ColumnDefinitions="*,Auto">
-                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                                <TextBlock Text="☝  Pointing" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
-                                <TextBlock Text="Left click at current cursor position" FontSize="12" Opacity="0.9" Foreground="White"/>
-                            </StackPanel>
-                            <ToggleSwitch Grid.Column="1" x:Name="PointingToggle"
-                                          OffContent="Disabled" OnContent="Enabled"
-                                          VerticalAlignment="Center" Margin="16,0,0,0"/>
+                            <TextBlock Grid.Column="0" Text="☝  Pointing" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="White" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" x:Name="PointingCombo" SelectedIndex="0"
+                                      VerticalAlignment="Center" Margin="16,0,0,0" MinWidth="170">
+                                <ComboBoxItem Content="None"/>
+                                <ComboBoxItem Content="Minimize Window"/>
+                                <ComboBoxItem Content="Maximize Window"/>
+                                <ComboBoxItem Content="Left Click"/>
+                                <ComboBoxItem Content="Volume Up"/>
+                                <ComboBoxItem Content="Volume Down"/>
+                                <ComboBoxItem Content="Previous Desktop"/>
+                                <ComboBoxItem Content="Next Desktop"/>
+                            </ComboBox>
                         </Grid>
                     </Border>
 
@@ -129,13 +146,19 @@
                     <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
                             PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                         <Grid ColumnDefinitions="*,Auto">
-                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                                <TextBlock Text="✌  Peace" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
-                                <TextBlock Text="Volume up" FontSize="12" Opacity="0.9" Foreground="White"/>
-                            </StackPanel>
-                            <ToggleSwitch Grid.Column="1" x:Name="PeaceToggle"
-                                          OffContent="Disabled" OnContent="Enabled"
-                                          VerticalAlignment="Center" Margin="16,0,0,0"/>
+                            <TextBlock Grid.Column="0" Text="✌  Peace" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="White" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" x:Name="PeaceCombo" SelectedIndex="0"
+                                      VerticalAlignment="Center" Margin="16,0,0,0" MinWidth="170">
+                                <ComboBoxItem Content="None"/>
+                                <ComboBoxItem Content="Minimize Window"/>
+                                <ComboBoxItem Content="Maximize Window"/>
+                                <ComboBoxItem Content="Left Click"/>
+                                <ComboBoxItem Content="Volume Up"/>
+                                <ComboBoxItem Content="Volume Down"/>
+                                <ComboBoxItem Content="Previous Desktop"/>
+                                <ComboBoxItem Content="Next Desktop"/>
+                            </ComboBox>
                         </Grid>
                     </Border>
 
@@ -143,13 +166,19 @@
                     <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
                             PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                         <Grid ColumnDefinitions="*,Auto">
-                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                                <TextBlock Text="🤙  Pinky" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
-                                <TextBlock Text="Volume down" FontSize="12" Opacity="0.9" Foreground="White"/>
-                            </StackPanel>
-                            <ToggleSwitch Grid.Column="1" x:Name="PinkyToggle"
-                                          OffContent="Disabled" OnContent="Enabled"
-                                          VerticalAlignment="Center" Margin="16,0,0,0"/>
+                            <TextBlock Grid.Column="0" Text="🤙  Pinky" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="White" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" x:Name="PinkyCombo" SelectedIndex="0"
+                                      VerticalAlignment="Center" Margin="16,0,0,0" MinWidth="170">
+                                <ComboBoxItem Content="None"/>
+                                <ComboBoxItem Content="Minimize Window"/>
+                                <ComboBoxItem Content="Maximize Window"/>
+                                <ComboBoxItem Content="Left Click"/>
+                                <ComboBoxItem Content="Volume Up"/>
+                                <ComboBoxItem Content="Volume Down"/>
+                                <ComboBoxItem Content="Previous Desktop"/>
+                                <ComboBoxItem Content="Next Desktop"/>
+                            </ComboBox>
                         </Grid>
                     </Border>
 
@@ -157,13 +186,19 @@
                     <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
                             PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                         <Grid ColumnDefinitions="*,Auto">
-                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                                <TextBlock Text="👈  Swipe Left" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
-                                <TextBlock Text="Switch to previous virtual desktop" FontSize="12" Opacity="0.9" Foreground="White"/>
-                            </StackPanel>
-                            <ToggleSwitch Grid.Column="1" x:Name="SwipeLeftToggle"
-                                          OffContent="Disabled" OnContent="Enabled"
-                                          VerticalAlignment="Center" Margin="16,0,0,0"/>
+                            <TextBlock Grid.Column="0" Text="👈  Swipe Left" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="White" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" x:Name="SwipeLeftCombo" SelectedIndex="0"
+                                      VerticalAlignment="Center" Margin="16,0,0,0" MinWidth="170">
+                                <ComboBoxItem Content="None"/>
+                                <ComboBoxItem Content="Minimize Window"/>
+                                <ComboBoxItem Content="Maximize Window"/>
+                                <ComboBoxItem Content="Left Click"/>
+                                <ComboBoxItem Content="Volume Up"/>
+                                <ComboBoxItem Content="Volume Down"/>
+                                <ComboBoxItem Content="Previous Desktop"/>
+                                <ComboBoxItem Content="Next Desktop"/>
+                            </ComboBox>
                         </Grid>
                     </Border>
 
@@ -171,13 +206,19 @@
                     <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
                             PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                         <Grid ColumnDefinitions="*,Auto">
-                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                                <TextBlock Text="👉  Swipe Right" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
-                                <TextBlock Text="Switch to next virtual desktop" FontSize="12" Opacity="0.9" Foreground="White"/>
-                            </StackPanel>
-                            <ToggleSwitch Grid.Column="1" x:Name="SwipeRightToggle"
-                                          OffContent="Disabled" OnContent="Enabled"
-                                          VerticalAlignment="Center" Margin="16,0,0,0"/>
+                            <TextBlock Grid.Column="0" Text="👉  Swipe Right" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="White" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" x:Name="SwipeRightCombo" SelectedIndex="0"
+                                      VerticalAlignment="Center" Margin="16,0,0,0" MinWidth="170">
+                                <ComboBoxItem Content="None"/>
+                                <ComboBoxItem Content="Minimize Window"/>
+                                <ComboBoxItem Content="Maximize Window"/>
+                                <ComboBoxItem Content="Left Click"/>
+                                <ComboBoxItem Content="Volume Up"/>
+                                <ComboBoxItem Content="Volume Down"/>
+                                <ComboBoxItem Content="Previous Desktop"/>
+                                <ComboBoxItem Content="Next Desktop"/>
+                            </ComboBox>
                         </Grid>
                     </Border>
 

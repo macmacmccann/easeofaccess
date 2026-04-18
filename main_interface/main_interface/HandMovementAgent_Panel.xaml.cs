@@ -221,14 +221,37 @@ namespace main_interface
                 // Master switch — do nothing if gestures are disabled
                 if (!_gesturesEnabled) return;
 
-                if (gesture == "open_hand"   && OpenHandToggle.IsOn)   MinimizeWindow();
-                else if (gesture == "fist"   && FistToggle.IsOn)       MaximizeWindow();
-                else if (gesture == "pointing" && PointingToggle.IsOn) LeftClick();
-                else if (gesture == "peace"  && PeaceToggle.IsOn)      VolumeUp();
-                else if (gesture == "pinky"  && PinkyToggle.IsOn)      VolumeDown();
-                else if (gesture == "swipe_left"  && SwipeLeftToggle.IsOn)  PrevDesktop();
-                else if (gesture == "swipe_right" && SwipeRightToggle.IsOn) NextDesktop();
+                var combo = gesture switch
+                {
+                    "open_hand"   => OpenHandCombo,
+                    "fist"        => FistCombo,
+                    "pointing"    => PointingCombo,
+                    "peace"       => PeaceCombo,
+                    "pinky"       => PinkyCombo,
+                    "swipe_left"  => SwipeLeftCombo,
+                    "swipe_right" => SwipeRightCombo,
+                    _             => null
+                };
+
+                int idx = combo?.SelectedIndex ?? 0;
+                if (idx > 0) ExecuteActionByIndex(idx);
             });
+        }
+
+        // Index matches ComboBox item order: 1=Minimize, 2=Maximize, 3=LeftClick,
+        // 4=VolumeUp, 5=VolumeDown, 6=PrevDesktop, 7=NextDesktop
+        private void ExecuteActionByIndex(int index)
+        {
+            switch (index)
+            {
+                case 1: MinimizeWindow(); break;
+                case 2: MaximizeWindow(); break;
+                case 3: LeftClick();      break;
+                case 4: VolumeUp();       break;
+                case 5: VolumeDown();     break;
+                case 6: PrevDesktop();    break;
+                case 7: NextDesktop();    break;
+            }
         }
 
         // ── Actions (Win32) ──────────────────────────────────────────────────
