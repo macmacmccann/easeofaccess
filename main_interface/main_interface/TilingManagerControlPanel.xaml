@@ -22,43 +22,30 @@
         <Border x:Name="Headertop" Background="Transparent">
 
 
-            <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Top"  Height="120" Padding="16" Margin="24,24,0,0">
-                <StackPanel Spacing="4">
-
-                    <TextBlock
-                        Text="Enable Tiling"
-                        FontSize="30"
-                        FontWeight="SemiBold" />
-
-                    <TextBlock
-                        Text="Automatically arranges windows for you"
-                        FontSize="14"
-                        Opacity="0.7" />
-
-
-                </StackPanel>
-
-
-                <ToggleSwitch 
+            <Grid Height="120" Padding="16" Margin="24,24,0,0" ColumnDefinitions="Auto,Auto,*" VerticalAlignment="Top">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Enable Tiling" FontSize="30" FontWeight="SemiBold" />
+                        <TextBlock Text="Automatically arranges windows for you" FontSize="14" Opacity="0.7" />
+                    </StackPanel>
+                    <ToggleSwitch
                         x:Name="TilingManagerToggle"
-                        Grid.Column="1"
-                      FontSize="16"
-                     MinHeight="48"
-                        Padding="4"
-                        OnContent="On"
-                        OffContent="Off"
+                        FontSize="16" MinHeight="48" Padding="4"
+                        OnContent="On" OffContent="Off"
                         VerticalAlignment="Center"
                         Toggled="TilingManagerToggle_Toggled"
                         PointerEntered="Border_PointerEntered"
                         PointerExited="Border_PointerExited">
-
-                <ToggleSwitch.RenderTransform>
-                    <ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
-                </ToggleSwitch.RenderTransform>
-                </ToggleSwitch>
-
-
-            </StackPanel>
+                        <ToggleSwitch.RenderTransform>
+                            <ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
+                        </ToggleSwitch.RenderTransform>
+                    </ToggleSwitch>
+                </StackPanel>
+                <Border Grid.Column="1" Background="#20FFFFFF" CornerRadius="10"
+                        Padding="14,10" VerticalAlignment="Center" Margin="24,0,0,0">
+                    <controls:HotKeyCaptureControl x:Name="TilingShortcut" Label="Toggle hotkey"/>
+                </Border>
+            </Grid>
 
         </Border>
 
@@ -186,6 +173,29 @@ PointerExited="Border_PointerExited">
 
 
 
+                    <!-- NICE TOGGLE BAR BORDER WRAPPED -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+PointerExited="Border_PointerExited">
+                        <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                        <Grid ColumnDefinitions="*,Auto">
+
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="Grid Mode" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                                <TextBlock Text="Arrange windows into a grid" FontSize="12" Opacity="0.9" Foreground="White" />
+                            </StackPanel>
+
+                            <!-- GRID COL 2 TOGGLE -->
+                            <ToggleSwitch
+                            Grid.Column="1"
+                            x:Name="GridModeToggle"
+                            OnContent="On"
+                            OffContent="Off"
+                            VerticalAlignment="Center"
+                               Toggled="GridModeToggle_Toggled"
+                            Margin="16,0,0,0" />
+                        </Grid>
+                    </Border>
+
                 </StackPanel><!-- WRAPPER END OF TOP FEATURE TOGGLES  -->
             </Grid> <!-- WRAPPER END OF TOP FEATURE TOGGLES  -->
 
@@ -263,11 +273,82 @@ PointerExited="Border_PointerExited">
 
                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
                             <TextBlock x:Name="HotkeyText2" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
-                            <TextBlock Text="Maximise current window w/ " FontSize="12" Opacity="0.9" Foreground="White" />
+                            <TextBlock Text="Maximise focused window w/" FontSize="12" Opacity="0.9" Foreground="White" />
                         </StackPanel>
 
-                        <Button Grid.Column="1" x:Name="AssignHotkey2"  Content="Assign Hotkey" Click="AssignHotkey_Clicked"></Button>
+                        <Button Grid.Column="1" x:Name="AssignHotkey2" Content="Assign Hotkey" Click="AssignHotkey_Clicked"></Button>
 
+                    </Grid>
+                </Border>
+
+                <Border
+            Grid.Row="1"
+            Grid.Column="0"
+            Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+            PointerExited="Border_PointerExited">
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock x:Name="HotkeyText3" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
+                            <TextBlock Text="Snap back to tile w/" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+
+                        <Button Grid.Column="1" x:Name="AssignHotkey3" Content="Assign Hotkey" Click="AssignHotkey_Clicked"></Button>
+
+                    </Grid>
+                </Border>
+
+                <Border
+            Grid.Row="1"
+            Grid.Column="1"
+            Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+            PointerExited="Border_PointerExited">
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock x:Name="HotkeyText4" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
+                            <TextBlock Text="Focus next window w/" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+
+                        <Button Grid.Column="1" x:Name="AssignHotkey4" Content="Assign Hotkey" Click="AssignHotkey_Clicked"></Button>
+
+                    </Grid>
+                </Border>
+
+                <Border
+            Grid.Row="2"
+            Grid.Column="0"
+            Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+            PointerExited="Border_PointerExited">
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock x:Name="HotkeyText5" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
+                            <TextBlock Text="Close focused window w/" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+
+                        <Button Grid.Column="1" x:Name="AssignHotkey5" Content="Assign Hotkey" Click="AssignHotkey_Clicked"></Button>
+
+                    </Grid>
+                </Border>
+
+                <Border
+            Grid.Row="2"
+            Grid.Column="1"
+            Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+            PointerExited="Border_PointerExited">
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock x:Name="HotkeyText6" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
+                            <TextBlock Text="Swap with next window w/" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+
+                        <Button Grid.Column="1" x:Name="AssignHotkey6" Content="Assign Hotkey" Click="AssignHotkey_Clicked"></Button>
 
                     </Grid>
                 </Border>

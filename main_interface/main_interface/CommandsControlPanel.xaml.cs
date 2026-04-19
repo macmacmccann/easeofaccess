@@ -56,6 +56,8 @@ public sealed partial class CommandsControlPanel : Page
     public static CommandsControlPanel Instance { get; private set; }
     public event Action<string>? HotKeyErrorOccured;
 
+    public void ToggleEnable() => OverlayEnabledToggle.IsOn = !OverlayEnabledToggle.IsOn;
+
 
     public CommandsControlPanel()
     {
@@ -87,6 +89,7 @@ public sealed partial class CommandsControlPanel : Page
 
 
         TipsConstructor();
+        CommandsShortcut.ComboCaptured += (m, v) => RegisterFeatureShortcut(CommandsShortcut, ShortcutsWindow.ID_FEAT_COMMANDS, m, v);
 
 
 
@@ -773,9 +776,22 @@ public sealed partial class CommandsControlPanel : Page
             GuideRedirect();
         };
         await dialog.ShowAsync();
+    }
 
 
+    private async void RegisterFeatureShortcut(main_interface.Controls.HotKeyCaptureControl assigner, int id, uint mod, uint vk)
+    {
+        bool success = ShortcutsWindow.Instance.TryUpdateHotkey(id, (Modifiers)mod, vk, out var combo);
+        if (!success)
+        {
+            bool retry = await Dialogues.OnErrorDialogue_InUse(this.XamlRoot);
+            if (retry) { assigner.StartCapture(); return; }
+        }
+        if (combo.VirtualKey != 0)
+            assigner.SetDisplayText(main_interface.Controls.HotKeyCaptureControl.DescribeCombo(combo.Modifiers, combo.VirtualKey));
     }
 
     }
+
+    
 

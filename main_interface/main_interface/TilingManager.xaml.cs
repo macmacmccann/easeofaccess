@@ -130,21 +130,32 @@ namespace main_interface
 
         //In constructor   _winEventDelegate = OnWinEvent;
         // Im only using one param idObject = window 
+        private HashSet<IntPtr> _lastKnownWindows = new HashSet<IntPtr>();
+
         private void OnWinEvent(IntPtr hWinEventHook,
-            uint eventType, // id of event 
-            IntPtr hWnd, // handle of window 
-            int idObject, // window
-            int idChild, // sub objects in the window - not needed 
-            uint dwEventThread, // thread
-            uint dwmsEventTime) 
+            uint eventType,
+            IntPtr hWnd,
+            int idObject,
+            int idChild,
+            uint dwEventThread,
+            uint dwmsEventTime)
         {
-            // "Im listening to see if its a window i dont care about its subcomponents "
+            // Only care about top-level window objects, not sub-components
             if (idObject != 0) return;
 
-            // Bug Fix : Apps opening go on and off during opening - just wait until its fully loaded
             DispatcherQueue.TryEnqueue(async () =>
             {
+                // Wait for the window to fully appear before checking
                 await Task.Delay(300);
+
+                var current = new HashSet<IntPtr>(GetTileableWindows());
+
+                // Only retile if the set of windows actually changed (open/close)
+                // Clicking an existing window won't change the set, so no spurious retiles
+                if (current.SetEquals(_lastKnownWindows))
+                    return;
+
+                _lastKnownWindows = current;
                 TilePrimaryMonitorWindows();
             });
         }
@@ -170,8 +181,12 @@ namespace main_interface
         {
 
             var hWnd = WindowNative.GetWindowHandle(this);
-            UnregisterHotKey(hWnd, HOTKEY_ID_OVERLAY); // THESE SHOULD BE DONE AFTER REMOVING SUBCLASS 
-            UnregisterHotKey(hWnd, HOTKEY_ID_FAKE_OTHER_FUNCTION);
+            UnregisterHotKey(hWnd, HOTKEY_ID_OVERLAY);
+            UnregisterHotKey(hWnd, HOTKEY_ID_MAXIMIZE);
+            UnregisterHotKey(hWnd, HOTKEY_ID_RETILE);
+            UnregisterHotKey(hWnd, HOTKEY_ID_FOCUS_NEXT);
+            UnregisterHotKey(hWnd, HOTKEY_ID_CLOSE);
+            UnregisterHotKey(hWnd, HOTKEY_ID_SWAP_NEXT);
 
             if (_winEventHook != IntPtr.Zero)
                 UnhookWinEvent(_winEventHook);
@@ -471,60 +486,39 @@ namespace main_interface
 
         }
 
-        // guard flag stop recursive loop run method only once 
         int nowFiltered = 1;
-        void TilePrimaryMonitorWindows()
+        private List<IntPtr> _tiledOrder = new List<IntPtr>();
+
+        public void TilePrimaryMonitorWindows()
         {
             List<IntPtr> windows = GetTileableWindows();
             if (windows.Count == 0) return;
+            _tiledOrder = new List<IntPtr>(windows);
+            ApplyTileOrder(_tiledOrder);
+        }
 
-           // ListFullyFilteredWindows(windows);
+        void ApplyTileOrder(List<IntPtr> windows)
+        {
+            if (windows.Count == 0) return;
 
-            
-         
-
-            // Get monitor from your own app window
-            IntPtr hMonitor = MonitorFromWindow( WindowNative.GetWindowHandle(this),0x00000002 // MONITOR_DEFAULTTONEAREST
-            );
-
-
+            IntPtr hMonitor = MonitorFromWindow(WindowNative.GetWindowHandle(this), 0x00000002);
             MONITORINFO mi = new MONITORINFO();
-
             mi.cbSize = Marshal.SizeOf(mi);
-
             GetMonitorInfo(hMonitor, ref mi);
 
-            //mi.rcMoniotr = full monitor rectangle 
-            // rc.Work = the work area - eg., not taskbar 
-
-            // Needed later for mutipple monitors -> 0,0 for mon 1 maybe 10,10 for mon2 x y 
-            int workX = mi.rcWork.Left; // x co-ordinate of left edge of work area
-            int workY = mi.rcWork.Top; // y cordinate of top edge on monitor work area 
-
-
-            int workWidth = mi.rcWork.Right - mi.rcWork.Left;
+            int workX = mi.rcWork.Left;
+            int workY = mi.rcWork.Top;
+            int workWidth  = mi.rcWork.Right  - mi.rcWork.Left;
             int workHeight = mi.rcWork.Bottom - mi.rcWork.Top;
-            // Now didivde by amount of filtered windows 
-            int tileWidth = workWidth / windows.Count;
+            int tileWidth  = workWidth  / windows.Count;
             int tileHeight = workHeight / windows.Count;
 
-      
-
-            const uint SWP_NOACTIVATE = 0x0010;
-      
-
-
-            
             if (StateSettings.ColumnModeEnabled)
-            {
                 ColumnWindows(windows, workWidth, workHeight, tileHeight, tileWidth, workX, workY);
-            }
             if (StateSettings.StackedModeEnabled)
-            {
-                StackWindows(windows, workWidth, workHeight, tileHeight, tileWidth, workX,workY);
-            }
-            
-
+                StackWindows(windows, workWidth, workHeight, tileHeight, tileWidth, workX, workY);
+            if (StateSettings.GridModeEnabled)
+                GridWindows(windows, workWidth, workHeight, workX, workY);
         }
 
 
@@ -555,12 +549,13 @@ namespace main_interface
                 SetWindowPos(
                     windows[i],
                     IntPtr.Zero,
-                    workX, // x position  workx + ( i * tileWidth ) = eg., monitor 2 push tiling to start on mon 2 eg., 1000 dpi to left 
-                    workY + (i * tileHeight), // y position Primary monitor left worky 0,0 on monitor 1 
-                    workWidth, // x size span the whole width of monitor 
-                    tileHeight, // y size 
+                    workX, // x position  workx + ( i * tileWidth ) = eg., monitor 2 push tiling to start on mon 2 eg., 1000 dpi to left
+                    workY + (i * tileHeight), // y position Primary monitor left worky 0,0 on monitor 1
+                    workWidth, // x size span the whole width of monitor
+                    tileHeight, // y size
                     SWP_NOACTIVATE
                 );
+                _ = FadeInWindowAsync(windows[i]);
             }
         }
 
@@ -591,14 +586,46 @@ namespace main_interface
                 SetWindowPos(
                     windows[i],
                     IntPtr.Zero,
-                    workX + (i * tileWidth), // x position  workx + ( i * tileWidth ) = eg., monitor 2 push tiling to start on mon 2 eg., 1000 dpi to left 
-                    workY, // y position Primary monitor left worky 0,0 on monitor 1 
-                    tileWidth, // x size span the whole width of monitor 
-                    workHeight, // y size 
+                    workX + (i * tileWidth), // x position  workx + ( i * tileWidth ) = eg., monitor 2 push tiling to start on mon 2 eg., 1000 dpi to left
+                    workY, // y position Primary monitor left worky 0,0 on monitor 1
+                    tileWidth, // x size span the whole width of monitor
+                    workHeight, // y size
                     SWP_NOACTIVATE
                 );
+                _ = FadeInWindowAsync(windows[i]);
             }
 
+        }
+
+        public void GridWindows(List<IntPtr> windows, int workWidth, int workHeight, int workX, int workY)
+        {
+            int count = windows.Count;
+            if (count == 0) return;
+
+            int cols = (int)Math.Ceiling(Math.Sqrt(count));
+            int rows = (int)Math.Ceiling((double)count / cols);
+
+            int cellWidth = workWidth / cols;
+            int cellHeight = workHeight / rows;
+
+            const uint SWP_NOACTIVATE = 0x0010;
+            for (int i = 0; i < count; i++)
+            {
+                int col = i % cols;
+                int row = i / cols;
+
+                ShowWindow(windows[i], 9); // SW_RESTORE
+                SetWindowPos(
+                    windows[i],
+                    IntPtr.Zero,
+                    workX + col * cellWidth,
+                    workY + row * cellHeight,
+                    cellWidth,
+                    cellHeight,
+                    SWP_NOACTIVATE
+                );
+                _ = FadeInWindowAsync(windows[i]);
+            }
         }
 
         public void ReturntoMaxedAfterClosing()
@@ -675,6 +702,29 @@ namespace main_interface
         }
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        [DllImport("user32.dll")]
+        static extern bool SetLayeredWindowAttributes(IntPtr hWnd, uint crKey, byte bAlpha, uint dwFlags);
+        const uint LWA_ALPHA = 0x2;
+
+        private async Task FadeInWindowAsync(IntPtr hWnd)
+        {
+            uint original = (uint)GetWindowLong(hWnd, GWL_EXSTYLE);
+            bool wasLayered = (original & WS_EX_LAYERED) != 0;
+
+            SetWindowLong(hWnd, GWL_EXSTYLE, original | WS_EX_LAYERED);
+            SetLayeredWindowAttributes(hWnd, 0, 0, LWA_ALPHA);
+
+            for (int alpha = 0; alpha <= 255; alpha += 17)
+            {
+                SetLayeredWindowAttributes(hWnd, 0, (byte)Math.Min(alpha, 255), LWA_ALPHA);
+                await Task.Delay(12);
+            }
+            SetLayeredWindowAttributes(hWnd, 0, 255, LWA_ALPHA);
+
+            if (!wasLayered)
+                SetWindowLong(hWnd, GWL_EXSTYLE, original);
+        }
         const int GWL_EXSTYLE = -20;
         const int WS_EX_TRANSPARENT = 0x00000020;
         const int WS_EX_LAYERED = 0x00080000;
@@ -728,11 +778,13 @@ namespace main_interface
         public enum ProgressState
         {
             StepOne,
-            StepTwo
+            StepTwo,
+            StepThree
         }
 
 
         private ProgressState currentState = ProgressState.StepOne;
+        private bool _maximizeToggle = false;
 
         public void ProgressWhatIsOn()
         {
@@ -762,7 +814,13 @@ namespace main_interface
                     TilingManagerControlPanel._tilingControlPanelPage.Column_SetStateAndToggle_DontRead();
                     break;
 
-          
+                case ProgressState.StepThree:
+                    Debug.WriteLine("Turn on Grid ");
+
+                    TilingManagerControlPanel._tilingControlPanelPage.Grid_SetStateAndToggle_DontRead();
+                    break;
+
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -836,7 +894,7 @@ namespace main_interface
 
             if (msg == MouseClick) // Dont bring background to foregorund with click 
                 {
-                    return (IntPtr)MA_NOACTIVATEANDEAT; // Don’t activate on click
+                    return (IntPtr)MA_NOACTIVATEANDEAT; // Donï¿½t activate on click
                 }
             // YOU put a return 
             // so if was mouse click then might not run below depends test 
@@ -848,16 +906,50 @@ namespace main_interface
             { // Was the event a hotkey press?
 
            
-                if (wParam.ToInt32() == HOTKEY_ID_OVERLAY) 
+                if (wParam.ToInt32() == HOTKEY_ID_OVERLAY)
                 {
-                    Debug.WriteLine("Alternating Modes On tiling manager");
+                    Debug.WriteLine("Cycle modes");
                     ProgressWhatIsOn();
-                    return IntPtr.Zero; // tell win32 the message was handled  
+                    return IntPtr.Zero;
                 }
-                if (wParam.ToInt32() == HOTKEY_ID_FAKE_OTHER_FUNCTION)
+                if (wParam.ToInt32() == HOTKEY_ID_MAXIMIZE)
                 {
-                    Debug.WriteLine("Other function called on tiling manager");
-                    return IntPtr.Zero; // tell win32 the message was handled  
+                    _maximizeToggle = !_maximizeToggle;
+                    if (_maximizeToggle)
+                    {
+                        Debug.WriteLine("Maximize focused window");
+                        MaximizeFocusedWindow();
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Retile all windows");
+                        TilePrimaryMonitorWindows();
+                    }
+                    return IntPtr.Zero;
+                }
+                if (wParam.ToInt32() == HOTKEY_ID_RETILE)
+                {
+                    Debug.WriteLine("Retile all windows");
+                    TilePrimaryMonitorWindows();
+                    return IntPtr.Zero;
+                }
+                if (wParam.ToInt32() == HOTKEY_ID_FOCUS_NEXT)
+                {
+                    Debug.WriteLine("Focus next window");
+                    FocusNextWindow();
+                    return IntPtr.Zero;
+                }
+                if (wParam.ToInt32() == HOTKEY_ID_CLOSE)
+                {
+                    Debug.WriteLine("Close focused window");
+                    CloseFocusedWindow();
+                    return IntPtr.Zero;
+                }
+                if (wParam.ToInt32() == HOTKEY_ID_SWAP_NEXT)
+                {
+                    Debug.WriteLine("Swap focused window with next");
+                    SwapFocusedWithNext();
+                    return IntPtr.Zero;
                 }
 
 
@@ -881,8 +973,12 @@ namespace main_interface
         const int VK_8 = 0x38;
 
 
-        const int HOTKEY_ID_OVERLAY = 9000; //hotkey id so when windows sends it back to us 
-        const int HOTKEY_ID_FAKE_OTHER_FUNCTION = 8000;
+        const int HOTKEY_ID_OVERLAY = 9000;     // cycle modes
+        const int HOTKEY_ID_MAXIMIZE = 8000;    // maximize â†” retile toggle
+        const int HOTKEY_ID_RETILE = 7000;      // snap all windows back to tile
+        const int HOTKEY_ID_FOCUS_NEXT = 6000;  // focus next tiled window
+        const int HOTKEY_ID_CLOSE = 5000;       // close focused window
+        const int HOTKEY_ID_SWAP_NEXT = 4000;   // swap focused window with next in tile order
         public bool TryUpdateHotkey(int id, Modifiers modkey, uint vk, out HotKeyCombo resultingCombo)
         {
 
@@ -984,7 +1080,54 @@ namespace main_interface
 
 
         [DllImport("user32.dll")]
-        static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vk); // This tells window when this key combo is pressed notify this window 
+        static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        static extern void SwitchToThisWindow(IntPtr hWnd, bool fAltTab);
+
+        [DllImport("user32.dll")]
+        static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+        const uint WM_CLOSE = 0x0010;
+
+        private void MaximizeFocusedWindow()
+        {
+            IntPtr hwnd = GetForegroundWindow();
+            if (hwnd == IntPtr.Zero || hwnd == WindowNative.GetWindowHandle(this)) return;
+            ShowWindow(hwnd, 3); // SW_MAXIMIZE
+        }
+
+        private void FocusNextWindow()
+        {
+            if (_tiledOrder.Count == 0) return;
+            IntPtr focused = GetForegroundWindow();
+            int idx = _tiledOrder.IndexOf(focused);
+            int next = (idx + 1) % _tiledOrder.Count;
+            SwitchToThisWindow(_tiledOrder[next], true);
+        }
+
+        private void CloseFocusedWindow()
+        {
+            IntPtr hwnd = GetForegroundWindow();
+            if (hwnd == IntPtr.Zero || hwnd == WindowNative.GetWindowHandle(this)) return;
+            PostMessage(hwnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+            // WinEvent hook fires automatically when the window disappears and retiles
+        }
+
+        private void SwapFocusedWithNext()
+        {
+            if (_tiledOrder.Count < 2) return;
+            IntPtr focused = GetForegroundWindow();
+            int idx = _tiledOrder.IndexOf(focused);
+            if (idx < 0) return;
+            int next = (idx + 1) % _tiledOrder.Count;
+            var tmp = _tiledOrder[idx];
+            _tiledOrder[idx] = _tiledOrder[next];
+            _tiledOrder[next] = tmp;
+            ApplyTileOrder(_tiledOrder);
+        }
+
+        [DllImport("user32.dll")]
+        static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vk); // This tells window when this key combo is pressed notify this window
                                                                                          // params are handle to your app window , id to actually idenify the hotkey , modifer keys eg., sh
 
         // attatch a subclass prodecure to a window 

@@ -27,15 +27,21 @@ namespace main_interface;
 /// </summary>
 public sealed partial class MouselessControlPanel : Page
 {
+    public static MouselessControlPanel? Instance { get; private set; }
+
+    public void ToggleEnable() => MouselessToggle.IsOn = !MouselessToggle.IsOn;
+
     private Mouseless _mouselesswindow;
     public MouselessControlPanel()
     {
+        Instance = this;
         InitializeComponent();
 
         Headertop.BackgroundTransition = new BrushTransition() { Duration = TimeSpan.FromMilliseconds(300) };
         HeaderColour(Headertop);
+        MouselessShortcut.ComboCaptured += (m, v) => RegisterFeatureShortcut(MouselessShortcut, ShortcutsWindow.ID_FEAT_MOUSELESS, m, v);
 
-        // Keep the page alive / no duplicates upon nav switch by caching / reflected states preserved in ui 
+        // Keep the page alive / no duplicates upon nav switch by caching / reflected states preserved in ui
         this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
     }
   
@@ -187,6 +193,18 @@ public sealed partial class MouselessControlPanel : Page
 
     private void ProgramClicks_Click(object sender, RoutedEventArgs e)
         => Frame.Navigate(typeof(ReprogramKeysControlPanel));
+
+    private async void RegisterFeatureShortcut(main_interface.Controls.HotKeyCaptureControl assigner, int id, uint mod, uint vk)
+    {
+        bool success = ShortcutsWindow.Instance.TryUpdateHotkey(id, (Modifiers)mod, vk, out var combo);
+        if (!success)
+        {
+            bool retry = await Dialogues.OnErrorDialogue_InUse(this.XamlRoot);
+            if (retry) { assigner.StartCapture(); return; }
+        }
+        if (combo.VirtualKey != 0)
+            assigner.SetDisplayText(main_interface.Controls.HotKeyCaptureControl.DescribeCombo(combo.Modifiers, combo.VirtualKey));
+    }
 
 
 

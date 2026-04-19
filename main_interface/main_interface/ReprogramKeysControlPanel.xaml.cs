@@ -42,6 +42,8 @@ public sealed partial class ReprogramKeysControlPanel : Page
      * 
      */
     public static ReprogramKeysControlPanel _ReprogramKeysPanel { get; private set; }
+
+    public void ToggleEnable() => ReprogamKeysIsEnabledToggle.IsOn = !ReprogamKeysIsEnabledToggle.IsOn;
     private ReprogamKeys windowBehind;
 
    // public ReprogamKeys _Window;
@@ -61,6 +63,7 @@ public sealed partial class ReprogramKeysControlPanel : Page
         windowBehind = ReprogamKeys.GetOrMakeInstance;
         Headertop.BackgroundTransition = new BrushTransition() { Duration = TimeSpan.FromMilliseconds(300) };
         DesignGlobalCode.HeaderColour(Headertop);
+        ReprogramShortcut.ComboCaptured += (m, v) => RegisterFeatureShortcut(ReprogramShortcut, ShortcutsWindow.ID_FEAT_REPROGRAM, m, v);
 
         // Keep the page alive / no duplicates upon nav switch by caching / reflected states preserved in ui 
         this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
@@ -647,10 +650,34 @@ public sealed partial class ReprogramKeysControlPanel : Page
     private void OnKeyUp(object sender, KeyRoutedEventArgs e)
     {
         Debug.WriteLine($"Key RELEASED  fired for: {e.Key}");
-        
+
         if (_keyMap.TryGetValue(e.Key, out KeyboardKey keyControl))
-        {
             keyControl.TriggerReleasedVisual();
+
+        ReleaseStuckModifiers();
+    }
+
+    private static readonly (VirtualKey vk, VirtualKey[] mapKeys)[] _modifierReleaseChecks =
+    [
+        (VirtualKey.LeftShift,   [VirtualKey.LeftShift,   VirtualKey.Shift]),
+        (VirtualKey.RightShift,  [VirtualKey.RightShift,  VirtualKey.Shift]),
+        (VirtualKey.LeftMenu,    [VirtualKey.LeftMenu,    VirtualKey.Menu]),
+        (VirtualKey.RightMenu,   [VirtualKey.RightMenu,   VirtualKey.Menu]),
+        (VirtualKey.LeftControl, [VirtualKey.LeftControl, VirtualKey.Control]),
+        (VirtualKey.RightControl,[VirtualKey.RightControl,VirtualKey.Control]),
+    ];
+
+    private void ReleaseStuckModifiers()
+    {
+        var state = Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread;
+        foreach (var (vk, mapKeys) in _modifierReleaseChecks)
+        {
+            if (!state(vk).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
+            {
+                foreach (var mk in mapKeys)
+                    if (_keyMap.TryGetValue(mk, out KeyboardKey ctrl))
+                        ctrl.TriggerReleasedVisual();
+            }
         }
     }
 
@@ -882,6 +909,7 @@ public sealed partial class ReprogramKeysControlPanel : Page
             
             // Row 4 - ZXCV Row
             { VirtualKey.LeftShift,     KeyLeftShift     },
+            { VirtualKey.Shift,         KeyLeftShift     }, // generic — KeyUp fires this, not LeftShift
 
             { VirtualKey.Z,             KeyZ             },
             { VirtualKey.X,             KeyX             },
@@ -903,6 +931,7 @@ public sealed partial class ReprogramKeysControlPanel : Page
            
             { VirtualKey.Space,         KeySpace         },
 
+            { VirtualKey.Menu,          KeyLeftAlt       }, // generic — KeyUp fires this for Alt
             { VirtualKey.RightMenu,     KeyRightAlt       },
             { VirtualKey.RightWindows,  KeyRightWin      },
             { VirtualKey.Application,   KeyMenu          }, // Vague Alt 
@@ -914,6 +943,18 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
 
 
+
+    private async void RegisterFeatureShortcut(main_interface.Controls.HotKeyCaptureControl assigner, int id, uint mod, uint vk)
+    {
+        bool success = ShortcutsWindow.Instance.TryUpdateHotkey(id, (Modifiers)mod, vk, out var combo);
+        if (!success)
+        {
+            bool retry = await Dialogues.OnErrorDialogue_InUse(this.XamlRoot);
+            if (retry) { assigner.StartCapture(); return; }
+        }
+        if (combo.VirtualKey != 0)
+            assigner.SetDisplayText(main_interface.Controls.HotKeyCaptureControl.DescribeCombo(combo.Modifiers, combo.VirtualKey));
+    }
 
     public static ReprogramKeysControlPanel GetInstance
     {

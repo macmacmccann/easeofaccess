@@ -38,6 +38,8 @@ namespace main_interface
 
         public static TilingManagerControlPanel _tilingControlPanelPage { get; private set; }
 
+        public void ToggleEnable() => TilingManagerToggle.IsOn = !TilingManagerToggle.IsOn;
+
         private Modifiers CapturedModiferKeys; // not uint casting problem its cast to None in enum method below 
 
         public event Action<string>? HotKeyErrorOccured;
@@ -63,7 +65,7 @@ namespace main_interface
             Headertop.BackgroundTransition = new BrushTransition() { Duration = TimeSpan.FromMilliseconds(300) };
             DesignGlobalCode.HeaderColour(Headertop);
             TipsConstructor();
-
+            TilingShortcut.ComboCaptured += (m, v) => RegisterFeatureShortcut(TilingShortcut, ShortcutsWindow.ID_FEAT_TILING, m, v);
         }
 
 
@@ -85,6 +87,7 @@ namespace main_interface
             TilingManagerToggle.IsOn = StateSettings.TilingManagerEnabled;
             StackedModeToggle.IsOn = StateSettings.StackedModeEnabled;
             ColumnModeToggle.IsOn = StateSettings.ColumnModeEnabled;
+            GridModeToggle.IsOn = StateSettings.GridModeEnabled;
             FocusModeToggle.IsOn = StateSettings.FocusModeEnabled;
 
 
@@ -119,7 +122,7 @@ namespace main_interface
 
             // You cant turn it on if you dont have one enabled
             // For now -> but force one enabled 
-            if(!StateSettings.ColumnModeEnabled && !StateSettings.StackedModeEnabled)
+            if(!StateSettings.ColumnModeEnabled && !StateSettings.StackedModeEnabled && !StateSettings.GridModeEnabled)
             {
                 TilingManagerToggle.IsOn = false;
                 StateSettings.TilingManagerEnabled = false;
@@ -243,22 +246,58 @@ namespace main_interface
             }
             else if (StateSettings.StackedModeEnabled)
             {
-                // Turn off other mode when turning on 
+                // Turn off other modes when turning on
+                ColumnModeToggle.IsOn = false;
+                StateSettings.ColumnModeEnabled = false;
+                GridModeToggle.IsOn = false;
+                StateSettings.GridModeEnabled = false;
+            }
+
+            if (TilingManager.Exists())
+            {
+                Debug.WriteLine($"(should be ) stackedmode on : {StateSettings.StackedModeEnabled}");
+                TilingManager.GetInstance().ApplySettings();
+                TilingManager.GetInstance().TilePrimaryMonitorWindows();
+            }
+        }
+
+        private void GridModeToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            GlobalGridToggle();
+        }
+
+        public void Grid_SetStateAndToggle_DontRead()
+        {
+            GridModeToggle.IsOn = true;
+            StateSettings.GridModeEnabled = true;
+            GlobalGridToggle();
+        }
+
+        public void GlobalGridToggle()
+        {
+            StateSettings.GridModeEnabled = GridModeToggle.IsOn;
+
+            if (!GridModeToggle.IsOn)
+                return;
+
+            // Turn off other modes when Grid turns on
+            if (StateSettings.GridModeEnabled)
+            {
+                StackedModeToggle.IsOn = false;
+                StateSettings.StackedModeEnabled = false;
                 ColumnModeToggle.IsOn = false;
                 StateSettings.ColumnModeEnabled = false;
             }
 
-            // Dont accidentially create it switching toggleds 
             if (TilingManager.Exists())
-            {          
-                Debug.WriteLine($"(should be ) stackedmode on : {StateSettings.StackedModeEnabled}");
-
+            {
+                Debug.WriteLine($"(should be) Grid mode on : {StateSettings.GridModeEnabled}");
                 TilingManager.GetInstance().ApplySettings();
-
+                TilingManager.GetInstance().TilePrimaryMonitorWindows();
             }
         }
 
-        // Event filtered to method -> as it can be called best of both worls 
+        // Event filtered to method -> as it can be called best of both worls
         private void ColumnModeToggle_Toggled(object sender, RoutedEventArgs e)
         {
             GlobalColumnToggle();
@@ -292,21 +331,21 @@ namespace main_interface
             {
                 StackedModeToggle.IsOn = true;
                 StateSettings.StackedModeEnabled = true;
-            }else if (StateSettings.ColumnModeEnabled)
+            } else if (StateSettings.ColumnModeEnabled)
             {
-                // Turn off other mode 
-                StackedModeToggle.IsOn = false;  //ui 
-                StateSettings.StackedModeEnabled = false; // real value 
+                // Turn off other modes
+                StackedModeToggle.IsOn = false;
+                StateSettings.StackedModeEnabled = false;
+                GridModeToggle.IsOn = false;
+                StateSettings.GridModeEnabled = false;
             }
 
 
-            // Dont accidentially create it switching toggleds 
             if (TilingManager.Exists())
             {
                 Debug.WriteLine($"(should be) Column mode on : {StateSettings.ColumnModeEnabled}");
-
                 TilingManager.GetInstance().ApplySettings();
-
+                TilingManager.GetInstance().TilePrimaryMonitorWindows();
             }
         }
 
@@ -424,14 +463,31 @@ namespace main_interface
                 {
                     _activeHotkeyTextBlock = HotkeyText;
                     _activeHotkeyTextBlock.Text = "Press keys...";
-
                 }
                 else if (button.Name == "AssignHotkey2")
                 {
                     _activeHotkeyTextBlock = HotkeyText2;
                     _activeHotkeyTextBlock.Text = "Press keys...";
-
-
+                }
+                else if (button.Name == "AssignHotkey3")
+                {
+                    _activeHotkeyTextBlock = HotkeyText3;
+                    _activeHotkeyTextBlock.Text = "Press keys...";
+                }
+                else if (button.Name == "AssignHotkey4")
+                {
+                    _activeHotkeyTextBlock = HotkeyText4;
+                    _activeHotkeyTextBlock.Text = "Press keys...";
+                }
+                else if (button.Name == "AssignHotkey5")
+                {
+                    _activeHotkeyTextBlock = HotkeyText5;
+                    _activeHotkeyTextBlock.Text = "Press keys...";
+                }
+                else if (button.Name == "AssignHotkey6")
+                {
+                    _activeHotkeyTextBlock = HotkeyText6;
+                    _activeHotkeyTextBlock.Text = "Press keys...";
                 }
 
             }
@@ -622,7 +678,7 @@ namespace main_interface
                     else
                     {
 
-                        _activeHotkeyTextBlock.Text = DescribeHotKey(CapturedModiferKeys, 0) + " + …";
+                        _activeHotkeyTextBlock.Text = DescribeHotKey(CapturedModiferKeys, 0) + " + ï¿½";
                         return; // if a modifer then keep capturing mods 
                     }
 
@@ -641,7 +697,7 @@ namespace main_interface
 
                 if (!isCurrentKeyModifier)
                 {
-                    _activeHotkeyTextBlock.Text = DescribeHotKey(CapturedModiferKeys, 0) + " …";
+                    _activeHotkeyTextBlock.Text = DescribeHotKey(CapturedModiferKeys, 0) + " ï¿½";
                     _waitingForPrimaryKey = true;
 
                 }
@@ -752,11 +808,13 @@ namespace main_interface
             return string.Join(" ", keyschosen);
         }
 
-        private const int HOTKEY_ID_1 = 1;
-        private const int HOTKEY_ID_2 = 2;
-        private const int HOTKEY_ID_OVERLAY = 9000;
-        private const int HOTKEY_ID_FAKE_OTHER_FUNCTION = 8000;
-        private const int HOT_DEFAULT_ERROR = 101010;
+        private const int HOTKEY_ID_OVERLAY    = 9000;
+        private const int HOTKEY_ID_MAXIMIZE   = 8000;
+        private const int HOTKEY_ID_RETILE     = 7000;
+        private const int HOTKEY_ID_FOCUS_NEXT = 6000;
+        private const int HOTKEY_ID_CLOSE      = 5000;
+        private const int HOTKEY_ID_SWAP_NEXT  = 4000;
+        private const int HOT_DEFAULT_ERROR    = 101010;
         private async Task OnHotkeyCaptured(Modifiers modifiers, uint vk)  // Changed from uint to Modifiers
         {
             Debug.WriteLine($"checking combo: mod={modifiers}, vk={vk}");
@@ -768,8 +826,12 @@ namespace main_interface
             int hotkeyId = 0;
             switch (_activeButton.Name)
             {
-                case "AssignHotkey": hotkeyId = HOTKEY_ID_OVERLAY; break;
-                case "AssignHotkey2": hotkeyId = HOTKEY_ID_FAKE_OTHER_FUNCTION; break;
+                case "AssignHotkey":  hotkeyId = HOTKEY_ID_OVERLAY;    break;
+                case "AssignHotkey2": hotkeyId = HOTKEY_ID_MAXIMIZE;   break;
+                case "AssignHotkey3": hotkeyId = HOTKEY_ID_RETILE;     break;
+                case "AssignHotkey4": hotkeyId = HOTKEY_ID_FOCUS_NEXT; break;
+                case "AssignHotkey5": hotkeyId = HOTKEY_ID_CLOSE;      break;
+                case "AssignHotkey6": hotkeyId = HOTKEY_ID_SWAP_NEXT;  break;
                 default:
 
                     OnError("BTN no xaml name");
@@ -993,6 +1055,18 @@ namespace main_interface
 
 
 
+        private async void RegisterFeatureShortcut(main_interface.Controls.HotKeyCaptureControl assigner, int id, uint mod, uint vk)
+        {
+            bool success = ShortcutsWindow.Instance.TryUpdateHotkey(id, (Modifiers)mod, vk, out var combo);
+            if (!success)
+            {
+                bool retry = await Dialogues.OnErrorDialogue_InUse(this.XamlRoot);
+                if (retry) { assigner.StartCapture(); return; }
+            }
+            if (combo.VirtualKey != 0)
+                assigner.SetDisplayText(main_interface.Controls.HotKeyCaptureControl.DescribeCombo(combo.Modifiers, combo.VirtualKey));
+        }
+
     } // end of class
- } // end of namespace 
+ } // end of namespace
 

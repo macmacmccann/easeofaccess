@@ -47,6 +47,7 @@ namespace main_interface
         public static bool FocusModeEnabled = false;
         public static bool StackedModeEnabled = false;
         public static bool ColumnModeEnabled = true;
+        public static bool GridModeEnabled = false;
 
         // Reprogam Keys // Key Control
 

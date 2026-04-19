@@ -40,6 +40,13 @@ namespace main_interface
         public const int ID_HIGH_CONTRAST  = 1009;
         public const int ID_FOCUS_MODE     = 1010;
 
+        // Per-page feature-enable shortcuts (2000 range, separate from system shortcuts above)
+        public const int ID_FEAT_EYESIGHT  = 2001;
+        public const int ID_FEAT_REPROGRAM = 2002;
+        public const int ID_FEAT_MOUSELESS = 2003;
+        public const int ID_FEAT_COMMANDS  = 2004;
+        public const int ID_FEAT_TILING    = 2005;
+
         // ── Lifecycle ────────────────────────────────────────────────────────
 
         private SubclassProc?      _windowProc;
@@ -72,7 +79,8 @@ namespace main_interface
             // Unregister every ID we might have registered
             foreach (var id in new[] {
                 ID_SCREEN_READER, ID_MAGNIFIER, ID_OSK, ID_DIM_SCREEN, ID_TILING,
-                ID_DYSLEXIA, ID_MOUSELESS, ID_COMMANDS, ID_HIGH_CONTRAST, ID_FOCUS_MODE })
+                ID_DYSLEXIA, ID_MOUSELESS, ID_COMMANDS, ID_HIGH_CONTRAST, ID_FOCUS_MODE,
+                ID_FEAT_EYESIGHT, ID_FEAT_REPROGRAM, ID_FEAT_MOUSELESS, ID_FEAT_COMMANDS, ID_FEAT_TILING })
             {
                 UnregisterHotKey(hwnd, id);
             }
@@ -169,8 +177,13 @@ namespace main_interface
                 case ID_DYSLEXIA:      ToggleDyslexia();     break;
                 case ID_MOUSELESS:     ToggleMouseless();    break;
                 case ID_COMMANDS:      ToggleCommands();     break;
-                case ID_HIGH_CONTRAST: ToggleHighContrast(); break;
-                case ID_FOCUS_MODE:    ToggleFocusMode();    break;
+                case ID_HIGH_CONTRAST:  ToggleHighContrast();  break;
+                case ID_FOCUS_MODE:     ToggleFocusMode();     break;
+                case ID_FEAT_EYESIGHT:  EyesightControlPanel.Instance?.ToggleEnable();                   break;
+                case ID_FEAT_REPROGRAM: ReprogramKeysControlPanel._ReprogramKeysPanel?.ToggleEnable(); break;
+                case ID_FEAT_MOUSELESS: MouselessControlPanel.Instance?.ToggleEnable();                break;
+                case ID_FEAT_COMMANDS:  CommandsControlPanel.Instance?.ToggleEnable();                 break;
+                case ID_FEAT_TILING:    TilingManagerControlPanel._tilingControlPanelPage?.ToggleEnable(); break;
             }
         }
 

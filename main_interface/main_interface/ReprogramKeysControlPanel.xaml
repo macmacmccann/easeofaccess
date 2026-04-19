@@ -25,43 +25,30 @@ xmlns:system="using:Windows.System"
                 <Border.BackgroundSizing>InnerBorderEdge</Border.BackgroundSizing>
 
 
-                <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Top"  Height="120" Padding="16" Margin="24,24,0,0">
-                    <StackPanel Spacing="4">
-
-                        <TextBlock
-                        Text="Enable Key Reprogamming"
-                        FontSize="30"
-                        FontWeight="SemiBold" />
-
-                        <TextBlock
-                        Text="Rewire your computer with a simple panel "
-                        FontSize="14"
-                        Opacity="0.7" />
-
-
+                <Grid Height="120" Padding="16" Margin="24,24,0,0" ColumnDefinitions="Auto,Auto,*" VerticalAlignment="Top">
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Enable Key Reprogamming" FontSize="30" FontWeight="SemiBold" />
+                            <TextBlock Text="Rewire your computer with a simple panel" FontSize="14" Opacity="0.7" />
+                        </StackPanel>
+                        <ToggleSwitch
+                            x:Name="ReprogamKeysIsEnabledToggle"
+                            FontSize="16" MinHeight="48" Padding="4"
+                            OnContent="On" OffContent="Off"
+                            VerticalAlignment="Center"
+                            Toggled="ReprogamKeysIsEnabled_Toggled"
+                            PointerEntered="Border_PointerEntered"
+                            PointerExited="Border_PointerExited">
+                            <ToggleSwitch.RenderTransform>
+                                <ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
+                            </ToggleSwitch.RenderTransform>
+                        </ToggleSwitch>
                     </StackPanel>
-
-
-                    <ToggleSwitch 
-                        x:Name="ReprogamKeysIsEnabledToggle"
-                        Grid.Column="1"
-                      FontSize="16"
-                     MinHeight="48"
-                        Padding="4"
-                        OnContent="On"
-                        OffContent="Off"
-                        VerticalAlignment="Center"
-                        Toggled="ReprogamKeysIsEnabled_Toggled"
-                        PointerEntered="Border_PointerEntered"
-                        PointerExited="Border_PointerExited">
-
-                        <ToggleSwitch.RenderTransform>
-                            <ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
-                        </ToggleSwitch.RenderTransform>
-                    </ToggleSwitch>
-
-
-                </StackPanel>
+                    <Border Grid.Column="1" Background="#20FFFFFF" CornerRadius="10"
+                            Padding="14,10" VerticalAlignment="Center" Margin="24,0,0,0">
+                        <controls:HotKeyCaptureControl x:Name="ReprogramShortcut" Label="Toggle hotkey"/>
+                    </Border>
+                </Grid>
 
             </Border>
 

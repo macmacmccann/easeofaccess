@@ -26,19 +26,22 @@ namespace main_interface;
 /// </summary>
 public sealed partial class EyesightControlPanel : Page
 {
+    public static EyesightControlPanel? Instance { get; private set; }
 
-
+    public void ToggleEnable() => MonitorColorFixEnabledToggle.IsOn = !MonitorColorFixEnabledToggle.IsOn;
 
     public EyesightControlPanel()
     {
         InitializeComponent();
+        Instance = this;
         LoadPreferencesOnStart();
         DesignGlobalCode.HeaderColour(Headertop);
         TipsConstructor();
         Headertop.BackgroundTransition = new BrushTransition() { Duration = TimeSpan.FromMilliseconds(300) };
         HeaderColour(Headertop);
+        EyesightShortcut.ComboCaptured += (m, v) => RegisterFeatureShortcut(EyesightShortcut, ShortcutsWindow.ID_FEAT_EYESIGHT, m, v);
 
-        // Keep the page alive / no duplicates upon nav switch by caching / reflected states preserved in ui 
+        // Keep the page alive / no duplicates upon nav switch by caching / reflected states preserved in ui
         this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
     }
 
@@ -376,6 +379,18 @@ public sealed partial class EyesightControlPanel : Page
     }
 
 
+
+    private async void RegisterFeatureShortcut(main_interface.Controls.HotKeyCaptureControl assigner, int id, uint mod, uint vk)
+    {
+        bool success = ShortcutsWindow.Instance.TryUpdateHotkey(id, (Modifiers)mod, vk, out var combo);
+        if (!success)
+        {
+            bool retry = await Dialogues.OnErrorDialogue_InUse(this.XamlRoot);
+            if (retry) { assigner.StartCapture(); return; }
+        }
+        if (combo.VirtualKey != 0)
+            assigner.SetDisplayText(main_interface.Controls.HotKeyCaptureControl.DescribeCombo(combo.Modifiers, combo.VirtualKey));
+    }
 
     private void TipsConstructor()
     {
