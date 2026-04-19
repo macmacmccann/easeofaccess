@@ -17,12 +17,22 @@
       
            
         <!-- Header -->
-        <TextBlock 
-            Text="Settings"
-            FontSize="32"
-            FontWeight="Bold"
-            HorizontalAlignment="Center"
-            Margin="0,20,0,40"/>
+        <StackPanel HorizontalAlignment="Center" Margin="0,20,0,24" Spacing="12" Width="550">
+            <TextBlock
+                Text="Settings"
+                FontSize="32"
+                FontWeight="Bold"
+                HorizontalAlignment="Center"/>
+            <Border Background="#40000000" CornerRadius="12" Padding="16">
+                <TextBlock
+                    Text="Control how the app runs on your machine — whether it starts automatically with Windows, stays alive in the background after you close the window, and syncs your configuration across devices."
+                    FontSize="13"
+                    Opacity="0.85"
+                    TextWrapping="Wrap"
+                    HorizontalAlignment="Center"
+                    TextAlignment="Center"/>
+            </Border>
+        </StackPanel>
 
         <!-- Content Area -->
         <StackPanel 

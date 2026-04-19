@@ -72,10 +72,18 @@
 
             <StackPanel Grid.Column="0" Spacing="8">
                 <TextBlock
-                    Text="Access controls you cant usually"
+                    Text="What this does"
                     FontSize="20"
                     Opacity="0.7"
                     VerticalAlignment="Top" />
+
+                <Border Background="#20FFFFFF" CornerRadius="12" Padding="16" Margin="0,0,16,0">
+                    <TextBlock
+                        Text="Your screen emits high-energy light that strains your eyes, disrupts sleep, and can trigger headaches — these overlays shift your display's colour temperature to reduce that impact, with presets for specific conditions like migraine sensitivity or dyslexia."
+                        FontSize="13"
+                        Opacity="0.85"
+                        TextWrapping="Wrap" />
+                </Border>
 
                 <!-- gif -->
 

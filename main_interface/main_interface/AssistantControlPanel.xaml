@@ -40,6 +40,16 @@
                 <!-- LEFT: status panel -->
                 <StackPanel Grid.Column="0" Spacing="16">
 
+                    <TextBlock Text="What this does" FontSize="20" Opacity="0.7" />
+
+                    <Border Background="#20FFFFFF" CornerRadius="12" Padding="16" Margin="0,0,16,0">
+                        <TextBlock
+                            Text="Instead of remembering to turn features on yourself, set a rule once and the app does it for you — activate Dim Screen at a set time, enable Tiling Manager when you have too many windows open, and more."
+                            FontSize="13"
+                            Opacity="0.85"
+                            TextWrapping="Wrap" />
+                    </Border>
+
                     <TextBlock Text="Automation status" FontSize="20" Opacity="0.7" />
 
                     <!-- Live status readout -->

@@ -214,8 +214,10 @@ namespace main_interface
                 case "Mouseless":       ContentFrame.Navigate(typeof(MouselessControlPanel));   break;
                 case "TilingManager":   ContentFrame.Navigate(typeof(TilingManagerControlPanel)); break;
                 case "ReprogramKeys":   ContentFrame.Navigate(typeof(ReprogramKeysControlPanel)); break;
-                case "Assistant":       ContentFrame.Navigate(typeof(AssistantControlPanel));   break;
-                case "TerminalControl": ContentFrame.Navigate(typeof(TerminalControlPanel));    break;
+                case "Assistant":       ContentFrame.Navigate(typeof(AssistantControlPanel)); break;
+                case "QuickActions": ContentFrame.Navigate(typeof(ShortcutsControlPanel)); break;
+
+                // case "TerminalControl": ContentFrame.Navigate(typeof(TerminalControlPanel));    break;
                 case "about":           ContentFrame.Navigate(typeof(About));                   break;
                 case "HandMovement":    ContentFrame.Navigate(typeof(HandMovementAgent_Panel));  break;
             }

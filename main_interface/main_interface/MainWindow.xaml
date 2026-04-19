@@ -48,7 +48,9 @@
                 <NavigationViewItem Content="Mouseless" Icon="TouchPointer" Tag="Mouseless"/>
                 <NavigationViewItem Content="Tiling Manager" Icon="GoToStart" Tag="TilingManager"/>
                 <NavigationViewItem Content="Key Control" Icon="Link" Tag="ReprogramKeys"/>
-                <NavigationViewItem Content="Terminal Control" Icon="Link" Tag="TerminalControl"/>
+                <NavigationViewItem Content="Quick Action" Icon="Help" Tag="QuickActions"/>
+
+                <!--   <NavigationViewItem Content="Terminal Control" Icon="Link" Tag="TerminalControl"/>  -->
                 <NavigationViewItem Content="Assistant" Icon="Help" Tag="Assistant"/>
                 <NavigationViewItem Content="Hand Gestures" Icon="RotateCamera" Tag="HandMovement"/>
             </NavigationView.MenuItems>

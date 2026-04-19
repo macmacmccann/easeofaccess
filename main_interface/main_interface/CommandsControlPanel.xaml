@@ -84,10 +84,18 @@
 
             <StackPanel Grid.Column="0" Spacing="8">
                 <TextBlock
-                    Text="Write Commands in a flash"
+                    Text="What this does"
                     FontSize="20"
                     Opacity="0.7"
                     VerticalAlignment="Top" />
+
+                <Border Background="#20FFFFFF" CornerRadius="12" Padding="16" Margin="0,0,16,0">
+                    <TextBlock
+                        Text="The Elevated Clipboard stores the text snippets and commands you use most often so you can paste them instantly from any application — no retyping, no hunting through history, just one hotkey away."
+                        FontSize="13"
+                        Opacity="0.85"
+                        TextWrapping="Wrap" />
+                </Border>
 
                 <!-- gif -->
 

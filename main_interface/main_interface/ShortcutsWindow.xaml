@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="main_interface.ShortcutsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- This window has no visible UI — it exists purely to own a Win32 HWND
+         so that RegisterHotKey / WM_HOTKEY messages have somewhere to land. -->
+    <Grid x:Name="RootGrid"/>
+
+</Window>

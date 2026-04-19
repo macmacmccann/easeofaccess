@@ -35,8 +35,15 @@
 
             <!-- Left: gif framed in a card -->
             <StackPanel Grid.Column="0" Spacing="12" Margin="0,0,16,0">
-                <TextBlock Text="Control your cursor with arrow keys"
-                           FontSize="14" Opacity="0.55" />
+                <TextBlock Text="What this does"
+                           FontSize="20" Opacity="0.7" />
+                <Border Background="#20FFFFFF" CornerRadius="12" Padding="16">
+                    <TextBlock
+                        Text="If using a mouse is difficult or uncomfortable, Mouseless Mode lets you move the cursor and click entirely from your keyboard — pair it with the key reprogrammer to build a full mouse-free setup that works for you."
+                        FontSize="13"
+                        Opacity="0.85"
+                        TextWrapping="Wrap" />
+                </Border>
                 <Border CornerRadius="12" Padding="8"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                     <Image Source="/Assets/gifs/Mouseless.gif" Stretch="Uniform"/>

@@ -70,10 +70,18 @@
 
             <StackPanel Grid.Column="0" Spacing="8">
                 <TextBlock
-                    Text="Snap your windows "
+                    Text="What this does"
                     FontSize="20"
                     Opacity="0.7"
                     VerticalAlignment="Top" />
+
+                <Border Background="#20FFFFFF" CornerRadius="12" Padding="16" Margin="0,0,16,0">
+                    <TextBlock
+                        Text="Juggling multiple windows slows you down — the Tiling Manager automatically positions every new window into a clean, non-overlapping layout so you can stay focused without constantly resizing and repositioning things yourself."
+                        FontSize="13"
+                        Opacity="0.85"
+                        TextWrapping="Wrap" />
+                </Border>
 
                     <!-- gif -->
 

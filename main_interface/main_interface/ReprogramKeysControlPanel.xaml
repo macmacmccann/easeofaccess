@@ -70,9 +70,67 @@ xmlns:system="using:Windows.System"
             <Grid Grid.Row="1">
                 <!-- ROW 1 = top of page bottom of header-->
 
-                <!-- 6 rows doe key board -->
+                <Grid RowDefinitions="Auto,*">
 
-                <Grid x:Name="keyboard"  RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                <Border Grid.Row="0" Background="#20FFFFFF" CornerRadius="12" Padding="16" Margin="24,8,24,4">
+                    <TextBlock
+                        Text="Every key on your keyboard can be remapped to something more useful for you — swap Caps Lock for Escape, assign a key to a mouse button, or reconfigure anything that causes strain. Changes apply system-wide in real time."
+                        FontSize="13"
+                        Opacity="0.85"
+                        TextWrapping="Wrap" />
+                </Border>
+
+                <!-- keyboard + how-to card side by side -->
+                <Grid Grid.Row="1" ColumnDefinitions="3*,*">
+
+                <!-- Instructions card -->
+                <Expander Grid.Column="1"
+                          Header="How to remap"
+                          IsExpanded="True"
+                          HorizontalAlignment="Stretch"
+                          HorizontalContentAlignment="Stretch"
+                          VerticalAlignment="Top"
+                          Margin="12,8,24,8">
+                    <StackPanel Spacing="14" Padding="4,8,4,4">
+
+                        <!-- Remap key → key -->
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Key → Key" FontSize="13" FontWeight="SemiBold" Opacity="0.75"/>
+                            <TextBlock Text="1.  Press Start Reprogramming below" FontSize="12" Opacity="0.65" TextWrapping="Wrap"/>
+                            <TextBlock Text="2.  Press the key you want to replace" FontSize="12" Opacity="0.65" TextWrapping="Wrap"/>
+                            <TextBlock Text="3.  Press the key you want it to become" FontSize="12" Opacity="0.65" TextWrapping="Wrap"/>
+                            <TextBlock Text="4.  The keyboard highlights the change" FontSize="12" Opacity="0.65" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <Rectangle Height="1" Fill="#30FFFFFF"/>
+
+                        <!-- Remap key → mouse -->
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Key → Mouse Button" FontSize="13" FontWeight="SemiBold" Opacity="0.75"/>
+                            <TextBlock Text="1.  Press Map Key → Mouse below" FontSize="12" Opacity="0.65" TextWrapping="Wrap"/>
+                            <TextBlock Text="2.  Press the key you want to assign" FontSize="12" Opacity="0.65" TextWrapping="Wrap"/>
+                            <TextBlock Text="3.  Choose LClick / RClick / MClick" FontSize="12" Opacity="0.65" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <Rectangle Height="1" Fill="#30FFFFFF"/>
+
+                        <!-- Undo -->
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Undo a remap" FontSize="13" FontWeight="SemiBold" Opacity="0.75"/>
+                            <TextBlock Text="1.  Press Reset One Key below" FontSize="12" Opacity="0.65" TextWrapping="Wrap"/>
+                            <TextBlock Text="2.  Press the key to restore" FontSize="12" Opacity="0.65" TextWrapping="Wrap"/>
+                            <TextBlock Text="   Or press Reset All to clear everything" FontSize="12" Opacity="0.65" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <Rectangle Height="1" Fill="#30FFFFFF"/>
+
+                        <TextBlock Text="⚠  Inaccessible Keys shows any key you programmed over but haven't mapped to — click it to fix the gap."
+                                   FontSize="11" Opacity="0.55" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Expander>
+
+                <!-- 6 rows for keyboard -->
+                <Grid x:Name="keyboard" Grid.Column="0" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
 
                     <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Stretch" Height="60" Padding="8" Margin="24,0,0,0">
                         <controls:KeyboardKey x:Name="KeyEsc" Label="Esc" VirtualKeyCode="{local:VirtualKeyExtension Key=Escape}"/>
@@ -180,8 +238,11 @@ xmlns:system="using:Windows.System"
                         </StackPanel>
                     </Grid>
 
-                </Grid>
+                </Grid><!-- close keyboard Grid -->
 
+                </Grid><!-- close ColumnDefinitions="*,240" wrapper -->
+
+                </Grid><!-- close RowDefinitions="Auto,*" wrapper -->
 
             </Grid>
 

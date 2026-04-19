@@ -40,6 +40,16 @@
                 <!-- LEFT: live feed + gesture shape guide -->
                 <StackPanel Grid.Column="0" Spacing="16">
 
+                    <TextBlock Text="What this does" FontSize="20" Opacity="0.7" />
+
+                    <Border Background="#20FFFFFF" CornerRadius="12" Padding="16" Margin="0,0,16,0">
+                        <TextBlock
+                            Text="Your webcam reads your hand shape in real time and fires a Windows action the moment a gesture is detected — assign any gesture to any action on the right, or set it to None to ignore it."
+                            FontSize="13"
+                            Opacity="0.85"
+                            TextWrapping="Wrap" />
+                    </Border>
+
                     <TextBlock Text="Live gesture feed" FontSize="20" Opacity="0.7" />
 
                     <!-- Live gesture readout -->
