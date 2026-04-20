@@ -63,11 +63,12 @@ steps:
       projects: '$(testProject)'
       arguments: >
         --configuration $(buildConfiguration)
-        --no-build
+        --no-restore
         -p:Platform=$(buildPlatform)
         --collect:"XPlat Code Coverage"
         --results-directory $(Agent.TempDirectory)/TestResults
         --logger trx
+        --verbosity normal
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
 
