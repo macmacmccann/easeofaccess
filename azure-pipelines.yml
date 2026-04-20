@@ -63,6 +63,7 @@ steps:
       projects: '$(testProject)'
       arguments: >
         --configuration $(buildConfiguration)
+        --no-build
         -p:Platform=$(buildPlatform)
         --collect:"XPlat Code Coverage"
         --results-directory $(Agent.TempDirectory)/TestResults
