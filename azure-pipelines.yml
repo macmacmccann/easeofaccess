@@ -62,6 +62,13 @@ steps:
       command: test
       projects: '$(testProject)'
       publishTestResults: true
-      arguments: '--configuration $(buildConfiguration) --no-restore -p:Platform=$(buildPlatform)'
+      arguments: '--configuration $(buildConfiguration) --no-restore -p:Platform=$(buildPlatform) --collect "XPlat Code Coverage" --results-directory $(Agent.TempDirectory)/TestResults'
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+  # Publish code coverage
+  - task: PublishCodeCoverageResults@2
+    displayName: 'Publish code coverage'
+    condition: succeededOrFailed()
+    inputs:
+      summaryFileLocation: '$(Agent.TempDirectory)/TestResults/**/coverage.cobertura.xml'
