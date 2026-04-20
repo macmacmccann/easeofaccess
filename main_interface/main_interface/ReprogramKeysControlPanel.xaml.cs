@@ -41,16 +41,14 @@ public sealed partial class ReprogramKeysControlPanel : Page
      * 
      * 
      */
-    public static ReprogramKeysControlPanel _ReprogramKeysPanel { get; private set; }
+    public static ReprogramKeysControlPanel? _ReprogramKeysPanel { get; private set; }
 
     public void ToggleEnable() => ReprogamKeysIsEnabledToggle.IsOn = !ReprogamKeysIsEnabledToggle.IsOn;
     private ReprogamKeys windowBehind;
 
    // public ReprogamKeys _Window;
     private Modifiers CapturedModiferKeys; // not uint casting problem its cast to None in enum method below 
-    private Dictionary<VirtualKey, KeyboardKey> _keyMap;
-
-    public event Action<string>? HotKeyErrorOccured;
+    private Dictionary<VirtualKey, KeyboardKey>? _keyMap;
 
     public ReprogramKeysControlPanel()
     {
@@ -302,7 +300,9 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
     }
 
-    VirtualKey youJustPressedTheSameKeyIgnore = VirtualKey.None; // dont program same key + same key thats stupid 
+#pragma warning disable CS0414
+    VirtualKey youJustPressedTheSameKeyIgnore = VirtualKey.None; // dont program same key + same key thats stupid
+#pragma warning restore CS0414
     private void OnKeyDown(object sender, KeyRoutedEventArgs e)
     {
 
@@ -367,7 +367,7 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
         if (_isCapturingFromCard)
         {
-            if (!_keyMap.TryGetValue(rawKeyCaptured, out KeyboardKey cardKeyControl)) return;
+            if (_keyMap == null || !_keyMap.TryGetValue(rawKeyCaptured, out KeyboardKey? cardKeyControl)) return;
             firstKey = rawKeyCaptured;
             secondKey = _cardSecondKey;
             _isCapturingFromCard = false;
@@ -388,7 +388,7 @@ public sealed partial class ReprogramKeysControlPanel : Page
             return;
         }
 
-        if (_keyMap.TryGetValue(rawKeyCaptured, out KeyboardKey keyControl))
+        if (_keyMap != null && _keyMap.TryGetValue(rawKeyCaptured, out KeyboardKey? keyControl))
         {
 
             Debug.WriteLine($"x -> Passed Into  : {rawKeyCaptured}");
@@ -406,7 +406,7 @@ public sealed partial class ReprogramKeysControlPanel : Page
                     ReprogamKeys.GetOrMakeInstance.TransferKeys(rawKeyCaptured, VirtualKey.None);
 
                     // Reset that source key's label and colour back to its original
-                    if (sourceKVP.Key != VirtualKey.None && _keyMap.TryGetValue(sourceKVP.Key, out KeyboardKey sourceControl))
+                    if (sourceKVP.Key != VirtualKey.None && _keyMap != null && _keyMap.TryGetValue(sourceKVP.Key, out KeyboardKey? sourceControl))
                     {
                         sourceControl.Label = FormatKeyLabel(sourceKVP.Key);
                         sourceControl.SetMappedColour(false);
@@ -520,8 +520,10 @@ public sealed partial class ReprogramKeysControlPanel : Page
 
       
 
+#pragma warning disable CS0219
         bool ModifiersBinary = false;
-        VirtualKey specificModHandedness = VirtualKey.None; // extra indirect return // if == None Not a mod 
+#pragma warning restore CS0219
+        VirtualKey specificModHandedness = VirtualKey.None; // extra indirect return // if == None Not a mod
 
         // CapturedModiferKeys = 0; // Binary code 1 would mean control 
         //   CapturedModiferKeys = Modifiers.None; // 0000
@@ -635,7 +637,7 @@ public sealed partial class ReprogramKeysControlPanel : Page
     }
 
     // then find the one matching firstKey
-    private KeyboardKey FindKeyByVirtualKey(VirtualKey targetKey)
+    private KeyboardKey? FindKeyByVirtualKey(VirtualKey targetKey)
     {
 
         Debug.WriteLine($"Virtual Key is = {targetKey} so xName's VkeyCode needs to be the same");
@@ -651,7 +653,7 @@ public sealed partial class ReprogramKeysControlPanel : Page
     {
         Debug.WriteLine($"Key RELEASED  fired for: {e.Key}");
 
-        if (_keyMap.TryGetValue(e.Key, out KeyboardKey keyControl))
+        if (_keyMap != null && _keyMap.TryGetValue(e.Key, out KeyboardKey? keyControl))
             keyControl.TriggerReleasedVisual();
 
         ReleaseStuckModifiers();
@@ -675,7 +677,7 @@ public sealed partial class ReprogramKeysControlPanel : Page
             if (!state(vk).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
             {
                 foreach (var mk in mapKeys)
-                    if (_keyMap.TryGetValue(mk, out KeyboardKey ctrl))
+                    if (_keyMap != null && _keyMap.TryGetValue(mk, out KeyboardKey? ctrl))
                         ctrl.TriggerReleasedVisual();
             }
         }
@@ -745,7 +747,7 @@ public sealed partial class ReprogramKeysControlPanel : Page
     private void Test()
     {
         var keyboardKey = this.FindName("KeyF1") as KeyboardKey;
-        keyboardKey.Label = "WWW";
+        if (keyboardKey != null) keyboardKey.Label = "WWW";
 
     }
 

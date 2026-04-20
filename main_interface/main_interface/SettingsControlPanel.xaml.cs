@@ -60,7 +60,6 @@ public sealed partial class SettingsControlPanel : Page
 
     public void LogOutButton_Click(object sender, RoutedEventArgs e)
     {
-        int x = 3;
     }
 
 
@@ -202,7 +201,7 @@ public sealed partial class SettingsControlPanel : Page
             {
                 var backgroundBrush = control.Background as SolidColorBrush;
 
-                backgroundBrush.Color = Colors.Transparent;
+                if (backgroundBrush != null) backgroundBrush.Color = Colors.Transparent;
 
 
                 // Then reset to theme resource

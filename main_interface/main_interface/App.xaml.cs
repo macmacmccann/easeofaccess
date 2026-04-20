@@ -31,11 +31,11 @@ namespace main_interface
     /// </summary>
     public partial class App : Application
     {
-        private MySplashScreen splash;
+        private MySplashScreen? splash;
 
        // private Window? _window;
 
-        public MainWindow main_window { get; private set; }
+        public MainWindow? main_window { get; private set; }
 
 
 

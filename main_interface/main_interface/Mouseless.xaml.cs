@@ -29,7 +29,7 @@ public sealed partial class Mouseless : Window
 {
 
     // Lifetime management -> 
-    LowLevelKeyboardProc _keyboardProc;
+    LowLevelKeyboardProc? _keyboardProc;
     // Store the win32 import globally 
     // Store it so its not garbage collected
 
@@ -107,7 +107,7 @@ public sealed partial class Mouseless : Window
         }
     }
 
-    private void OnMoveTick(object state)
+    private void OnMoveTick(object? state)
     {
         if (!StateSettings.MouselessEnabled) return;
 

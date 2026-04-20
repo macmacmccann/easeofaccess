@@ -17,7 +17,7 @@ namespace main_interface
 {
     public sealed partial class MainWindow : Window
     {
-        DesktopAcrylicBackdrop acrylic;
+        DesktopAcrylicBackdrop? acrylic;
 
         public MainWindow()
         {
@@ -165,8 +165,7 @@ namespace main_interface
             this.SystemBackdrop = acrylic;
         }
 
-        private Eyesight _spotlightWindow;
-        private AccountWindow AccountWindow_Instance_Singleton;
+        private AccountWindow? AccountWindow_Instance_Singleton;
 
         private void NavigationView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
@@ -176,7 +175,7 @@ namespace main_interface
                 return;
             }
 
-            string tag = args.InvokedItemContainer?.Tag?.ToString();
+            string? tag = args.InvokedItemContainer?.Tag?.ToString();
             if (string.IsNullOrEmpty(tag)) return;
 
             if (tag == "AccountWindow")

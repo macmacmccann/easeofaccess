@@ -31,7 +31,7 @@ public sealed partial class MouselessControlPanel : Page
 
     public void ToggleEnable() => MouselessToggle.IsOn = !MouselessToggle.IsOn;
 
-    private Mouseless _mouselesswindow;
+    private Mouseless? _mouselesswindow;
     public MouselessControlPanel()
     {
         Instance = this;
@@ -306,7 +306,7 @@ public sealed partial class MouselessControlPanel : Page
             {
                 var backgroundBrush = control.Background as SolidColorBrush;
 
-                backgroundBrush.Color = Colors.Transparent;
+                if (backgroundBrush != null) backgroundBrush.Color = Colors.Transparent;
 
 
                 // Then reset to theme resource

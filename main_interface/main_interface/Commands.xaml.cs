@@ -40,11 +40,11 @@ namespace main_interface
 
     public sealed partial class Commands : Window
     {
-        private static Commands _instance;
+        private static Commands? _instance;
         IntPtr _previousforground; // What is the app to paste the command grab it 
         //_previousforground = GetForegroundWindow();
 
-        DesktopAcrylicBackdrop acrylic;
+        DesktopAcrylicBackdrop? acrylic;
 
         public static Commands Instance
         {
@@ -167,7 +167,7 @@ namespace main_interface
             => RefreshList(SearchBox.Text);
 
         private string _numberBuffer = "";
-        private DispatcherTimer _numberTimer;
+        private DispatcherTimer? _numberTimer;
 
         private void OnWindowKeyDown(object sender, KeyRoutedEventArgs e)
         {
@@ -333,7 +333,7 @@ namespace main_interface
         }
 
 
-        private SubclassProc _windowProc; // Field is in scope of MainWindow - will live as long as MainWindow does !
+        private SubclassProc? _windowProc; // Field is in scope of MainWindow - will live as long as MainWindow does !
 
         delegate IntPtr SubclassProc( // What SetWindowSublass Expects 
         IntPtr hwnd, // What window this message is for (the handle to window ) 
@@ -636,7 +636,7 @@ namespace main_interface
         }
 
 
-        DispatcherTimer _animationTimer;
+        DispatcherTimer? _animationTimer;
         double _opacity;
 
         void ShowOnScreen()
@@ -828,6 +828,7 @@ namespace main_interface
             );
 
         // required if i want to use this import
+#pragma warning disable CS0649
         struct MARGINS
         {
             public int cxLeftWidth;
@@ -836,6 +837,7 @@ namespace main_interface
             public int cyBottomHeight;
 
         }
+#pragma warning restore CS0649
 
 
 
@@ -927,7 +929,7 @@ namespace main_interface
 
         public static void Delete(int id) => _commands.Remove(id);
 
-        public static bool TryGet(int id, out string text) => _commands.TryGetValue(id, out text);
+        public static bool TryGet(int id, out string? text) => _commands.TryGetValue(id, out text);
 
         public static IEnumerable<KeyValuePair<int, string>> All() => _commands;
     }

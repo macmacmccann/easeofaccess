@@ -15,7 +15,7 @@ namespace main_interface
 {
     public sealed partial class AccountWindow : Window
     {
-        private static AccountWindow _instance;
+        private static AccountWindow? _instance;
 
         public static AccountWindow Instance
         {
@@ -36,7 +36,7 @@ namespace main_interface
             this.AppWindow.Closing += AppWindow_Closing;
         }
 
-        public void Activate()
+        public new void Activate()
         {
             var hwnd = WindowNative.GetWindowHandle(this);
             SetForegroundWindow(hwnd);

@@ -31,7 +31,7 @@ namespace main_interface
     public static class OemKeys
     {
         public const VirtualKey Semicolon = (VirtualKey)186;
-        public const VirtualKey Equals = (VirtualKey)187;
+        public new const VirtualKey Equals = (VirtualKey)187;
         public const VirtualKey Comma = (VirtualKey)188;
         public const VirtualKey Period = (VirtualKey)190;
         public const VirtualKey Slash = (VirtualKey)191;

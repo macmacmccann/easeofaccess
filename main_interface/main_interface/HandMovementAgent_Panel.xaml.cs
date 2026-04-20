@@ -17,8 +17,8 @@ namespace main_interface
     public sealed partial class HandMovementAgent_Panel : Page
     {
         private string _gestureState = "none";
-        private CancellationTokenSource _cts;
-        private Process _pythonProcess;
+        private CancellationTokenSource? _cts;
+        private Process? _pythonProcess;
         private bool _gesturesEnabled = false;
 
         public HandMovementAgent_Panel()
@@ -199,7 +199,7 @@ namespace main_interface
                     StatusLabel.Text = "Connected — reading gestures.");
 
                 using var reader = new StreamReader(pipe);
-                string line;
+                string? line;
                 while ((line = await reader.ReadLineAsync(token)) != null)
                 {
                     HandleGesture(line.Trim());
@@ -341,7 +341,7 @@ namespace main_interface
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        static extern IntPtr FindWindow(string? lpClassName, string lpWindowName);
 
         [DllImport("user32.dll", EntryPoint = "GetWindowLongW")]
         static extern int GetWindowLongW(IntPtr hWnd, int nIndex);

@@ -13,8 +13,8 @@ namespace main_interface
 {
     public sealed partial class AssistantControlPanel : Page
     {
-        private DispatcherTimer _automationTimer;
-        private Mouseless _mouselessWindow;
+        private DispatcherTimer? _automationTimer;
+        private Mouseless? _mouselessWindow;
 
         // trigger tracking  time rules fire once per day
         private DateTime _lastDimScreenTriggerDate  = DateTime.MinValue;

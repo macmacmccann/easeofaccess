@@ -31,7 +31,7 @@ namespace main_interface;
 public sealed partial class Eyesight : Window
 {
 
-    private static Eyesight _instance;
+    private static Eyesight? _instance;
     public Eyesight()
     {
         InitializeComponent();

@@ -104,12 +104,12 @@ namespace main_interface.Controls
 
         public void TriggerPressedVisual()
         {
-            DesignGlobalCode.Key_PointerEntered(RootBorder, null);
+            DesignGlobalCode.Key_PointerEntered(RootBorder, null!);
         }
 
         public void TriggerReleasedVisual()
         {
-            DesignGlobalCode.Key_PointerExited(RootBorder, null);
+            DesignGlobalCode.Key_PointerExited(RootBorder, null!);
         }
 
         private bool _isMapped = false;

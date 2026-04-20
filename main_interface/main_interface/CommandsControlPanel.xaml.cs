@@ -5,7 +5,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Hosting;
@@ -37,8 +36,6 @@ using WinRT.Interop;
 using Application = Microsoft.UI.Xaml.Application;
 using WinUITextBlock = Microsoft.UI.Xaml.Controls.TextBlock;
 
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 namespace main_interface;
 using static DesignGlobalCode;
 
@@ -53,8 +50,7 @@ public sealed partial class CommandsControlPanel : Page
 
     private Commands commandsWindow;
 
-    public static CommandsControlPanel Instance { get; private set; }
-    public event Action<string>? HotKeyErrorOccured;
+    public static CommandsControlPanel? Instance { get; private set; }
 
     public void ToggleEnable() => OverlayEnabledToggle.IsOn = !OverlayEnabledToggle.IsOn;
 
@@ -84,7 +80,6 @@ public sealed partial class CommandsControlPanel : Page
         // Create instance if there isnt one 
         commandsWindow = Commands.Instance;
 
-        HotKeyErrorOccured += OnError;
         //  commandsWindow.HotKeyErrorOccured += Testit;
 
 
@@ -194,13 +189,13 @@ public sealed partial class CommandsControlPanel : Page
 
     bool _isCapturingHotKey; // guard flag - stop when false 
     bool _waitingForPrimaryKey;
-    private TextBlock _activeHotkeyTextBlock; // Track which Textblock to update
-    private Microsoft.UI.Xaml.Controls.Button _activeButton;
+    private TextBlock? _activeHotkeyTextBlock; // Track which Textblock to update
+    private Microsoft.UI.Xaml.Controls.Button? _activeButton;
 
     //event not method 
-    private async void AssignHotkey_Clicked(object sender, RoutedEventArgs e)
+    private void AssignHotkey_Clicked(object sender, RoutedEventArgs e)
     {
-        _isCapturingHotKey = true; // Capture mode 
+        _isCapturingHotKey = true; // Capture mode
 
 
         // DO I WANT POP UP 

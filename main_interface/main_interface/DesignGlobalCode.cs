@@ -47,7 +47,6 @@ namespace main_interface
 
         public static async Task FadeInAsync(UIElement RootGrid)
         {
-            string maingrid = "RootGrid";
             await Task.Delay(1);
             var visual = ElementCompositionPreview.GetElementVisual(RootGrid);
             visual.Opacity = 0;
@@ -201,7 +200,7 @@ namespace main_interface
                 {
                     var backgroundBrush = control.Background as SolidColorBrush;
 
-                    backgroundBrush.Color = Colors.Transparent;
+                    if (backgroundBrush != null) backgroundBrush.Color = Colors.Transparent;
 
 
                     // Then reset to theme resource

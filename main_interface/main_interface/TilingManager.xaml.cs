@@ -10,7 +10,6 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -35,11 +34,11 @@ namespace main_interface
     /// </summary>
     public sealed partial class TilingManager : Window
     {
-        DesktopAcrylicBackdrop acrylic; // Dont garbage collect / global / exists in lifecycle of whole class not just a method
+        DesktopAcrylicBackdrop? acrylic; // Dont garbage collect / global / exists in lifecycle of whole class not just a method
         // SINGLETON PATTERN 
         // accessable throughout the whole app .GetInstance
         // forces only one instance 
-        public static TilingManager _instanceTilingManager; // mamed dif as instance could be any window singleton instance
+        public static TilingManager? _instanceTilingManager; // mamed dif as instance could be any window singleton instance
         // wait when this runs on mainwindow im making one - this should be a check if its creating simply boolean returen true 
         public static TilingManager GetInstance()
         {
@@ -125,7 +124,7 @@ namespace main_interface
         delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hWnd,
              int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
 
-        private WinEventDelegate _winEventDelegate; // must hold reference or GC will collect it
+        private WinEventDelegate? _winEventDelegate; // must hold reference or GC will collect it
 
 
         //In constructor   _winEventDelegate = OnWinEvent;
@@ -833,7 +832,7 @@ namespace main_interface
 
         // HOOKS 
 
-        private SubclassProc _windowProc; // Field is in scope of MainWindow - will live as long as MainWindow does !
+        private SubclassProc? _windowProc; // Field is in scope of MainWindow - will live as long as MainWindow does !
 
         delegate IntPtr SubclassProc( // What SetWindowSublass Expects 
         IntPtr hwnd, // What window this message is for (the handle to window ) 

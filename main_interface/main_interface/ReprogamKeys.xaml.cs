@@ -30,11 +30,11 @@ namespace main_interface;
 public sealed partial class ReprogamKeys : Window
 {
 
-    public static ReprogramKeysControlPanel panel;
-    private static ReprogamKeys _instance;
+    public static ReprogramKeysControlPanel? panel;
+    private static ReprogamKeys? _instance;
 
     // Lifetime management -> 
-    LowLevelKeyboardProc _keyboardProc;
+    LowLevelKeyboardProc? _keyboardProc;
     // Store the win32 import globally 
     // Store it so its not garbage collected
 
@@ -236,7 +236,7 @@ public sealed partial class ReprogamKeys : Window
 
 
 
-    private SubclassProc _windowProc; // Field is in scope of MainWindow - will live as long as MainWindow does !
+    private SubclassProc? _windowProc; // Field is in scope of MainWindow - will live as long as MainWindow does !
 
     delegate IntPtr SubclassProc( // What SetWindowSublass Expects 
     IntPtr hwnd, // What window this message is for (the handle to window ) 
@@ -306,7 +306,7 @@ public sealed partial class ReprogamKeys : Window
     }
 
     const int WH_KEYBOARD_LL = 13;
-    const UIntPtr INJECTED_KEY_MARKER = 0xDEADBEEF;
+    static readonly UIntPtr INJECTED_KEY_MARKER = unchecked((UIntPtr)0xDEADBEEF);
 
     [StructLayout(LayoutKind.Sequential)]
     struct KBDLLHOOKSTRUCT

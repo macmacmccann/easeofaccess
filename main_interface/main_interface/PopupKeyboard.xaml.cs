@@ -31,12 +31,12 @@ namespace main_interface;
 public sealed partial class PopupKeyboard : Window
 {
 
-    private Dictionary<VirtualKey, KeyboardKey> _keyMap;
+    private Dictionary<VirtualKey, KeyboardKey>? _keyMap;
 
 
-    private static PopupKeyboard _instance;
+    private static PopupKeyboard? _instance;
     IntPtr _previousforground; // What is the app to paste the command grab it hwnd
-    DesktopAcrylicBackdrop acrylic;
+    DesktopAcrylicBackdrop? acrylic;
 
     public PopupKeyboard()
     {
@@ -68,14 +68,14 @@ public sealed partial class PopupKeyboard : Window
 
     private void OnKeyDown(object sender, KeyRoutedEventArgs e)
     {
-        if (_keyMap.TryGetValue(e.Key, out KeyboardKey keyControl))
+        if (_keyMap != null && _keyMap.TryGetValue(e.Key, out KeyboardKey? keyControl))
         {
             keyControl.TriggerPressedVisual();
         }
     }
     private void OnKeyUp(object sender, KeyRoutedEventArgs e)
     {
-        if (_keyMap.TryGetValue(e.Key, out KeyboardKey keyControl))
+        if (_keyMap != null && _keyMap.TryGetValue(e.Key, out KeyboardKey? keyControl))
         {
             keyControl.TriggerReleasedVisual();
         }
@@ -228,7 +228,7 @@ public sealed partial class PopupKeyboard : Window
 
 
 
-    DispatcherTimer _animationTimer;
+    DispatcherTimer? _animationTimer;
     double _opacity;
     public void FadeIn()
     {

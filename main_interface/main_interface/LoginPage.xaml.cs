@@ -36,8 +36,8 @@ namespace main_interface
 
         private async void LoginButtonClicked(object sender, RoutedEventArgs e)
         {
-            string email = EmailTextBox.Text?.Trim();
-            bool success = await AuthService.Login(email, MyPasswordBox.Password);
+            string? email = EmailTextBox.Text?.Trim();
+            bool success = await AuthService.Login(email!, MyPasswordBox.Password);
 
             if (success)
             {

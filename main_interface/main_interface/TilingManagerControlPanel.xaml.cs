@@ -1,13 +1,11 @@
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
@@ -36,14 +34,11 @@ namespace main_interface
     public sealed partial class TilingManagerControlPanel : Page
     {
 
-        public static TilingManagerControlPanel _tilingControlPanelPage { get; private set; }
+        public static TilingManagerControlPanel? _tilingControlPanelPage { get; private set; }
 
         public void ToggleEnable() => TilingManagerToggle.IsOn = !TilingManagerToggle.IsOn;
 
         private Modifiers CapturedModiferKeys; // not uint casting problem its cast to None in enum method below 
-
-        public event Action<string>? HotKeyErrorOccured;
-
 
         public TilingManagerControlPanel()
         {
@@ -56,8 +51,7 @@ namespace main_interface
 
 
             // Hotkey constructions 
-            this.KeyDown += EventOfKeyPressedDown; // subscribe to this method on any key down on page 
-            HotKeyErrorOccured += OnError;
+            this.KeyDown += EventOfKeyPressedDown; // subscribe to this method on any key down on page
            //_tilingManager = TilingManager.GetInstance(); NO im constructing making it -> toggles should 
 
 
@@ -441,13 +435,13 @@ namespace main_interface
 
         bool _isCapturingHotKey; // guard flag - stop when false 
         bool _waitingForPrimaryKey;
-        private TextBlock _activeHotkeyTextBlock; // Track which Textblock to update
-        private Microsoft.UI.Xaml.Controls.Button _activeButton;
+        private TextBlock? _activeHotkeyTextBlock; // Track which Textblock to update
+        private Microsoft.UI.Xaml.Controls.Button? _activeButton;
 
         //event not method 
-        private async void AssignHotkey_Clicked(object sender, RoutedEventArgs e)
+        private void AssignHotkey_Clicked(object sender, RoutedEventArgs e)
         {
-            _isCapturingHotKey = true; // Capture mode 
+            _isCapturingHotKey = true; // Capture mode
             _waitingForPrimaryKey = false;
             CapturedModiferKeys = Modifiers.None;
             CapturedVK = 0;
