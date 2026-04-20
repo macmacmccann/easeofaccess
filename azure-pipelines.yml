@@ -55,36 +55,13 @@ steps:
         -p:EnableNETAnalyzers=true
         -p:AnalysisLevel=latest
 
-  #  Run tests with code coverage
+  # Run tests — publishTestResults:true lets the task handle TRX collection
   - task: DotNetCoreCLI@2
     displayName: 'Run unit tests'
     inputs:
       command: test
       projects: '$(testProject)'
-      arguments: >
-        --configuration $(buildConfiguration)
-        --no-restore
-        -p:Platform=$(buildPlatform)
-        --collect:"XPlat Code Coverage"
-        --results-directory $(Agent.TempDirectory)/TestResults
-        --logger trx
-        --verbosity normal
+      publishTestResults: true
+      arguments: '--configuration $(buildConfiguration) --no-restore -p:Platform=$(buildPlatform)'
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
-
-  #  publish test results
-  - task: PublishTestResults@2
-    displayName: 'Publish test results'
-    condition: always()
-    inputs:
-      testResultsFormat: VSTest
-      testResultsFiles: '$(Agent.TempDirectory)/TestResults/**/*.trx'
-      mergeTestResults: true
-      testRunTitle: 'Unit Tests - $(buildConfiguration)'
-
-  # publish code coverage 
-  - task: PublishCodeCoverageResults@2
-    displayName: 'Publish code coverage'
-    condition: always()
-    inputs:
-      summaryFileLocation: '$(Agent.TempDirectory)/TestResults/**/coverage.cobertura.xml'
