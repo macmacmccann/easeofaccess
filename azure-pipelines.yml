@@ -62,7 +62,7 @@ steps:
       command: test
       projects: '$(testProject)'
       publishTestResults: true
-      arguments: '--configuration $(buildConfiguration) --no-restore -p:Platform=$(buildPlatform) --collect "XPlat Code Coverage" --results-directory $(Agent.TempDirectory)/TestResults'
+      arguments: '--configuration $(buildConfiguration) --no-restore -p:Platform=$(buildPlatform) --collect:"XPlat Code Coverage" --results-directory $(Agent.TempDirectory)/TestResults'
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
 
