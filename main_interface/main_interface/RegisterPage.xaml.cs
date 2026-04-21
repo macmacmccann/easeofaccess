@@ -35,17 +35,16 @@ namespace main_interface
 
         public async void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            bool success = await AuthService.Register(EmailTextBox.Text, MyPasswordBox.Password);
+            var (success, error) = await AuthService.Register(EmailTextBox.Text, MyPasswordBox.Password);
             if (success) {
                 SuccessText.IsOpen = true;
-                   SuccessText.Message =  "Account created you can now log in !";
+                SuccessText.Message = "Account created you can now log in !";
                 ErrorText.IsOpen = false;
             }
             else {
                 ErrorText.IsOpen = true;
-                ErrorText.Message = "Failed to create account ";
+                ErrorText.Message = "Failed to create account: " + error;
                 SuccessText.IsOpen = false;
-
             }
 
 

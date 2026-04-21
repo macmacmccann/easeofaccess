@@ -576,7 +576,7 @@ namespace main_interface
             if (!StateSettings.OverlayEnabled)
                 return;
 
-
+                
             var appWindow = GetAppWindowForCurrentWindow();
             if (StateSettings.OverlayEnabled)
             {

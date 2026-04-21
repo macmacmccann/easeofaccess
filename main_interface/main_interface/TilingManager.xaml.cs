@@ -386,12 +386,12 @@ namespace main_interface
         private IVirtualDesktopManager _virtualDesktopManager =
     (IVirtualDesktopManager)new VirtualDesktopManager();
 
-   
-     
 
 
-          //  Returns hwnd - lots of filtering here 
-            List<IntPtr> GetTileableWindows()
+
+
+        //  Returns hwnd - lots of filtering here 
+        List<IntPtr> GetTileableWindows()
         {
             // List to stor all windows that are visible or not tool windows 
             List<IntPtr> windows = new List<IntPtr>();
@@ -426,7 +426,10 @@ namespace main_interface
                     title == "Command Palette" ||
                     title == "Ease Of Access" ||
                     title == "Sticky Notes" ||
-                    title == "Clock"
+                    title == "Clock" ||
+                    title == "Windows Shell Experience Host" ||
+                    title == "Settings"
+                    
                     )
                     return true;
                 // Find which monitor this window is currently on 

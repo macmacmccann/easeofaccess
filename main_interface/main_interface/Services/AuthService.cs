@@ -10,19 +10,18 @@ namespace main_interface.Services
 {
     internal class AuthService
     {
-        public static async Task<bool> Register(string email, string password)
+        public static async Task<(bool success, string error)> Register(string email, string password)
         {
             try
             {
-                var client = SupabaseClientProvider.Instance;
+                var client = await SupabaseClientProvider.GetInstanceAsync();
                 await client.Auth.SignUp(email, password);
-                //contentFrame.Navigate(typeof(Account));
-                return true;
+                return (true, "");
             }
-            catch (Exception ex) {
-                Console.WriteLine("Register failed" + ex.Message);
-                return false;
-                }
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
+            }
         }
 
 
@@ -31,7 +30,7 @@ namespace main_interface.Services
         {
             try
             {
-                var client = SupabaseClientProvider.Instance;
+                var client = await SupabaseClientProvider.GetInstanceAsync();
                 await client.Auth.SignIn(email, password);
                 return true;
             }
@@ -44,12 +43,14 @@ namespace main_interface.Services
 
         public static Supabase.Gotrue.User? GetCurrentUser()
         {
-            return SupabaseClientProvider.Instance.Auth.CurrentUser;
+            try { return SupabaseClientProvider.Instance.Auth.CurrentUser; }
+            catch { return null; }
         }
 
         public static async Task Logout()
         {
-            await SupabaseClientProvider.Instance.Auth.SignOut();
+            var client = await SupabaseClientProvider.GetInstanceAsync();
+            await client.Auth.SignOut();
         }
 
     }

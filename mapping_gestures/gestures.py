@@ -1,6 +1,6 @@
 from collections import deque
 
-# MediaPipe hand landmark indices
+# mediapipe hand landmark indices
 WRIST = 0
 THUMB_TIP = 4
 INDEX_TIP, INDEX_PIP = 8, 6
@@ -10,7 +10,7 @@ PINKY_TIP, PINKY_PIP = 20, 18
 
 
 def fingers_extended(hand):
-    # Returns list of booleans [index, middle, ring, pinky] — True if extended.
+    # returns list of booleans [index, middle, ring, pinky] — True if extended.
     return [
         hand[INDEX_TIP].y  < hand[INDEX_PIP].y,
         hand[MIDDLE_TIP].y < hand[MIDDLE_PIP].y,
@@ -20,7 +20,7 @@ def fingers_extended(hand):
 
 
 def classify_static(hand):
-    # classify single-frame static gestures
+    # classify singleframe static gestures
     extended = fingers_extended(hand)
     count = sum(extended)
 
@@ -38,7 +38,7 @@ def classify_static(hand):
 
 
 class SwipeDetector:
-    # Detects left/right swipe by watching wrist x over a short history.
+    # detects left/right swipe by watching wrist x over a short history.
 
     def __init__(self, history_len=12, threshold=0.15):
         self.history = deque(maxlen=history_len)
@@ -51,9 +51,11 @@ class SwipeDetector:
             return None
 
         delta = self.history[-1] - self.history[0]
-        # In MediaPipe x coords: 0=left edge, 1=right edge of the mirrored frame.
-        # Moving hand left  → x decreases → delta negative
-        # Moving hand right → x increases → delta positive
+        # In mediapipe x coords:
+        #  0=left edge
+        #  1=right edge of the mirrored frame.
+        # moving hand left  → x decreases → delta negative
+        # moving hand right → x increases → delta positive
         if delta < -self.threshold:
             self.history.clear()
             return "swipe_left"
@@ -64,14 +66,14 @@ class SwipeDetector:
 
 
 class GestureClassifier:
-    # Combines static + swipe detection per hand slot.
+    # combines static + swipe detection per hand slot.
 
     def __init__(self):
-        # support up to 2 hands, each with its own swipe detector
+        # support up to 2 hands each with its own swipe detector
         self.swipe = [SwipeDetector(), SwipeDetector()]
 
     def classify(self, hand, hand_index=0):
-        # returns the most specific gesture label for this hand, or None.
+        # return the most specific gesture label for this hand, or None.
         swipe = self.swipe[hand_index].update(hand)
         if swipe:
             return swipe
