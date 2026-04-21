@@ -12,7 +12,24 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="About.xaml" />
+    <None Remove="Assistant.xaml" />
+    <None Remove="AssistantControlPanel.xaml" />
+    <None Remove="Controls\KeyboardKey.xaml" />
+    <None Remove="Controls\UserControl2.xaml" />
+    <None Remove="LoginPage.xaml" />
+    <None Remove="Mouseless.xaml" />
+    <None Remove="MouselessControlPanel.xaml" />
     <None Remove="MySplashScreen.xaml" />
+    <None Remove="PopupKeyboard.xaml" />
+    <None Remove="RegisterPage.xaml" />
+    <None Remove="ReprogamKeys.xaml" />
+    <None Remove="ReprogramKeysControlPanel.xaml" />
+    <None Remove="SettingsControlPanel.xaml" />
+    <None Remove="SpotlightPage.xaml" />
+    <None Remove="TerminalAssistant.xaml" />
+    <None Remove="TerminalControlPanel.xaml" />
+    <None Remove="TilingManager.xaml" />
+    <None Remove="TilingManagerControlPanel.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,8 +37,36 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="StateSettings.cs" />
+    <Compile Remove="TakenCombinations.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\main_interface.Core\main_interface.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="H.NotifyIcon.WinUI" Version="2.1.2" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6584" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.250916003" />
+    <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
+    <PackageReference Include="Supabase" Version="1.1.1" />
+    <PackageReference Include="supabase-csharp" Version="0.16.2" />
+    <PackageReference Include="Supabase.Postgrest" Version="4.1.0" />
+    <PackageReference Include="Supabase.Realtime" Version="7.2.0" />
+    <PackageReference Include="Supabase.Storage" Version="2.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="RegisterPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="LoginPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
@@ -37,13 +82,150 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Account.xaml">
+    <Page Update="AccountWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="General.xaml">
+    <Page Update="HomePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\gifs\" />
+    <Folder Include="NewFolder\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="HandMovementAgent_Panel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="ReprogamKeys.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="PopupKeyboard.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\KeyboardKey.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\UserControl2.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\HotKeyCaptureControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="HotKeyControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Assistant.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="TerminalControlPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="TerminalAssistant.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="AssistantControlPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="ReprogramKeysControlPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="SettingsControlPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="TilingManagerControlPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="TilingManager.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="MouselessControlPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Mouseless.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="SpotlightPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Eyesight.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="EyesightControlPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="CommandsControlPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Commands.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

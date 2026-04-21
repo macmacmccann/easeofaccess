@@ -1,0 +1,74 @@
+trigger:
+  branches:
+    include:
+      - main
+      - iteration_no.*
+
+pr:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: windows-latest
+
+variables:
+  mainProject: 'main_interface/main_interface/main_interface.csproj'
+  coreProject: 'main_interface/main_interface.Core/main_interface.Core.csproj'
+  testProject: 'main_interface/main_interface.Tests/main_interface.Tests.csproj'
+  buildConfiguration: 'Release'
+  buildPlatform: 'x64'
+
+steps:
+
+  # install netsdk
+  - task: UseDotNet@2
+    displayName: 'Use .NET 8 SDK'
+    inputs:
+      packageType: sdk
+      version: '8.x'
+
+  # restore packages
+  - task: DotNetCoreCLI@2
+    displayName: 'Restore packages'
+    inputs:
+      command: restore
+      projects: |
+        $(coreProject)
+        $(mainProject)
+        $(testProject)
+      arguments: '-p:Platform=$(buildPlatform)'
+
+  # Build (skip Package.wapproj by targeting csproj directly)
+  - task: DotNetCoreCLI@2
+    displayName: 'Build solution'
+    inputs:
+      command: build
+      projects: |
+        $(coreProject)
+        $(mainProject)
+        $(testProject)
+      arguments: >
+        --configuration $(buildConfiguration)
+        --no-restore
+        -p:Platform=$(buildPlatform)
+        -p:EnableNETAnalyzers=true
+        -p:AnalysisLevel=latest
+
+  # Run tests — publishTestResults:true lets the task handle TRX collection
+  - task: DotNetCoreCLI@2
+    displayName: 'Run unit tests'
+    inputs:
+      command: test
+      projects: '$(testProject)'
+      publishTestResults: true
+      arguments: '--configuration $(buildConfiguration) --no-restore -p:Platform=$(buildPlatform) --collect:"XPlat Code Coverage"'
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+  # Publish code coverage
+  - task: PublishCodeCoverageResults@2
+    displayName: 'Publish code coverage'
+    condition: succeededOrFailed()
+    inputs:
+      summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'

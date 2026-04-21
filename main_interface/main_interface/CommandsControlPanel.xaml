@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="main_interface.CommandsControlPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:main_interface"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    
+    
+    
+    
+    
+    
+    xmlns:controls="using:main_interface.Controls"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+
+
+        <Grid  x:Name="RootGrid" RowDefinitions="0.2*,*,Auto,Auto">
+
+        <!-- HEADER -->
+        <Border x:Name="Headertop">
+
+
+            <Grid Height="120" Padding="16" Margin="24,24,0,0" ColumnDefinitions="Auto,Auto,*" VerticalAlignment="Top">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Enable Elevated Clipboard" FontSize="30" FontWeight="SemiBold" />
+                        <TextBlock Text="Design your own typing history" FontSize="14" Opacity="0.7" />
+                    </StackPanel>
+                    <ToggleSwitch
+                        x:Name="OverlayEnabledToggle"
+                        OffContent="Disabled" OnContent="Enabled"
+                        Toggled="OverlayToggle_Toggled"
+                        FontSize="16" MinHeight="48" Padding="4"
+                        VerticalAlignment="Center"
+                        PointerEntered="Border_PointerEntered"
+                        PointerExited="Border_PointerExited">
+                        <ToggleSwitch.RenderTransform>
+                            <ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
+                        </ToggleSwitch.RenderTransform>
+                    </ToggleSwitch>
+                </StackPanel>
+                <Border Grid.Column="1" Background="#20FFFFFF" CornerRadius="10"
+                        Padding="14,10" VerticalAlignment="Center" Margin="24,0,0,0">
+                    <controls:HotKeyCaptureControl x:Name="CommandsShortcut" Label="Toggle hotkey"/>
+                </Border>
+            </Grid>
+
+        </Border>
+        <!-- END OF HEADER -->
+
+        <!-- COL 1: TOP SIDE PROFILE OF PAGE  -->
+
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" Padding="16" Margin="24,24,0,0">
+
+            <StackPanel Grid.Column="0" Spacing="8">
+                <TextBlock
+                    Text="What this does"
+                    FontSize="20"
+                    Opacity="0.7"
+                    VerticalAlignment="Top" />
+
+                <Border Background="#20FFFFFF" CornerRadius="12" Padding="16" Margin="0,0,16,0">
+                    <TextBlock
+                        Text="The Elevated Clipboard stores the text snippets and commands you use most often so you can paste them instantly from any application — no retyping, no hunting through history, just one hotkey away."
+                        FontSize="13"
+                        Opacity="0.85"
+                        TextWrapping="Wrap" />
+                </Border>
+
+                <!-- gif -->
+
+                <Image Source="/Assets/Images/terminal.jpg" />
+
+                <!-- -->
+
+
+
+            </StackPanel>
+
+            <!-- COL 2: FEATURES RIGHT SIDE TOP TOGGLES  -->
+
+            <StackPanel Grid.Column="1" Spacing="8">
+                <TextBlock
+                    Grid.Column="1"
+                    Text="Features"
+                    FontSize="20"
+                    Opacity="0.7"
+                    VerticalAlignment="Top" />
+
+                <!-- toggles -->
+
+
+
+                <!-- ONE TOGGLE BAR BORDER WRAPPED -->
+                <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+PointerExited="Border_PointerExited">
+                    <!-- SUB GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                    <Grid ColumnDefinitions="*,Auto">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock Text="Enable High Priority" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Make sure it you get a pop up without distactions" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+
+                        <!-- SUB GRID COL 2 TOGGLE -->
+                        <ToggleSwitch 
+                           
+                              x:Name="AlwaysOnTopEnabledToggle"
+                              Header="Activate this feature "
+
+                              OffContent="Off"
+                              OnContent="On"
+                              Toggled="AlwaysOnTopToggle_Toggled" 
+                    
+
+                             Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Margin="16,0,0,0" />
+                    </Grid>
+                </Border>
+                <!-- END ONE TOGGLE BAR BORDER WRAPPED -->
+
+                <!-- Search Auto Focus Toggle -->
+                <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+PointerExited="Border_PointerExited">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock Text="Auto Focus Search" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Focus search bar automatically when commands window opens" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+                        <ToggleSwitch
+                            x:Name="SearchAutoFocusToggle"
+                            OffContent="Off" OnContent="On"
+                            Toggled="SearchAutoFocus_Toggled"
+                            Grid.Column="1" VerticalAlignment="Center" Margin="16,0,0,0" />
+                    </Grid>
+                </Border>
+
+                <!--  TOGGLE 2  BAR BORDER WRAPPED -->
+                <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+PointerExited="Border_PointerExited">
+                    <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                    <Grid ColumnDefinitions="*,Auto">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock Text="Auto Command" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Automate specified command to active window" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+
+                        <!-- GRID COL 2 TOGGLE -->
+                        <ToggleSwitch 
+                           
+                          x:Name="AutoPasteEnabledToggle"
+                           Header="Activate this feature "
+                           OffContent="Manual"
+                           OnContent="Automatic"
+                           Toggled="AutoPasteToggle_Toggled"
+                             Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Margin="16,0,0,0" />
+                    </Grid>
+                </Border>
+                <!-- END ONE TOGGLE BAR BORDER WRAPPED -->
+
+
+
+            </StackPanel>
+
+        </Grid>
+
+
+
+            <!-- MIDDLE PAGE BARRIER  -->
+
+
+            <!-- HEADER row 2 of main grid -->
+            <Grid Grid.Row="2" Background="#80FAD89C" HorizontalAlignment="Stretch" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+
+
+                <Border x:Name="SplitPage"
+                        Grid.Column="0"
+                            Margin="30"
+                             HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center">
+
+                             <TextBlock
+                                
+                               Text="YOU DECIDE HOW YOUR COMPUTER BEHAVES"
+                                FontSize="22"
+                                FontWeight="SemiBold"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                </Border>
+
+
+                <Button Grid.Column ="1"  x:Name="TipIcon1" Content="Remind Me" Margin="0,0,70,0"/>
+                    <muxc:TeachingTip x:Name="TipContent1" Target="{x:Bind TipIcon1}"/>
+
+            </Grid>
+
+
+            <!-- BOTTOM TOGGLES ROW 3 of msin grid  -->
+
+            <Grid Grid.Row="3" RowDefinitions="*,*,*"
+                  ColumnDefinitions="*,*"
+                  HorizontalAlignment="Stretch"
+                  Margin="40,0,0,0">
+
+
+                <Border
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+                    PointerExited="Border_PointerExited">
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock x:Name="HotkeyText" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
+                            <TextBlock Text="See Commands w/" FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+
+                        <Button Grid.Column="1" x:Name="AssignHotkey"  Content="Assign Hotkey" Click="AssignHotkey_Clicked"></Button>
+
+
+                    </Grid>
+                </Border>
+
+                <Border
+                     Grid.Row="0"
+                     Grid.Column="1"
+                     Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+                     PointerExited="Border_PointerExited">
+
+                    <Grid ColumnDefinitions="*,*">
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock x:Name="HotkeyText2" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
+                            <TextBlock Text="Save Command w/ " FontSize="12" Opacity="0.9" Foreground="White" />
+                        </StackPanel>
+
+                        <Button Grid.Column="1" x:Name="AssignHotkey2"  Content="Assign Hotkey" Click="AssignHotkey_Clicked"></Button>
+
+
+                    </Grid>
+                </Border>
+
+
+
+            </Grid>
+           </Grid>
+
+    </ScrollViewer>
+
+</Page>

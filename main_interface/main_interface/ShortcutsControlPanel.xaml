@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="main_interface.ShortcutsControlPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:main_interface"
+    xmlns:controls="using:main_interface.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+
+        <Grid RowDefinitions="0.2*,*">
+
+            <!-- HEADER -->
+            <Border x:Name="Headertop" Background="#FF4F46E5">
+                <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Top"
+                            Height="120" Padding="16" Margin="24,24,0,0">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="System Shortcuts" FontSize="30" FontWeight="SemiBold"/>
+                        <TextBlock Text="Assign a keyboard combo to any accessibility feature — press it anywhere in Windows"
+                                   FontSize="14" Opacity="0.7"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <!-- END HEADER -->
+
+            <!-- BODY -->
+            <Grid Grid.Row="1" ColumnDefinitions="*,*" Padding="16" Margin="24,16,0,0">
+
+                <!-- LEFT COLUMN -->
+                <StackPanel Grid.Column="0" Spacing="8" Margin="0,0,12,0">
+
+                    <TextBlock Text="What this does" FontSize="20" Opacity="0.7"/>
+
+                    <Border Background="#20FFFFFF" CornerRadius="12" Padding="16" Margin="0,0,16,8">
+                        <TextBlock
+                            Text="Each row below is one global shortcut. Press 'Assign', hold a modifier (Ctrl / Alt / Shift), then press a letter — from that point the combo triggers the action from anywhere in Windows, even when this app is in the background."
+                            FontSize="13" Opacity="0.85" TextWrapping="Wrap"/>
+                    </Border>
+
+                    <!-- Screen Reader -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,16,4"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <controls:HotKeyCaptureControl x:Name="NarratorAssigner"
+                                                       Label="Screen Reader (Narrator)"/>
+                    </Border>
+
+                    <!-- Magnifier -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,16,4"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <controls:HotKeyCaptureControl x:Name="MagnifierAssigner"
+                                                       Label="Magnifier"/>
+                    </Border>
+
+                    <!-- On-Screen Keyboard -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,16,4"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <controls:HotKeyCaptureControl x:Name="OskAssigner"
+                                                       Label="On-Screen Keyboard"/>
+                    </Border>
+
+                    <!-- Dim Screen -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,16,4"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <controls:HotKeyCaptureControl x:Name="DimScreenAssigner"
+                                                       Label="Toggle Dim Screen"/>
+                    </Border>
+
+                    <!-- Tiling Manager -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,16,4"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <controls:HotKeyCaptureControl x:Name="TilingAssigner"
+                                                       Label="Toggle Tiling Manager"/>
+                    </Border>
+
+                </StackPanel>
+
+                <!-- RIGHT COLUMN -->
+                <StackPanel Grid.Column="1" Spacing="8" Margin="0,0,24,0">
+
+                    <TextBlock Text="Shortcuts" FontSize="20" Opacity="0.7"/>
+
+                    <!-- Dyslexia Mode -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,0,4"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <controls:HotKeyCaptureControl x:Name="DyslexiaAssigner"
+                                                       Label="Toggle Dyslexia Mode"/>
+                    </Border>
+
+                    <!-- Mouseless Mode -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,0,4"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <controls:HotKeyCaptureControl x:Name="MouselessAssigner"
+                                                       Label="Toggle Mouseless Mode"/>
+                    </Border>
+
+                    <!-- Commands Overlay -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,0,4"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <controls:HotKeyCaptureControl x:Name="CommandsAssigner"
+                                                       Label="Open Commands Panel"/>
+                    </Border>
+
+                    <!-- High Contrast -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,0,4"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <controls:HotKeyCaptureControl x:Name="HighContrastAssigner"
+                                                       Label="Toggle High Contrast"/>
+                    </Border>
+
+                    <!-- Focus Mode -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,0,4"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <controls:HotKeyCaptureControl x:Name="FocusModeAssigner"
+                                                       Label="Focus Mode (minimise all others)"/>
+                    </Border>
+
+                </StackPanel>
+
+            </Grid>
+
+        </Grid>
+
+    </ScrollViewer>
+
+</Page>

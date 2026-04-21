@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="main_interface.SettingsControlPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:main_interface"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+<Grid>
+        <Image Source="/Assets/gifs/Account.gif"
+            Stretch="UniformToFill"></Image>
+    <Grid x:Name="maingrid" RowDefinitions="Auto,*,Auto">
+
+
+      
+           
+        <!-- Header -->
+        <StackPanel HorizontalAlignment="Center" Margin="0,20,0,24" Spacing="12" Width="550">
+            <TextBlock
+                Text="Settings"
+                FontSize="32"
+                FontWeight="Bold"
+                HorizontalAlignment="Center"/>
+            <Border Background="#40000000" CornerRadius="12" Padding="16">
+                <TextBlock
+                    Text="Control how the app runs on your machine — whether it starts automatically with Windows, stays alive in the background after you close the window, and syncs your configuration across devices."
+                    FontSize="13"
+                    Opacity="0.85"
+                    TextWrapping="Wrap"
+                    HorizontalAlignment="Center"
+                    TextAlignment="Center"/>
+            </Border>
+        </StackPanel>
+
+        <!-- Content Area -->
+        <StackPanel 
+            Grid.Row="1"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center"
+            Spacing="20"
+            Width="550">
+
+
+            <!-- Run on Startup -->
+            <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+        PointerExited="Border_PointerExited">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                        <TextBlock Text="Run on Startup" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                        <TextBlock Text="App will launch automatically when you log in" FontSize="12" Opacity="0.9" Foreground="White" />
+                    </StackPanel>
+                    <ToggleSwitch
+                        Grid.Column="1"
+                        x:Name="RunOnStartupToggle"
+                        Header="Apply"
+                        OffContent="Disabled"
+                        OnContent="Enabled"
+                        Toggled="RunOnStartup_Toggled"
+                        VerticalAlignment="Center"
+                        Margin="16,0,0,0" />
+                </Grid>
+            </Border>
+
+            <!-- Keep in background -->
+            <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+        PointerExited="Border_PointerExited">
+                <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                <Grid ColumnDefinitions="*,Auto">
+
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                        <TextBlock Text="Keep Program running in background" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                        <TextBlock Text="Closing the window hides it instead of exiting" FontSize="12" Opacity="0.9" Foreground="White" />
+                    </StackPanel>
+
+                    <!-- GRID COL 2 TOGGLE -->
+                    <ToggleSwitch 
+            Grid.Column="1"
+             x:Name="BackgroundProcessActiveToggle"
+           Header="Apply"
+           OffContent="Disabled"
+           OnContent="Enabled"
+           Toggled="BackgroundProcessActive_Toggled" 
+            VerticalAlignment="Center"
+            Margin="16,0,0,0" />
+                </Grid>
+            </Border>
+
+
+
+
+            <!-- NICE TOGGLE BAR BORDER WRAPPED -->
+            <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+        PointerExited="Border_PointerExited">
+                <!-- GRID COL 1  WITH TWO DESC UNDER EACHOTHER -->
+                <Grid ColumnDefinitions="*,Auto">
+
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                        <TextBlock Text="Sync your data across cpus" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                        <TextBlock Text="Applied features will not mirror other cpus" FontSize="12" Opacity="0.9" Foreground="White" />
+                    </StackPanel>
+
+                    <!-- GRID COL 2 TOGGLE -->
+                        <ToggleSwitch 
+                    Grid.Column="1"
+                     x:Name="SyncActiveToggle"
+                   Header="Apply"
+                   OffContent="Disabled"
+                   OnContent="Enabled"
+                   Toggled="SyncActive_Toggled" 
+                    VerticalAlignment="Center"
+                    Margin="16,0,0,0" />
+                </Grid>
+            </Border>
+
+
+
+
+
+
+
+
+        </StackPanel>
+
+
+        <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*" ColumnSpacing="12" Margin="24,0,24,24">
+
+            <!-- Log Out -->
+            <Border Grid.Column="0" CornerRadius="12" Padding="16,14"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="#64748B" BorderThickness="0,3,0,0"
+                    PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="🚪" FontSize="22"/>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Log Out" FontSize="13" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Sign out of your account" FontSize="11" Opacity="0.55" Foreground="White" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <Button Content="Log Out" HorizontalAlignment="Stretch"
+                            Margin="0,4,0,0" Click="LogOutButton_Click"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Sync Data -->
+            <Border Grid.Column="1" CornerRadius="12" Padding="16,14"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="#3B82F6" BorderThickness="0,3,0,0"
+                    PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="🔄" FontSize="22"/>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Sync Data" FontSize="13" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Push your settings to the cloud" FontSize="11" Opacity="0.55" Foreground="White" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <Button Content="Sync" HorizontalAlignment="Stretch"
+                            Margin="0,4,0,0" Click="LogOutButton_Click"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Close and Kill -->
+            <Border Grid.Column="2" CornerRadius="12" Padding="16,14"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="#F97316" BorderThickness="0,3,0,0"
+                    PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="⚠" FontSize="22"/>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Close &amp; Kill" FontSize="13" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Shut down the window and all background processes" FontSize="11" Opacity="0.55" Foreground="White" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <Button Content="Kill Processes" HorizontalAlignment="Stretch"
+                            Margin="0,4,0,0" Click="LogOutButton_Click"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Delete Account -->
+            <Border Grid.Column="3" CornerRadius="12" Padding="16,14"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="#EF4444" BorderThickness="0,3,0,0"
+                    PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="🗑" FontSize="22"/>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Delete Account" FontSize="13" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Permanently remove your account and data" FontSize="11" Opacity="0.55" Foreground="White" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <Button Content="Delete" HorizontalAlignment="Stretch"
+                            Margin="0,4,0,0" Click="LogOutButton_Click"/>
+                </StackPanel>
+            </Border>
+
+        </Grid>
+
+
+    </Grid>
+
+ </Grid>
+</Page>

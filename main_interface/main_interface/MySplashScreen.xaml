@@ -13,10 +13,11 @@
         <MicaBackdrop />
     </Window.SystemBackdrop>
 
+
+
     <Grid Background="Azure" >
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock Text="Loading..." Foreground="White" FontSize="24" HorizontalAlignment="Center"/>
-            <ProgressRing IsActive="True" Width="60" Height="60" Margin="0,20,0,0"></ProgressRing>
-        </StackPanel>
+       <Image x:Name="SplashGif" Source="/Assets/gifs/splash.gif" Stretch="UniformToFill"/>
+
+      
     </Grid>
 </Window>

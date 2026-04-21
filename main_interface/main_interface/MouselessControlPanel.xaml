@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="main_interface.MouselessControlPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:main_interface"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:controls="using:main_interface.Controls">
+
+    <Grid RowDefinitions="0.2*,*">
+
+        <Border x:Name="Headertop">
+            <Grid Height="120" Padding="16" Margin="24,24,0,0" ColumnDefinitions="Auto,Auto,*" VerticalAlignment="Top">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Enable Mouseless Interaction" FontSize="30" FontWeight="SemiBold" />
+                        <TextBlock Text="Move through typing" FontSize="14" Opacity="0.7" />
+                    </StackPanel>
+                    <ToggleSwitch
+                        x:Name="MouselessToggle"
+                        OffContent="Disabled" OnContent="Enabled"
+                        Toggled="MouselessToggle_Toggled"
+                        FontSize="16" MinHeight="48" Padding="4" VerticalAlignment="Center"
+                        PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <ToggleSwitch.RenderTransform>
+                            <ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
+                        </ToggleSwitch.RenderTransform>
+                    </ToggleSwitch>
+                </StackPanel>
+                <Border Grid.Column="1" Background="#20FFFFFF" CornerRadius="10"
+                        Padding="14,10" VerticalAlignment="Center" Margin="24,0,0,0">
+                    <controls:HotKeyCaptureControl x:Name="MouselessShortcut" Label="Toggle hotkey"/>
+                </Border>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" Padding="16" Margin="24,16,0,0">
+
+            <!-- Left: gif framed in a card -->
+            <StackPanel Grid.Column="0" Spacing="12" Margin="0,0,16,0">
+                <TextBlock Text="What this does"
+                           FontSize="20" Opacity="0.7" />
+                <Border Background="#20FFFFFF" CornerRadius="12" Padding="16">
+                    <TextBlock
+                        Text="If using a mouse is difficult or uncomfortable, Mouseless Mode lets you move the cursor and click entirely from your keyboard — pair it with the key reprogrammer to build a full mouse-free setup that works for you."
+                        FontSize="13"
+                        Opacity="0.85"
+                        TextWrapping="Wrap" />
+                </Border>
+                <Border CornerRadius="12" Padding="8"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                    <Image Source="/Assets/gifs/Mouseless.gif" Stretch="Uniform"/>
+                </Border>
+            </StackPanel>
+
+            <!-- Right: speed options -->
+            <StackPanel Grid.Column="1" Spacing="8">
+                <TextBlock Text="Speed" FontSize="16" FontWeight="SemiBold"
+                           Opacity="0.8" Margin="0,0,24,4"/>
+
+                <!-- Fast -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="8" Padding="16" Margin="0,0,24,0"
+                        BorderBrush="#F97316" BorderThickness="3,0,0,0"
+                        PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock Text="Fast" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="High speed, lower precision" FontSize="12" Opacity="0.6" Foreground="White" />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1" x:Name="SpeedFastToggle"
+                            OffContent="Off" OnContent="On"
+                            Toggled="FastSpeedToggle_Toggled" VerticalAlignment="Center" Margin="16,0,0,0" />
+                    </Grid>
+                </Border>
+
+                <!-- Medium -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="8" Padding="16" Margin="0,0,24,0"
+                        BorderBrush="#3B82F6" BorderThickness="3,0,0,0"
+                        PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock Text="Medium" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Balanced speed and control" FontSize="12" Opacity="0.6" Foreground="White" />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1" x:Name="SpeedMedToggle"
+                            OffContent="Off" OnContent="On"
+                            Toggled="MedSpeedToggle_Toggled" VerticalAlignment="Center" Margin="16,0,0,0" />
+                    </Grid>
+                </Border>
+
+                <!-- Slow -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="8" Padding="16" Margin="0,0,24,0"
+                        BorderBrush="#22C55E" BorderThickness="3,0,0,0"
+                        PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock Text="Slow" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="Low speed, high precision" FontSize="12" Opacity="0.6" Foreground="White" />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1" x:Name="SpeedSlowToggle"
+                            OffContent="Off" OnContent="On"
+                            Toggled="SlowSpeedToggle_Toggled" VerticalAlignment="Center" Margin="16,0,0,0" />
+                    </Grid>
+                </Border>
+
+                <Button Content="🖱 Program Clicks" Click="ProgramClicks_Click"
+                        HorizontalAlignment="Stretch" Margin="0,8,24,0"
+                        Padding="0,14" FontSize="15" FontWeight="SemiBold"
+                        Style="{StaticResource AccentButtonStyle}"/>
+            </StackPanel>
+
+        </Grid>
+
+    </Grid>
+
+</Page>

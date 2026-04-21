@@ -8,13 +8,82 @@
     <None Update="App.xaml">
       <SubType>Designer</SubType>
     </None>
+    <Page Update="HandMovementAgent_Panel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="ReprogamKeys.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="PopupKeyboard.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\KeyboardKey.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\UserControl2.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\HotKeyCaptureControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Assistant.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="TerminalControlPanel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="TerminalAssistant.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="AssistantControlPanel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="ReprogramKeysControlPanel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="SettingsControlPanel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="TilingManagerControlPanel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="TilingManager.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="MouselessControlPanel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Mouseless.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="SpotlightPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Eyesight.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="EyesightControlPanel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CommandsControlPanel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Commands.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="RegisterPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="LoginPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="MySplashScreen.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Account.xaml">
+    <Page Update="AccountWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="General.xaml">
+    <Page Update="HomePage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <None Update="MainWindow.xaml">
