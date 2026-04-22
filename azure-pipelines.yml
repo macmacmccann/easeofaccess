@@ -28,6 +28,24 @@ steps:
       packageType: sdk
       version: '8.x'
 
+  # Install Windows App SDK 1.8 runtime — required for WinUI3 XAML build tasks
+  # (not pre-installed on windows-latest; REGDB_E_CLASSNOTREG without this)
+  - task: PowerShell@2
+    displayName: 'Install Windows App SDK Runtime'
+    inputs:
+      targetType: inline
+      script: |
+        $ProgressPreference = 'SilentlyContinue'
+        $installer = "$env:TEMP\WinAppRuntimeInstall.exe"
+        Invoke-WebRequest `
+          -Uri 'https://aka.ms/windowsappsdk/1.8/latest/windowsappruntimeinstall-x64.exe' `
+          -OutFile $installer
+        $result = Start-Process $installer -ArgumentList '--quiet' -Wait -PassThru
+        Write-Host "Installer exit code: $($result.ExitCode)"
+        if ($result.ExitCode -ne 0 -and $result.ExitCode -ne 1) {
+          exit $result.ExitCode
+        }
+
   # restore packages
   - task: DotNetCoreCLI@2
     displayName: 'Restore packages'
