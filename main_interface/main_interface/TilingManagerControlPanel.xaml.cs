@@ -82,7 +82,10 @@ namespace main_interface
             StackedModeToggle.IsOn = StateSettings.StackedModeEnabled;
             ColumnModeToggle.IsOn = StateSettings.ColumnModeEnabled;
             GridModeToggle.IsOn = StateSettings.GridModeEnabled;
+            MasterStackModeToggle.IsOn = StateSettings.MasterStackModeEnabled;
             FocusModeToggle.IsOn = StateSettings.FocusModeEnabled;
+            DimOpacitySlider.Value = StateSettings.FocusDimOpacity;
+            DimOpacityValue.Text = $"{StateSettings.FocusDimOpacity}%";
 
 
             // this sets the bool from the ui - tricky note 
@@ -116,7 +119,7 @@ namespace main_interface
 
             // You cant turn it on if you dont have one enabled
             // For now -> but force one enabled 
-            if(!StateSettings.ColumnModeEnabled && !StateSettings.StackedModeEnabled && !StateSettings.GridModeEnabled)
+            if(!StateSettings.ColumnModeEnabled && !StateSettings.StackedModeEnabled && !StateSettings.GridModeEnabled && !StateSettings.MasterStackModeEnabled)
             {
                 TilingManagerToggle.IsOn = false;
                 StateSettings.TilingManagerEnabled = false;
@@ -140,7 +143,8 @@ namespace main_interface
                     // var tm -> getinstance would just create another one if i said getinstance twice in a row 
                     var tm = TilingManager.GetInstance();
                     tm.ReturntoMaxedAfterClosing();
-                    tm.RemoveSubclass(); // Stops double creation accidentally - delete it when done !
+                    tm.RestoreAllOpacity();
+                    tm.RemoveSubclass();
                     tm.TurnOffHooks();
              
                     tm.Destroy();
@@ -162,6 +166,7 @@ namespace main_interface
 
                     tm.ApplySettings();
                     tm.ActivateWindowListenerHook();
+                    tm.ActivateFocusHook();
 
                      HeaderColour(sender, e);
 
@@ -245,6 +250,8 @@ namespace main_interface
                 StateSettings.ColumnModeEnabled = false;
                 GridModeToggle.IsOn = false;
                 StateSettings.GridModeEnabled = false;
+                MasterStackModeToggle.IsOn = false;
+                StateSettings.MasterStackModeEnabled = false;
             }
 
             if (TilingManager.Exists())
@@ -281,11 +288,46 @@ namespace main_interface
                 StateSettings.StackedModeEnabled = false;
                 ColumnModeToggle.IsOn = false;
                 StateSettings.ColumnModeEnabled = false;
+                MasterStackModeToggle.IsOn = false;
+                StateSettings.MasterStackModeEnabled = false;
             }
 
             if (TilingManager.Exists())
             {
                 Debug.WriteLine($"(should be) Grid mode on : {StateSettings.GridModeEnabled}");
+                TilingManager.GetInstance().ApplySettings();
+                TilingManager.GetInstance().TilePrimaryMonitorWindows();
+            }
+        }
+
+        private void MasterStackModeToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            GlobalMasterStackToggle();
+        }
+
+        public void MasterStack_SetStateAndToggle_DontRead()
+        {
+            MasterStackModeToggle.IsOn = true;
+            StateSettings.MasterStackModeEnabled = true;
+            GlobalMasterStackToggle();
+        }
+
+        public void GlobalMasterStackToggle()
+        {
+            StateSettings.MasterStackModeEnabled = MasterStackModeToggle.IsOn;
+
+            if (!MasterStackModeToggle.IsOn)
+                return;
+
+            StackedModeToggle.IsOn = false;
+            StateSettings.StackedModeEnabled = false;
+            ColumnModeToggle.IsOn = false;
+            StateSettings.ColumnModeEnabled = false;
+            GridModeToggle.IsOn = false;
+            StateSettings.GridModeEnabled = false;
+
+            if (TilingManager.Exists())
+            {
                 TilingManager.GetInstance().ApplySettings();
                 TilingManager.GetInstance().TilePrimaryMonitorWindows();
             }
@@ -332,6 +374,8 @@ namespace main_interface
                 StateSettings.StackedModeEnabled = false;
                 GridModeToggle.IsOn = false;
                 StateSettings.GridModeEnabled = false;
+                MasterStackModeToggle.IsOn = false;
+                StateSettings.MasterStackModeEnabled = false;
             }
 
 
@@ -348,6 +392,15 @@ namespace main_interface
    
   
 
+
+        private void DimOpacitySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            StateSettings.FocusDimOpacity = (int)e.NewValue;
+            DimOpacityValue.Text = $"{StateSettings.FocusDimOpacity}%";
+
+            if (TilingManager.Exists())
+                TilingManager.GetInstance().ReapplyFocusDim();
+        }
 
         private void Border_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
@@ -800,6 +853,19 @@ namespace main_interface
                //ComboPreviousNoId = new TakenCombinations.HotKeyCombo(ModToUint, vk);
                */
             return string.Join(" ", keyschosen);
+        }
+
+        public void SetHotkeyLabel(int hotkeyId, string text)
+        {
+            switch (hotkeyId)
+            {
+                case HOTKEY_ID_OVERLAY:    HotkeyText.Text  = text; break;
+                case HOTKEY_ID_MAXIMIZE:   HotkeyText2.Text = text; break;
+                case HOTKEY_ID_RETILE:     HotkeyText3.Text = text; break;
+                case HOTKEY_ID_FOCUS_NEXT: HotkeyText4.Text = text; break;
+                case HOTKEY_ID_CLOSE:      HotkeyText5.Text = text; break;
+                case HOTKEY_ID_SWAP_NEXT:  HotkeyText6.Text = text; break;
+            }
         }
 
         private const int HOTKEY_ID_OVERLAY    = 9000;

@@ -48,6 +48,8 @@ namespace main_interface
         public static bool StackedModeEnabled = false;
         public static bool ColumnModeEnabled = true;
         public static bool GridModeEnabled = false;
+        public static bool MasterStackModeEnabled = false;
+        public static int FocusDimOpacity = 67; // 0-100, applied to unfocused tiled windows
 
         // Reprogam Keys // Key Control
 

@@ -108,7 +108,52 @@ namespace main_interface
             );
         }
 
-        //Delegate required by enumerate windows to reveive the window handle 
+        public void ActivateFocusHook()
+        {
+            _focusEventDelegate = OnFocusChanged;
+            _focusEventHook = SetWinEventHook(
+                EVENT_SYSTEM_FOREGROUND,
+                EVENT_SYSTEM_FOREGROUND,
+                IntPtr.Zero,
+                _focusEventDelegate,
+                0, 0,
+                WINEVENT_OUTOFCONTEXT
+            );
+        }
+
+        private void OnFocusChanged(IntPtr hWinEventHook, uint eventType, IntPtr hWnd,
+            int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
+        {
+            if (idObject != 0) return;
+            DispatcherQueue.TryEnqueue(() => ApplyFocusDim(hWnd));
+        }
+
+        public void ApplyFocusDim(IntPtr focusedHwnd)
+        {
+            if (_tiledOrder.Count == 0) return;
+            byte dimAlpha = (byte)(StateSettings.FocusDimOpacity * 255 / 100);
+            foreach (var hwnd in _tiledOrder)
+            {
+                byte alpha = hwnd == focusedHwnd ? (byte)255 : dimAlpha;
+                uint exStyle = (uint)GetWindowLong(hwnd, GWL_EXSTYLE);
+                SetWindowLong(hwnd, GWL_EXSTYLE, exStyle | WS_EX_LAYERED);
+                SetLayeredWindowAttributes(hwnd, 0, alpha, LWA_ALPHA);
+            }
+        }
+
+        public void ReapplyFocusDim() => ApplyFocusDim(GetForegroundWindow());
+
+        public void RestoreAllOpacity()
+        {
+            foreach (var hwnd in _tiledOrder)
+            {
+                uint exStyle = (uint)GetWindowLong(hwnd, GWL_EXSTYLE);
+                SetWindowLong(hwnd, GWL_EXSTYLE, exStyle | WS_EX_LAYERED);
+                SetLayeredWindowAttributes(hwnd, 0, 255, LWA_ALPHA);
+            }
+        }
+
+        //Delegate required by enumerate windows to reveive the window handle
         delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
 
 
@@ -125,6 +170,9 @@ namespace main_interface
              int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
 
         private WinEventDelegate? _winEventDelegate; // must hold reference or GC will collect it
+
+        private IntPtr _focusEventHook;
+        private WinEventDelegate? _focusEventDelegate;
 
 
         //In constructor   _winEventDelegate = OnWinEvent;
@@ -170,6 +218,7 @@ namespace main_interface
         const uint EVENT_OBJECT_SHOW = 0x8002;
         const uint EVENT_OBJECT_HIDE = 0x8003;
         const uint EVENT_OBJECT_DESTROY = 0x8001;
+        const uint EVENT_SYSTEM_FOREGROUND = 0x0003;
         const uint WINEVENT_OUTOFCONTEXT = 0x0000;
 
 
@@ -189,8 +238,13 @@ namespace main_interface
 
             if (_winEventHook != IntPtr.Zero)
                 UnhookWinEvent(_winEventHook);
-            _winEventHook = IntPtr.Zero; // clear delegate
-            _winEventDelegate = null; // Global delegate aswell
+            _winEventHook = IntPtr.Zero;
+            _winEventDelegate = null;
+
+            if (_focusEventHook != IntPtr.Zero)
+                UnhookWinEvent(_focusEventHook);
+            _focusEventHook = IntPtr.Zero;
+            _focusEventDelegate = null;
 
 
             //_instanceTilingManager = null; // Clear the singleton reference 
@@ -217,9 +271,27 @@ namespace main_interface
             {
                 //SetupHook(); old method not dynamic hardcoded keys commented below 
                 // UpdateHotkey(0,0);
-                SetupSubclass(); // Hook into Win32 message loops 
-                UpdateHotkey(1, MOD_CONTROL, VK_O); // id set to match in method (as page doesnt know it only here does ) 
-                _isHookUpSet = true; // now never try again 
+                SetupSubclass();
+
+                TryUpdateHotkey(HOTKEY_ID_OVERLAY,    Modifiers.MOD_ALT,                              VK_A,     out _);
+                TryUpdateHotkey(HOTKEY_ID_FOCUS_NEXT, Modifiers.MOD_ALT,                              VK_RIGHT, out _);
+                TryUpdateHotkey(HOTKEY_ID_SWAP_NEXT,  Modifiers.MOD_ALT | Modifiers.MOD_SHIFT,        VK_RIGHT, out _);
+                TryUpdateHotkey(HOTKEY_ID_MAXIMIZE,   Modifiers.MOD_ALT,                              VK_F,     out _);
+                TryUpdateHotkey(HOTKEY_ID_RETILE,     Modifiers.MOD_ALT,                              VK_T,     out _);
+                TryUpdateHotkey(HOTKEY_ID_CLOSE,      Modifiers.MOD_ALT,                              VK_W,     out _);
+
+                var cp = TilingManagerControlPanel._tilingControlPanelPage;
+                if (cp != null)
+                {
+                    cp.SetHotkeyLabel(HOTKEY_ID_OVERLAY,    "Alt + A");
+                    cp.SetHotkeyLabel(HOTKEY_ID_FOCUS_NEXT, "Alt + Right");
+                    cp.SetHotkeyLabel(HOTKEY_ID_SWAP_NEXT,  "Alt + Shift + Right");
+                    cp.SetHotkeyLabel(HOTKEY_ID_MAXIMIZE,   "Alt + F");
+                    cp.SetHotkeyLabel(HOTKEY_ID_RETILE,     "Alt + T");
+                    cp.SetHotkeyLabel(HOTKEY_ID_CLOSE,      "Alt + W");
+                }
+
+                _isHookUpSet = true;
                                      // HotKeyErrorOccured?.Invoke("In Use. Try again");
 
             }
@@ -521,6 +593,10 @@ namespace main_interface
                 StackWindows(windows, workWidth, workHeight, tileHeight, tileWidth, workX, workY);
             if (StateSettings.GridModeEnabled)
                 GridWindows(windows, workWidth, workHeight, workX, workY);
+            if (StateSettings.MasterStackModeEnabled)
+                MasterStackWindows(windows, workWidth, workHeight, workX, workY);
+
+            ApplyFocusDim(GetForegroundWindow());
         }
 
 
@@ -597,6 +673,43 @@ namespace main_interface
                 _ = FadeInWindowAsync(windows[i]);
             }
 
+        }
+
+        public void MasterStackWindows(List<IntPtr> windows, int workWidth, int workHeight, int workX, int workY)
+        {
+            int count = windows.Count;
+            if (count == 0) return;
+
+            if (count == 1)
+            {
+                ShowWindow(windows[0], 9);
+                SetWindowPos(windows[0], IntPtr.Zero, workX, workY, workWidth, workHeight, SWP_NOACTIVATE);
+                _ = FadeInWindowAsync(windows[0]);
+                return;
+            }
+
+            int masterWidth = workWidth / 2;
+            int stackWidth = workWidth - masterWidth;
+            int stackHeight = workHeight / (count - 1);
+
+            ShowWindow(windows[0], 9);
+            SetWindowPos(windows[0], IntPtr.Zero, workX, workY, masterWidth, workHeight, SWP_NOACTIVATE);
+            _ = FadeInWindowAsync(windows[0]);
+
+            for (int i = 1; i < count; i++)
+            {
+                ShowWindow(windows[i], 9);
+                SetWindowPos(
+                    windows[i],
+                    IntPtr.Zero,
+                    workX + masterWidth,
+                    workY + (i - 1) * stackHeight,
+                    stackWidth,
+                    stackHeight,
+                    SWP_NOACTIVATE
+                );
+                _ = FadeInWindowAsync(windows[i]);
+            }
         }
 
         public void GridWindows(List<IntPtr> windows, int workWidth, int workHeight, int workX, int workY)
@@ -781,7 +894,8 @@ namespace main_interface
         {
             StepOne,
             StepTwo,
-            StepThree
+            StepThree,
+            StepFour
         }
 
 
@@ -822,6 +936,11 @@ namespace main_interface
                     TilingManagerControlPanel._tilingControlPanelPage.Grid_SetStateAndToggle_DontRead();
                     break;
 
+                case ProgressState.StepFour:
+                    Debug.WriteLine("Turn on Master Stack ");
+
+                    TilingManagerControlPanel._tilingControlPanelPage.MasterStack_SetStateAndToggle_DontRead();
+                    break;
 
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -970,9 +1089,14 @@ namespace main_interface
         const int MOD_ALT = 0x0001;  // alt 
         const int MOD_WIN = 0x0008; // win 
 
-        const int VK_V = 0x56; // Virtual Key for the letter v so meaning shift + v 
-        const int VK_O = 0x4F; // letter o 
+        const int VK_V = 0x56;
+        const int VK_O = 0x4F;
         const int VK_8 = 0x38;
+        const uint VK_RIGHT = 0x27;
+        const uint VK_F     = 0x46;
+        const uint VK_T     = 0x54;
+        const uint VK_W     = 0x57;
+        const uint VK_A     = 0x41;
 
 
         const int HOTKEY_ID_OVERLAY = 9000;     // cycle modes

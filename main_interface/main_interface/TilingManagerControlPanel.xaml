@@ -196,6 +196,40 @@ PointerExited="Border_PointerExited">
                         </Grid>
                     </Border>
 
+                    <!-- NICE TOGGLE BAR BORDER WRAPPED -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+PointerExited="Border_PointerExited">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="Master Stack Mode" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                                <TextBlock Text="One large master window, rest stacked beside it" FontSize="12" Opacity="0.9" Foreground="White" />
+                            </StackPanel>
+                            <ToggleSwitch
+                            Grid.Column="1"
+                            x:Name="MasterStackModeToggle"
+                            OnContent="On"
+                            OffContent="Off"
+                            VerticalAlignment="Center"
+                            Toggled="MasterStackModeToggle_Toggled"
+                            Margin="16,0,0,0" />
+                        </Grid>
+                    </Border>
+
+                    <!-- NICE TOGGLE BAR BORDER WRAPPED -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
+PointerExited="Border_PointerExited">
+                        <StackPanel Spacing="8">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
+                                    <TextBlock Text="Unfocused Dim" FontSize="14" FontWeight="SemiBold" Foreground="White" />
+                                    <TextBlock Text="Opacity of background windows" FontSize="12" Opacity="0.9" Foreground="White" />
+                                </StackPanel>
+                                <TextBlock x:Name="DimOpacityValue" Grid.Column="1" VerticalAlignment="Center" FontSize="14" Foreground="White" />
+                            </Grid>
+                            <Slider x:Name="DimOpacitySlider" Minimum="0" Maximum="100" ValueChanged="DimOpacitySlider_ValueChanged" />
+                        </StackPanel>
+                    </Border>
+
                 </StackPanel><!-- WRAPPER END OF TOP FEATURE TOGGLES  -->
             </Grid> <!-- WRAPPER END OF TOP FEATURE TOGGLES  -->
 
