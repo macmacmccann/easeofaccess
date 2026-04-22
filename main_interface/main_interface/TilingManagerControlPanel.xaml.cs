@@ -143,11 +143,10 @@ namespace main_interface
                 {
                     // var tm -> getinstance would just create another one if i said getinstance twice in a row 
                     var tm = TilingManager.GetInstance();
+                    tm.TurnOffHooks();
+                    tm.RemoveSubclass();
                     tm.ReturntoMaxedAfterClosing();
                     tm.RestoreAllOpacity();
-                    tm.RemoveSubclass();
-                    tm.TurnOffHooks();
-             
                     tm.Destroy();
                     bool exists = TilingManager.Exists();
                     Debug.WriteLine(exists);

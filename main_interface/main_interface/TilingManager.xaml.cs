@@ -137,6 +137,7 @@ namespace main_interface
         public void ApplyFocusDim(IntPtr focusedHwnd)
         {
             if (_tiledOrder.Count == 0) return;
+            if (_focusEventHook == IntPtr.Zero) return;
             byte dimAlpha = (byte)(StateSettings.FocusDimOpacity * 255 / 100);
             foreach (var hwnd in _tiledOrder)
             {
