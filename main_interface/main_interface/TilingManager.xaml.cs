@@ -77,13 +77,19 @@ namespace main_interface
             EnableAcrylic();
             HideFromTaskbar();
       
-            //TilePrimaryMonitor();
             GetTileableWindows();
             TilePrimaryMonitorWindows();
-       
 
-            // " Subscription" logic -> dump method into this 
-            Activated += OnActivated; 
+            SetupSubclass();
+
+            TryUpdateHotkey(HOTKEY_ID_OVERLAY,    Modifiers.MOD_ALT,                          VK_A,     out _);
+            TryUpdateHotkey(HOTKEY_ID_FOCUS_NEXT, Modifiers.MOD_ALT,                          VK_RIGHT, out _);
+            TryUpdateHotkey(HOTKEY_ID_SWAP_NEXT,  Modifiers.MOD_ALT | Modifiers.MOD_SHIFT,    VK_RIGHT, out _);
+            TryUpdateHotkey(HOTKEY_ID_MAXIMIZE,   Modifiers.MOD_ALT,                          VK_F,     out _);
+            TryUpdateHotkey(HOTKEY_ID_RETILE,     Modifiers.MOD_ALT,                          VK_T,     out _);
+            TryUpdateHotkey(HOTKEY_ID_CLOSE,      Modifiers.MOD_ALT,                          VK_W,     out _);
+
+            Activated += OnActivated;
 
 
 
@@ -261,45 +267,8 @@ namespace main_interface
 
 
 
-        private bool _isHookUpSet = false;
-
-        private void OnActivated(object sender, WindowActivatedEventArgs args) // hwnd exists after the fact thats why is activated when window is constructred not in the construcotr 
+        private void OnActivated(object sender, WindowActivatedEventArgs args)
         {
-          //  MoveOffScreen();
-            //thhis will run once im not unsuncribing to this method 
-            if (!_isHookUpSet)
-            {
-                //SetupHook(); old method not dynamic hardcoded keys commented below 
-                // UpdateHotkey(0,0);
-                SetupSubclass();
-
-                TryUpdateHotkey(HOTKEY_ID_OVERLAY,    Modifiers.MOD_ALT,                              VK_A,     out _);
-                TryUpdateHotkey(HOTKEY_ID_FOCUS_NEXT, Modifiers.MOD_ALT,                              VK_RIGHT, out _);
-                TryUpdateHotkey(HOTKEY_ID_SWAP_NEXT,  Modifiers.MOD_ALT | Modifiers.MOD_SHIFT,        VK_RIGHT, out _);
-                TryUpdateHotkey(HOTKEY_ID_MAXIMIZE,   Modifiers.MOD_ALT,                              VK_F,     out _);
-                TryUpdateHotkey(HOTKEY_ID_RETILE,     Modifiers.MOD_ALT,                              VK_T,     out _);
-                TryUpdateHotkey(HOTKEY_ID_CLOSE,      Modifiers.MOD_ALT,                              VK_W,     out _);
-
-                var cp = TilingManagerControlPanel._tilingControlPanelPage;
-                if (cp != null)
-                {
-                    cp.SetHotkeyLabel(HOTKEY_ID_OVERLAY,    "Alt + A");
-                    cp.SetHotkeyLabel(HOTKEY_ID_FOCUS_NEXT, "Alt + Right");
-                    cp.SetHotkeyLabel(HOTKEY_ID_SWAP_NEXT,  "Alt + Shift + Right");
-                    cp.SetHotkeyLabel(HOTKEY_ID_MAXIMIZE,   "Alt + F");
-                    cp.SetHotkeyLabel(HOTKEY_ID_RETILE,     "Alt + T");
-                    cp.SetHotkeyLabel(HOTKEY_ID_CLOSE,      "Alt + W");
-                }
-
-                _isHookUpSet = true;
-                                     // HotKeyErrorOccured?.Invoke("In Use. Try again");
-
-            }
-            // Elevated command choice cuts off code -> no way to override -> only after regaining focus 
-            if (args.WindowActivationState == WindowActivationState.Deactivated)
-            {
-
-            }
         }
 
 

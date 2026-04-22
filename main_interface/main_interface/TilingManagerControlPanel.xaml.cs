@@ -110,6 +110,7 @@ namespace main_interface
             // Usecase User controlling boolean through ui
             // OverlayEnabledToggle.IsOn = StateSettings.OverlayEnabled;
 
+            SyncHotkeyLabelsFromState();
         }
 
 
@@ -866,6 +867,23 @@ namespace main_interface
                 case HOTKEY_ID_CLOSE:      HotkeyText5.Text = text; break;
                 case HOTKEY_ID_SWAP_NEXT:  HotkeyText6.Text = text; break;
             }
+        }
+
+        // Called on page load — TilingManager.OnActivated may have already registered the
+        // defaults before this page existed, so read from TakenCombinations as the source of truth.
+        private void SyncHotkeyLabelsFromState()
+        {
+            void TrySet(int id, TextBlock tb)
+            {
+                if (TakenCombinations.TryGetCombo(id, out var combo) && combo.VirtualKey != 0)
+                    tb.Text = Controls.HotKeyCaptureControl.DescribeCombo(combo.Modifiers, combo.VirtualKey);
+            }
+            TrySet(HOTKEY_ID_OVERLAY,    HotkeyText);
+            TrySet(HOTKEY_ID_MAXIMIZE,   HotkeyText2);
+            TrySet(HOTKEY_ID_RETILE,     HotkeyText3);
+            TrySet(HOTKEY_ID_FOCUS_NEXT, HotkeyText4);
+            TrySet(HOTKEY_ID_CLOSE,      HotkeyText5);
+            TrySet(HOTKEY_ID_SWAP_NEXT,  HotkeyText6);
         }
 
         private const int HOTKEY_ID_OVERLAY    = 9000;
