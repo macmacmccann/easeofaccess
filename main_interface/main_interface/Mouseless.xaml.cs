@@ -88,6 +88,20 @@ public sealed partial class Mouseless : Window
 
     private System.Threading.Timer _moveTimer;
 
+    // Click keys state
+    private bool _enterHeld, _spaceHeld, _appsHeld;
+
+    // Key codes
+    private const int VK_RETURN = 0x0D;    // Enter
+    private const int VK_SPACE = 0x20;   // Space
+    private const int VK_APPS = 0x5D;   // Apps/Menu key
+
+    // Mouse button flags
+    const uint MOUSEEVENTF_LEFTDOWN = 0x0002;
+    const uint MOUSEEVENTF_LEFTUP = 0x0004;
+    const uint MOUSEEVENTF_RIGHTDOWN = 0x0008;
+    const uint MOUSEEVENTF_RIGHTUP = 0x0010;
+
     public void ApplySettings()
     {
         if (StateSettings.SpeedFastEnabled)
@@ -132,6 +146,53 @@ public sealed partial class Mouseless : Window
 
         if (dx != 0 || dy != 0)
             MoveMouse(dx, dy);
+    }
+
+    // ── Click actions ─────────────────────────────────────────────────
+    // Left click = Enter, Right click = Apps key, Double-click = Space
+    public void LeftClick()
+    {
+        var input = new INPUT
+        {
+            type = INPUT_MOUSE,
+            mi = new MOUSEINPUT { dwFlags = MOUSEEVENTF_LEFTDOWN }
+        };
+        SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
+
+        input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+        SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
+    }
+
+    public void RightClick()
+    {
+        var input = new INPUT
+        {
+            type = INPUT_MOUSE,
+            mi = new MOUSEINPUT { dwFlags = MOUSEEVENTF_RIGHTDOWN }
+        };
+        SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
+
+        input.mi.dwFlags = MOUSEEVENTF_RIGHTUP;
+        SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
+    }
+
+    public void DoubleClick()
+    {
+        var input = new INPUT
+        {
+            type = INPUT_MOUSE,
+            mi = new MOUSEINPUT { dwFlags = MOUSEEVENTF_LEFTDOWN }
+        };
+        SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
+        input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+        SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
+
+        System.Threading.Thread.Sleep(50);
+
+        input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+        SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
+        input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+        SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
     }
 
     void MoveMouse(int dx, int dy)
@@ -186,6 +247,9 @@ public sealed partial class Mouseless : Window
 
     const uint INPUT_MOUSE = 0; // Idenifies as mouse input not anything else
     const uint MOUSEEVENTF_MOVE = 0x0001; // Windows code this input is mouse movement 
+
+    // ── Click actions ─────────────────────────────────────────────────
+    // Enter = left click, Menu = right click, Space = double-click 
 
 
 
@@ -381,6 +445,11 @@ public sealed partial class Mouseless : Window
                 if (keyInfo.vkCode == (uint)Keys.Down)     _downHeld  = true;
                 if (keyInfo.vkCode == (uint)Keys.Left)     _leftHeld  = true;
                 if (keyInfo.vkCode == (uint)Keys.Right)    _rightHeld = true;
+
+                // Click actions on key down
+                if (keyInfo.vkCode == VK_RETURN)           _enterHeld = true;
+                if (keyInfo.vkCode == VK_SPACE)          _spaceHeld = true;
+                if (keyInfo.vkCode == VK_APPS)          _appsHeld = true;
             }
             if (wParam == (IntPtr)WM_KEYUP)
             {
@@ -388,6 +457,11 @@ public sealed partial class Mouseless : Window
                 if (keyInfo.vkCode == (uint)Keys.Down)     _downHeld  = false;
                 if (keyInfo.vkCode == (uint)Keys.Left)     _leftHeld  = false;
                 if (keyInfo.vkCode == (uint)Keys.Right)    _rightHeld = false;
+
+                // Trigger click actions on key release
+                if (keyInfo.vkCode == VK_RETURN && _enterHeld) { LeftClick(); _enterHeld = false; }
+                if (keyInfo.vkCode == VK_SPACE && _spaceHeld) { DoubleClick(); _spaceHeld = false; }
+                if (keyInfo.vkCode == VK_APPS && _appsHeld) { RightClick(); _appsHeld = false; }
             }
         }
         return CallNextHookEx(_keyboardHook, nCode, wParam, lParam);

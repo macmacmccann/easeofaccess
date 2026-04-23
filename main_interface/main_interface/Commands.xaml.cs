@@ -547,10 +547,12 @@ namespace main_interface
                     ToggleOverlay(); //Lets open our overlay screen
                     return IntPtr.Zero; // tell win32 the message was handled  
                 }
-                if (wParam.ToInt32() == HOTKEY_ID_FAKE_OTHER_FUNCTION)
+if (wParam.ToInt32() == HOTKEY_ID_FAKE_OTHER_FUNCTION)
                 {
-                    Debug.WriteLine("Other function called");
-                    return IntPtr.Zero; // tell win32 the message was handled  
+                    Debug.WriteLine("Hide window hotkey");
+                    MoveOffScreen();
+                    _visible = false;
+                    return IntPtr.Zero;  // tell win32 the message was handled  
                 }
 
 

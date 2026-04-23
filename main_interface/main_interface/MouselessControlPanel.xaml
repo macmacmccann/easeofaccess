@@ -112,6 +112,38 @@
                         HorizontalAlignment="Stretch" Margin="0,8,24,0"
                         Padding="0,14" FontSize="15" FontWeight="SemiBold"
                         Style="{StaticResource AccentButtonStyle}"/>
+
+                <!-- Keyboard shortcuts reference -->
+                <Border Background="#15FFFFFF" CornerRadius="8" Padding="16" Margin="0,16,24,0"
+                        BorderBrush="#374151" BorderThickness="1">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Keyboard Controls" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Border Background="#2563EB" CornerRadius="4" Padding="8,4">
+                                <TextBlock Text="Arrow Keys" FontSize="12" Foreground="White"/>
+                            </Border>
+                            <TextBlock Text="Move cursor" FontSize="12" Opacity="0.7" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Border Background="#16A34A" CornerRadius="4" Padding="8,4">
+                                <TextBlock Text="Enter" FontSize="12" Foreground="White"/>
+                            </Border>
+                            <TextBlock Text="Left click" FontSize="12" Opacity="0.7" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Border Background="#DC2626" CornerRadius="4" Padding="8,4">
+                                <TextBlock Text="Menu (Apps)" FontSize="12" Foreground="White"/>
+                            </Border>
+                            <TextBlock Text="Right click" FontSize="12" Opacity="0.7" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Border Background="#7C3AED" CornerRadius="4" Padding="8,4">
+                                <TextBlock Text="Space" FontSize="12" Foreground="White"/>
+                            </Border>
+                            <TextBlock Text="Double click" FontSize="12" Opacity="0.7" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
             </StackPanel>
 
         </Grid>

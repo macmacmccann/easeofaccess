@@ -103,11 +103,23 @@
                                 <ComboBoxItem Content="None"/>
                                 <ComboBoxItem Content="Minimize Window"/>
                                 <ComboBoxItem Content="Maximize Window"/>
+                                <ComboBoxItem Content="Close Window"/>
                                 <ComboBoxItem Content="Left Click"/>
+                                <ComboBoxItem Content="Right Click"/>
+                                <ComboBoxItem Content="Double Click"/>
+                                <ComboBoxItem Content="Scroll Up"/>
+                                <ComboBoxItem Content="Scroll Down"/>
                                 <ComboBoxItem Content="Volume Up"/>
                                 <ComboBoxItem Content="Volume Down"/>
+                                <ComboBoxItem Content="Play/Pause"/>
                                 <ComboBoxItem Content="Previous Desktop"/>
                                 <ComboBoxItem Content="Next Desktop"/>
+                                <ComboBoxItem Content="Copy"/>
+                                <ComboBoxItem Content="Paste"/>
+                                <ComboBoxItem Content="Tile Stacked"/>
+                                <ComboBoxItem Content="Tile Column"/>
+                                <ComboBoxItem Content="Tile Grid"/>
+                                <ComboBoxItem Content="Tile Master Stack"/>
                             </ComboBox>
                         </Grid>
                     </Border>
@@ -123,11 +135,23 @@
                                 <ComboBoxItem Content="None"/>
                                 <ComboBoxItem Content="Minimize Window"/>
                                 <ComboBoxItem Content="Maximize Window"/>
+                                <ComboBoxItem Content="Close Window"/>
                                 <ComboBoxItem Content="Left Click"/>
+                                <ComboBoxItem Content="Right Click"/>
+                                <ComboBoxItem Content="Double Click"/>
+                                <ComboBoxItem Content="Scroll Up"/>
+                                <ComboBoxItem Content="Scroll Down"/>
                                 <ComboBoxItem Content="Volume Up"/>
                                 <ComboBoxItem Content="Volume Down"/>
+                                <ComboBoxItem Content="Play/Pause"/>
                                 <ComboBoxItem Content="Previous Desktop"/>
                                 <ComboBoxItem Content="Next Desktop"/>
+                                <ComboBoxItem Content="Copy"/>
+                                <ComboBoxItem Content="Paste"/>
+                                <ComboBoxItem Content="Tile Stacked"/>
+                                <ComboBoxItem Content="Tile Column"/>
+                                <ComboBoxItem Content="Tile Grid"/>
+                                <ComboBoxItem Content="Tile Master Stack"/>
                             </ComboBox>
                         </Grid>
                     </Border>
@@ -143,11 +167,23 @@
                                 <ComboBoxItem Content="None"/>
                                 <ComboBoxItem Content="Minimize Window"/>
                                 <ComboBoxItem Content="Maximize Window"/>
+                                <ComboBoxItem Content="Close Window"/>
                                 <ComboBoxItem Content="Left Click"/>
+                                <ComboBoxItem Content="Right Click"/>
+                                <ComboBoxItem Content="Double Click"/>
+                                <ComboBoxItem Content="Scroll Up"/>
+                                <ComboBoxItem Content="Scroll Down"/>
                                 <ComboBoxItem Content="Volume Up"/>
                                 <ComboBoxItem Content="Volume Down"/>
+                                <ComboBoxItem Content="Play/Pause"/>
                                 <ComboBoxItem Content="Previous Desktop"/>
                                 <ComboBoxItem Content="Next Desktop"/>
+                                <ComboBoxItem Content="Copy"/>
+                                <ComboBoxItem Content="Paste"/>
+                                <ComboBoxItem Content="Tile Stacked"/>
+                                <ComboBoxItem Content="Tile Column"/>
+                                <ComboBoxItem Content="Tile Grid"/>
+                                <ComboBoxItem Content="Tile Master Stack"/>
                             </ComboBox>
                         </Grid>
                     </Border>
@@ -163,11 +199,23 @@
                                 <ComboBoxItem Content="None"/>
                                 <ComboBoxItem Content="Minimize Window"/>
                                 <ComboBoxItem Content="Maximize Window"/>
+                                <ComboBoxItem Content="Close Window"/>
                                 <ComboBoxItem Content="Left Click"/>
+                                <ComboBoxItem Content="Right Click"/>
+                                <ComboBoxItem Content="Double Click"/>
+                                <ComboBoxItem Content="Scroll Up"/>
+                                <ComboBoxItem Content="Scroll Down"/>
                                 <ComboBoxItem Content="Volume Up"/>
                                 <ComboBoxItem Content="Volume Down"/>
+                                <ComboBoxItem Content="Play/Pause"/>
                                 <ComboBoxItem Content="Previous Desktop"/>
                                 <ComboBoxItem Content="Next Desktop"/>
+                                <ComboBoxItem Content="Copy"/>
+                                <ComboBoxItem Content="Paste"/>
+                                <ComboBoxItem Content="Tile Stacked"/>
+                                <ComboBoxItem Content="Tile Column"/>
+                                <ComboBoxItem Content="Tile Grid"/>
+                                <ComboBoxItem Content="Tile Master Stack"/>
                             </ComboBox>
                         </Grid>
                     </Border>
@@ -183,11 +231,23 @@
                                 <ComboBoxItem Content="None"/>
                                 <ComboBoxItem Content="Minimize Window"/>
                                 <ComboBoxItem Content="Maximize Window"/>
+                                <ComboBoxItem Content="Close Window"/>
                                 <ComboBoxItem Content="Left Click"/>
+                                <ComboBoxItem Content="Right Click"/>
+                                <ComboBoxItem Content="Double Click"/>
+                                <ComboBoxItem Content="Scroll Up"/>
+                                <ComboBoxItem Content="Scroll Down"/>
                                 <ComboBoxItem Content="Volume Up"/>
                                 <ComboBoxItem Content="Volume Down"/>
+                                <ComboBoxItem Content="Play/Pause"/>
                                 <ComboBoxItem Content="Previous Desktop"/>
                                 <ComboBoxItem Content="Next Desktop"/>
+                                <ComboBoxItem Content="Copy"/>
+                                <ComboBoxItem Content="Paste"/>
+                                <ComboBoxItem Content="Tile Stacked"/>
+                                <ComboBoxItem Content="Tile Column"/>
+                                <ComboBoxItem Content="Tile Grid"/>
+                                <ComboBoxItem Content="Tile Master Stack"/>
                             </ComboBox>
                         </Grid>
                     </Border>
@@ -203,11 +263,23 @@
                                 <ComboBoxItem Content="None"/>
                                 <ComboBoxItem Content="Minimize Window"/>
                                 <ComboBoxItem Content="Maximize Window"/>
+                                <ComboBoxItem Content="Close Window"/>
                                 <ComboBoxItem Content="Left Click"/>
+                                <ComboBoxItem Content="Right Click"/>
+                                <ComboBoxItem Content="Double Click"/>
+                                <ComboBoxItem Content="Scroll Up"/>
+                                <ComboBoxItem Content="Scroll Down"/>
                                 <ComboBoxItem Content="Volume Up"/>
                                 <ComboBoxItem Content="Volume Down"/>
+                                <ComboBoxItem Content="Play/Pause"/>
                                 <ComboBoxItem Content="Previous Desktop"/>
                                 <ComboBoxItem Content="Next Desktop"/>
+                                <ComboBoxItem Content="Copy"/>
+                                <ComboBoxItem Content="Paste"/>
+                                <ComboBoxItem Content="Tile Stacked"/>
+                                <ComboBoxItem Content="Tile Column"/>
+                                <ComboBoxItem Content="Tile Grid"/>
+                                <ComboBoxItem Content="Tile Master Stack"/>
                             </ComboBox>
                         </Grid>
                     </Border>
@@ -223,11 +295,23 @@
                                 <ComboBoxItem Content="None"/>
                                 <ComboBoxItem Content="Minimize Window"/>
                                 <ComboBoxItem Content="Maximize Window"/>
+                                <ComboBoxItem Content="Close Window"/>
                                 <ComboBoxItem Content="Left Click"/>
+                                <ComboBoxItem Content="Right Click"/>
+                                <ComboBoxItem Content="Double Click"/>
+                                <ComboBoxItem Content="Scroll Up"/>
+                                <ComboBoxItem Content="Scroll Down"/>
                                 <ComboBoxItem Content="Volume Up"/>
                                 <ComboBoxItem Content="Volume Down"/>
+                                <ComboBoxItem Content="Play/Pause"/>
                                 <ComboBoxItem Content="Previous Desktop"/>
                                 <ComboBoxItem Content="Next Desktop"/>
+                                <ComboBoxItem Content="Copy"/>
+                                <ComboBoxItem Content="Paste"/>
+                                <ComboBoxItem Content="Tile Stacked"/>
+                                <ComboBoxItem Content="Tile Column"/>
+                                <ComboBoxItem Content="Tile Grid"/>
+                                <ComboBoxItem Content="Tile Master Stack"/>
                             </ComboBox>
                         </Grid>
                     </Border>

@@ -115,7 +115,7 @@ namespace main_interface
 
 
 
-        private void TilingManagerToggle_Toggled(object sender, RoutedEventArgs e)
+        public void TilingManagerToggle_Toggled(object sender, RoutedEventArgs e)
         {
 
             // You cant turn it on if you dont have one enabled

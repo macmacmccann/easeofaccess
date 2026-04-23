@@ -231,7 +231,7 @@ PointerExited="Border_PointerExited">
                     Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
                     PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                     <StackPanel Spacing="4" VerticalAlignment="Center">
-                        <TextBlock Text="Save Command w/" FontSize="12" Opacity="0.9" Foreground="White"/>
+                        <TextBlock Text="Hide window" FontSize="12" Opacity="0.9" Foreground="White"/>
                         <controls:HotKeyCaptureControl x:Name="SaveCommandAssigner" Label="Assign hotkey" HotkeyId="8000"/>
                     </StackPanel>
                 </Border>

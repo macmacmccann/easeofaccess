@@ -29,9 +29,7 @@ using AppWindow = Microsoft.UI.Windowing.AppWindow;
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 namespace main_interface
 {
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
+
     public sealed partial class TilingManager : Window
     {
         DesktopAcrylicBackdrop? acrylic; // Dont garbage collect / global / exists in lifecycle of whole class not just a method
