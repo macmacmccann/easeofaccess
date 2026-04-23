@@ -868,21 +868,25 @@ namespace main_interface
             }
         }
 
-        // Called on page load — TilingManager.OnActivated may have already registered the
-        // defaults before this page existed, so read from TakenCombinations as the source of truth.
+        // Called on page load — reads registered combos from TakenCombinations, falling back
+        // to the hardcoded defaults from TilingManager's constructor when none are registered yet
+        // (e.g. when the tiling toggle is off and TilingManager hasn't been constructed).
         private void SyncHotkeyLabelsFromState()
         {
-            void TrySet(int id, TextBlock tb)
+            SetLabel(HOTKEY_ID_OVERLAY,    HotkeyText,  "Alt + A");
+            SetLabel(HOTKEY_ID_MAXIMIZE,   HotkeyText2, "Alt + F");
+            SetLabel(HOTKEY_ID_RETILE,     HotkeyText3, "Alt + T");
+            SetLabel(HOTKEY_ID_FOCUS_NEXT, HotkeyText4, "Alt + Right");
+            SetLabel(HOTKEY_ID_CLOSE,      HotkeyText5, "Alt + W");
+            SetLabel(HOTKEY_ID_SWAP_NEXT,  HotkeyText6, "Alt + Shift + Right");
+
+            void SetLabel(int id, TextBlock tb, string defaultText)
             {
                 if (TakenCombinations.TryGetCombo(id, out var combo) && combo.VirtualKey != 0)
                     tb.Text = Controls.HotKeyCaptureControl.DescribeCombo(combo.Modifiers, combo.VirtualKey);
+                else
+                    tb.Text = defaultText;
             }
-            TrySet(HOTKEY_ID_OVERLAY,    HotkeyText);
-            TrySet(HOTKEY_ID_MAXIMIZE,   HotkeyText2);
-            TrySet(HOTKEY_ID_RETILE,     HotkeyText3);
-            TrySet(HOTKEY_ID_FOCUS_NEXT, HotkeyText4);
-            TrySet(HOTKEY_ID_CLOSE,      HotkeyText5);
-            TrySet(HOTKEY_ID_SWAP_NEXT,  HotkeyText6);
         }
 
         private const int HOTKEY_ID_OVERLAY    = 9000;
