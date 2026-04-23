@@ -74,18 +74,19 @@ namespace main_interface
 
             EnableAcrylic();
             HideFromTaskbar();
-      
+
             GetTileableWindows();
             TilePrimaryMonitorWindows();
 
             SetupSubclass();
 
-            TryUpdateHotkey(HOTKEY_ID_OVERLAY,    Modifiers.MOD_ALT,                          VK_A,     out _);
-            TryUpdateHotkey(HOTKEY_ID_FOCUS_NEXT, Modifiers.MOD_ALT,                          VK_RIGHT, out _);
-            TryUpdateHotkey(HOTKEY_ID_SWAP_NEXT,  Modifiers.MOD_ALT | Modifiers.MOD_SHIFT,    VK_RIGHT, out _);
-            TryUpdateHotkey(HOTKEY_ID_MAXIMIZE,   Modifiers.MOD_ALT,                          VK_F,     out _);
-            TryUpdateHotkey(HOTKEY_ID_RETILE,     Modifiers.MOD_ALT,                          VK_T,     out _);
-            TryUpdateHotkey(HOTKEY_ID_CLOSE,      Modifiers.MOD_ALT,                          VK_W,     out _);
+            // Register hotkeys from _assignedCombos (pre-seeded defaults or user-set while tiling was off)
+            RegisterFromAssigned(HOTKEY_ID_OVERLAY,    Modifiers.MOD_ALT,                       VK_A);
+            RegisterFromAssigned(HOTKEY_ID_FOCUS_NEXT, Modifiers.MOD_ALT,                       VK_RIGHT);
+            RegisterFromAssigned(HOTKEY_ID_SWAP_NEXT,  Modifiers.MOD_ALT | Modifiers.MOD_SHIFT, VK_RIGHT);
+            RegisterFromAssigned(HOTKEY_ID_MAXIMIZE,   Modifiers.MOD_ALT,                       VK_F);
+            RegisterFromAssigned(HOTKEY_ID_RETILE,     Modifiers.MOD_ALT,                       VK_T);
+            RegisterFromAssigned(HOTKEY_ID_CLOSE,      Modifiers.MOD_ALT,                       VK_W);
 
             Activated += OnActivated;
 
@@ -1073,6 +1074,38 @@ namespace main_interface
         const int HOTKEY_ID_FOCUS_NEXT = 6000;  // focus next tiled window
         const int HOTKEY_ID_CLOSE = 5000;       // close focused window
         const int HOTKEY_ID_SWAP_NEXT = 4000;   // swap focused window with next in tile order
+        // Populates TakenCombinations with the 6 hardcoded defaults WITHOUT creating the window.
+        // Call this from the control panel on startup so the popup keyboard shows them as taken
+        // even when the tiling toggle is off.
+        public static void SeedDefaultsTaken()
+        {
+            static void Seed(int id, uint mod, uint vk)
+            {
+                if (!TakenCombinations._assignedCombos.ContainsKey(id))
+                {
+                    TakenCombinations.Add(mod, vk);
+                    TakenCombinations._assignedCombos[id] = new HotKeyCombo(mod, vk);
+                }
+            }
+            Seed(HOTKEY_ID_OVERLAY,    (uint)Modifiers.MOD_ALT,                                    VK_A);
+            Seed(HOTKEY_ID_MAXIMIZE,   (uint)Modifiers.MOD_ALT,                                    VK_F);
+            Seed(HOTKEY_ID_RETILE,     (uint)Modifiers.MOD_ALT,                                    VK_T);
+            Seed(HOTKEY_ID_FOCUS_NEXT, (uint)Modifiers.MOD_ALT,                                    VK_RIGHT);
+            Seed(HOTKEY_ID_CLOSE,      (uint)Modifiers.MOD_ALT,                                    VK_W);
+            Seed(HOTKEY_ID_SWAP_NEXT,  (uint)(Modifiers.MOD_ALT | Modifiers.MOD_SHIFT),            VK_RIGHT);
+        }
+
+        // Registers a hotkey using whatever is in _assignedCombos for this ID (user-set or seeded
+        // default), falling back to the default only if no entry exists at all.
+        private void RegisterFromAssigned(int id, Modifiers defaultMod, uint defaultVk)
+        {
+            var hwnd = WindowNative.GetWindowHandle(this);
+            if (TakenCombinations._assignedCombos.TryGetValue(id, out var stored) && stored.VirtualKey != 0)
+                RegisterHotKey(hwnd, id, stored.Modifiers, stored.VirtualKey);
+            else
+                TryUpdateHotkey(id, defaultMod, defaultVk, out _);
+        }
+
         public bool TryUpdateHotkey(int id, Modifiers modkey, uint vk, out HotKeyCombo resultingCombo)
         {
 

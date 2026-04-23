@@ -6,9 +6,11 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Windows.Graphics;
 using Windows.System;
+using Windows.UI;
 using WinRT.Interop;
 using static main_interface.TakenCombinations;
 
@@ -33,12 +35,18 @@ public sealed partial class PopupKeyboard : Window
     private LowLevelKeyboardProc? _hookCallback; // keep alive — GC doesn't see unmanaged reference
     private IntPtr _hookHandle = IntPtr.Zero;
     private Microsoft.UI.Dispatching.DispatcherQueue _uiQueue = null!;
+    private uint _currentHookMods = 0; // modifier keys currently held
 
     private const int WH_KEYBOARD_LL = 13;
     private const int WM_KEYDOWN     = 0x0100;
     private const int WM_SYSKEYDOWN  = 0x0104;
     private const int WM_KEYUP       = 0x0101;
     private const int WM_SYSKEYUP    = 0x0105;
+
+    // Overlay colors
+    private static readonly Color _colorTaken  = Color.FromArgb(200, 220,  38,  38); // red   — taken under current mods
+    private static readonly Color _colorActive = Color.FromArgb(200, 251, 146,  60); // orange — held modifier key
+    private static readonly Color _colorHint   = Color.FromArgb( 80, 251, 191,  36); // amber  — modifier has some taken combos
 
     [StructLayout(LayoutKind.Sequential)]
     private struct KBDLLHOOKSTRUCT
@@ -68,36 +76,113 @@ public sealed partial class PopupKeyboard : Window
     public void InstallHook()
     {
         if (_hookHandle != IntPtr.Zero) return;
-        _hookCallback = HookCallback;
-        _hookHandle   = SetWindowsHookEx(WH_KEYBOARD_LL, _hookCallback, IntPtr.Zero, 0);
+        _hookCallback    = HookCallback;
+        _hookHandle      = SetWindowsHookEx(WH_KEYBOARD_LL, _hookCallback, IntPtr.Zero, 0);
+        _currentHookMods = 0;
+        _uiQueue.TryEnqueue(() => UpdateTakenOverlay(0)); // paint at-rest hint on open
     }
 
     public void UninstallHook()
     {
         if (_hookHandle == IntPtr.Zero) return;
         UnhookWindowsHookEx(_hookHandle);
-        _hookHandle = IntPtr.Zero;
+        _hookHandle      = IntPtr.Zero;
+        _currentHookMods = 0;
+        _uiQueue.TryEnqueue(ClearAllHighlights);
     }
 
     private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
     {
         if (nCode >= 0 && _keyMap != null)
         {
-            var kb = Marshal.PtrToStructure<KBDLLHOOKSTRUCT>(lParam);
-            var vk = (VirtualKey)kb.vkCode;
+            var kb  = Marshal.PtrToStructure<KBDLLHOOKSTRUCT>(lParam);
+            var vk  = (VirtualKey)kb.vkCode;
+            int msg = wParam.ToInt32();
+            bool down = msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN;
+            bool up   = msg == WM_KEYUP   || msg == WM_SYSKEYUP;
+
+            // Track modifier state — when it changes, repaint the taken overlay
+            uint modBit = ModBitFor(vk);
+            if (modBit != 0)
+            {
+                if (down) _currentHookMods |=  modBit;
+                if (up)   _currentHookMods &= ~modBit;
+                uint snap = _currentHookMods;
+                _uiQueue.TryEnqueue(() => UpdateTakenOverlay(snap));
+            }
+
+            // Key press visual
             if (_keyMap.TryGetValue(vk, out var keyCtrl))
             {
-                int msg = wParam.ToInt32();
-                if (msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN)
-                    _uiQueue.TryEnqueue(() => keyCtrl.TriggerPressedVisual());
-                else if (msg == WM_KEYUP || msg == WM_SYSKEYUP)
-                    _uiQueue.TryEnqueue(() => keyCtrl.TriggerReleasedVisual());
+                if (down) _uiQueue.TryEnqueue(() => keyCtrl.TriggerPressedVisual());
+                else if (up) _uiQueue.TryEnqueue(() => keyCtrl.TriggerReleasedVisual());
             }
         }
         return CallNextHookEx(_hookHandle, nCode, wParam, lParam);
     }
 
-    bool _visible; // Track where the overlay is currently visible 
+    // Returns the MOD_* bit for modifier virtual keys, 0 for everything else.
+    private static uint ModBitFor(VirtualKey vk) => vk switch
+    {
+        VirtualKey.LeftMenu    or VirtualKey.RightMenu    or VirtualKey.Menu    => (uint)Modifiers.MOD_ALT,
+        VirtualKey.LeftControl or VirtualKey.RightControl or VirtualKey.Control => (uint)Modifiers.MOD_CONTROL,
+        VirtualKey.LeftShift   or VirtualKey.RightShift   or VirtualKey.Shift   => (uint)Modifiers.MOD_SHIFT,
+        _                                                                         => 0
+    };
+
+    // Paints the keyboard to show which keys are taken under the current modifier state.
+    private void UpdateTakenOverlay(uint mods)
+    {
+        if (_keyMap == null) return;
+        foreach (var k in _keyMap.Values) k.SetHighlight(null);
+
+        if (mods == 0)
+        {
+            // At rest: subtle amber hint on modifier keys that have any taken combo
+            bool altHas   = _taken.Any(c => (c.Modifiers & (uint)Modifiers.MOD_ALT)     != 0);
+            bool ctrlHas  = _taken.Any(c => (c.Modifiers & (uint)Modifiers.MOD_CONTROL) != 0);
+            bool shiftHas = _taken.Any(c => (c.Modifiers & (uint)Modifiers.MOD_SHIFT)   != 0);
+            if (altHas)   { TryHighlight(VirtualKey.LeftMenu,    _colorHint); TryHighlight(VirtualKey.RightMenu,    _colorHint); }
+            if (ctrlHas)  { TryHighlight(VirtualKey.LeftControl, _colorHint); TryHighlight(VirtualKey.RightControl, _colorHint); }
+            if (shiftHas) { TryHighlight(VirtualKey.LeftShift,   _colorHint); TryHighlight(VirtualKey.RightShift,   _colorHint); }
+            return;
+        }
+
+        // Active modifier keys: orange
+        if ((mods & (uint)Modifiers.MOD_ALT)     != 0) { TryHighlight(VirtualKey.LeftMenu,    _colorActive); TryHighlight(VirtualKey.RightMenu,    _colorActive); }
+        if ((mods & (uint)Modifiers.MOD_CONTROL) != 0) { TryHighlight(VirtualKey.LeftControl, _colorActive); TryHighlight(VirtualKey.RightControl, _colorActive); }
+        if ((mods & (uint)Modifiers.MOD_SHIFT)   != 0) { TryHighlight(VirtualKey.LeftShift,   _colorActive); TryHighlight(VirtualKey.RightShift,   _colorActive); }
+
+        // Keys taken under exactly these modifiers: red
+        foreach (var combo in _taken)
+        {
+            if (combo.Modifiers == mods && combo.VirtualKey != 0)
+                TryHighlight((VirtualKey)combo.VirtualKey, _colorTaken);
+        }
+    }
+
+    private void TryHighlight(VirtualKey vk, Color color)
+    {
+        if (_keyMap != null && _keyMap.TryGetValue(vk, out var key))
+            key.SetHighlight(color);
+    }
+
+    private void ClearAllHighlights()
+    {
+        if (_keyMap == null) return;
+        foreach (var k in _keyMap.Values) k.SetHighlight(null);
+    }
+
+    // Fired when the user clicks Cancel — active capture controls subscribe to revert.
+    public static event Action? CancelRequested;
+
+    private void CancelButton_Click(object sender, RoutedEventArgs e)
+    {
+        MoveOffScreen();           // always close the popup
+        CancelRequested?.Invoke(); // let active capture revert its state
+    }
+
+    bool _visible; // Track where the overlay is currently visible
 
     public void Toggle()
     {

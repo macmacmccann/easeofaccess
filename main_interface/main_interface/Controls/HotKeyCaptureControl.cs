@@ -166,7 +166,8 @@ namespace main_interface.Controls
                 page.KeyDown += OnPageKeyDown;
             }
 
-            UsageTracker.Fired += OnUsageFired;
+            UsageTracker.Fired        += OnUsageFired;
+            PopupKeyboard.CancelRequested += OnPopupCancel;
             RefreshState();
         }
 
@@ -182,7 +183,22 @@ namespace main_interface.Controls
                 _currentlyCapturing = null;
                 HidePopup();
             }
-            UsageTracker.Fired -= OnUsageFired;
+            UsageTracker.Fired        -= OnUsageFired;
+            PopupKeyboard.CancelRequested -= OnPopupCancel;
+        }
+
+        private void OnPopupCancel()
+        {
+            // Dispatch to this control's thread — the popup button fires on the popup's context.
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                if (!_isCapturing || _currentlyCapturing != this) return;
+                _isCapturing = false;
+                HotkeyText.Text = _capturedVK != 0
+                    ? DescribeCombo(_capturedMods, _capturedVK)
+                    : "Not assigned";
+                // popup already hidden by CancelButton_Click before event fires
+            });
         }
 
         // ── Button ───────────────────────────────────────────────────────────

@@ -23,7 +23,7 @@ xmlns:system="using:Windows.System"
     <ScrollViewer>
 
 
-        <Grid x:Name="keyboard"  RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+        <Grid x:Name="keyboard"  RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
 
             <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Stretch" Height="60" Padding="8" Margin="24,0,0,0">
                 <controls:KeyboardKey x:Name="KeyEsc" Label="Esc" VirtualKeyCode="{local:VirtualKeyExtension Key=Escape}"/>
@@ -131,6 +131,14 @@ xmlns:system="using:Windows.System"
                     <controls:KeyboardKey x:Name="KeyRightCtrl" Label="Ctrl" VirtualKeyCode="{local:VirtualKeyExtension Key=RightControl}"/>
                 </StackPanel>
             </Grid>
+            <Grid Grid.Row="6" Padding="12,8" Margin="24,4,24,8">
+                <Button x:Name="CancelButton"
+                        Content="Cancel"
+                        HorizontalAlignment="Right"
+                        Style="{StaticResource AccentButtonStyle}"
+                        Click="CancelButton_Click"/>
+            </Grid>
+
         </Grid>
 
 

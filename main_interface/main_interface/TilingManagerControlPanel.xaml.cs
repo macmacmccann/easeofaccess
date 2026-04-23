@@ -60,6 +60,13 @@ namespace main_interface
             DesignGlobalCode.HeaderColour(Headertop);
             TipsConstructor();
             TilingShortcut.ComboCaptured += (m, v) => RegisterFeatureShortcut(TilingShortcut, ShortcutsWindow.ID_FEAT_TILING, m, v);
+
+            // Pre-populate TakenCombinations with the hardcoded defaults so the popup keyboard
+            // shows them as taken even while the tiling toggle is off.
+            TilingManager.SeedDefaultsTaken();
+
+            PopupKeyboard.CancelRequested += OnPopupCancelRequested;
+            this.Unloaded += (_, _) => PopupKeyboard.CancelRequested -= OnPopupCancelRequested;
         }
 
 
@@ -486,10 +493,11 @@ namespace main_interface
 
 
 
-        bool _isCapturingHotKey; // guard flag - stop when false 
+        bool _isCapturingHotKey;
         bool _waitingForPrimaryKey;
-        private TextBlock? _activeHotkeyTextBlock; // Track which Textblock to update
+        private TextBlock? _activeHotkeyTextBlock;
         private Microsoft.UI.Xaml.Controls.Button? _activeButton;
+        private string? _previousHotkeyText; // saved text to restore on cancel
 
         //event not method 
         private void AssignHotkey_Clicked(object sender, RoutedEventArgs e)
@@ -507,36 +515,25 @@ namespace main_interface
                 _activeButton = button;
                 // Determine which button was clicked and set the corresponding TextBlock
                 if (button.Name == "AssignHotkey")
-                {
                     _activeHotkeyTextBlock = HotkeyText;
-                    _activeHotkeyTextBlock.Text = "Press keys...";
-                }
                 else if (button.Name == "AssignHotkey2")
-                {
                     _activeHotkeyTextBlock = HotkeyText2;
-                    _activeHotkeyTextBlock.Text = "Press keys...";
-                }
                 else if (button.Name == "AssignHotkey3")
-                {
                     _activeHotkeyTextBlock = HotkeyText3;
-                    _activeHotkeyTextBlock.Text = "Press keys...";
-                }
                 else if (button.Name == "AssignHotkey4")
-                {
                     _activeHotkeyTextBlock = HotkeyText4;
-                    _activeHotkeyTextBlock.Text = "Press keys...";
-                }
                 else if (button.Name == "AssignHotkey5")
-                {
                     _activeHotkeyTextBlock = HotkeyText5;
-                    _activeHotkeyTextBlock.Text = "Press keys...";
-                }
                 else if (button.Name == "AssignHotkey6")
-                {
                     _activeHotkeyTextBlock = HotkeyText6;
+
+                if (_activeHotkeyTextBlock != null)
+                {
+                    _previousHotkeyText = _activeHotkeyTextBlock.Text; // save for cancel revert
                     _activeHotkeyTextBlock.Text = "Press keys...";
                 }
 
+                PopupKeyboard.MakeInstance.ShowOnScreen();
             }
         }
         // method
@@ -795,12 +792,13 @@ namespace main_interface
 
 
 
-            //Update button to show what was pressed
             if (_isCapturingHotKey == false && _waitingForPrimaryKey == false)
             {
                 _activeHotkeyTextBlock.Text = DescribeHotKey(CapturedModiferKeys, CapturedVK);
                 await OnHotkeyCaptured(CapturedModiferKeys, CapturedVK);
-
+                // Hide popup only if capture is truly finished (not retrying after error)
+                if (!_isCapturingHotKey && PopupKeyboard.Exists())
+                    PopupKeyboard.MakeInstance.MoveOffScreen();
             }
             atLeastOneModFirst = 0;
         }
@@ -922,16 +920,35 @@ namespace main_interface
 
 
             }
-            // Try to update
+            // If tiling is off, reserve the combo in TakenCombinations without creating the window.
+            // The actual RegisterHotKey call happens in TilingManager.RegisterFromAssigned() when
+            // the user later turns tiling on.
+            if (!StateSettings.TilingManagerEnabled)
+            {
+                TakenCombinations.RemoveById(hotkeyId);
+                if (TakenCombinations.IsTaken((uint)modifiers, vk))
+                {
+                    bool retry = await Dialogues.OnErrorDialogue_InUse(this.XamlRoot);
+                    if (retry) { GuideRedirect(); return; }
+                    // Restore label to whatever was previously assigned
+                    if (TakenCombinations.TryGetCombo(hotkeyId, out var old) && old.VirtualKey != 0)
+                        _activeHotkeyTextBlock.Text = DescribeHotKey((Modifiers)old.Modifiers, old.VirtualKey);
+                    _isCapturingHotKey = false;
+                    return;
+                }
+                var reserved = new TakenCombinations.HotKeyCombo((uint)modifiers, vk);
+                TakenCombinations.Add((uint)modifiers, vk);
+                TakenCombinations._assignedCombos[hotkeyId] = reserved;
+                _activeHotkeyTextBlock.Text = DescribeHotKey(modifiers, vk);
+                _isCapturingHotKey = false;
+                return;
+            }
 
-
+            // Tiling is on — route through the live window which can RegisterHotKey immediately.
             bool success = TilingManager.GetInstance().TryUpdateHotkey(hotkeyId, modifiers, vk, out var resultingCombo);
-
-
 
             if (!success)
             {
-                // Only if awauit returns true do you exit out of this and try again 
                 Debug.WriteLine("REFUSED - already in use or registration failed");
                 bool confirmed = await Dialogues.OnErrorDialogue_InUse(this.XamlRoot);
                 if (confirmed)
@@ -939,16 +956,11 @@ namespace main_interface
                     GuideRedirect();
                     return;
                 }
-
-
-
-                // Always update UI with resulting combo
                 _activeHotkeyTextBlock.Text = DescribeHotKey((Modifiers)resultingCombo.Modifiers, resultingCombo.VirtualKey);
             }
             else
             {
                 _activeHotkeyTextBlock.Text = DescribeHotKey((Modifiers)resultingCombo.Modifiers, resultingCombo.VirtualKey);
-
                 Debug.WriteLine($"SUCCESS - registered: {resultingCombo}");
             }
             _isCapturingHotKey = false;
@@ -1147,6 +1159,17 @@ namespace main_interface
             if (combo.VirtualKey != 0)
                 assigner.SetDisplayText(main_interface.Controls.HotKeyCaptureControl.DescribeCombo(combo.Modifiers, combo.VirtualKey));
             assigner.RefreshState();
+        }
+
+        private void OnPopupCancelRequested()
+        {
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                if (!_isCapturingHotKey) return;
+                Stop();
+                if (_activeHotkeyTextBlock != null)
+                    _activeHotkeyTextBlock.Text = _previousHotkeyText ?? "Not assigned";
+            });
         }
 
     } // end of class
