@@ -1146,6 +1146,7 @@ namespace main_interface
             }
             if (combo.VirtualKey != 0)
                 assigner.SetDisplayText(main_interface.Controls.HotKeyCaptureControl.DescribeCombo(combo.Modifiers, combo.VirtualKey));
+            assigner.RefreshState();
         }
 
     } // end of class

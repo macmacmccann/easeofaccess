@@ -167,6 +167,7 @@ namespace main_interface
 
         private void DispatchAction(int id)
         {
+            UsageTracker.RecordFire(id);
             switch (id)
             {
                 case ID_SCREEN_READER: ToggleNarrator();     break;

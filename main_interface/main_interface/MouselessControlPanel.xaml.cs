@@ -204,6 +204,7 @@ public sealed partial class MouselessControlPanel : Page
         }
         if (combo.VirtualKey != 0)
             assigner.SetDisplayText(main_interface.Controls.HotKeyCaptureControl.DescribeCombo(combo.Modifiers, combo.VirtualKey));
+        assigner.RefreshState();
     }
 
 

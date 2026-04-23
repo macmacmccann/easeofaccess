@@ -390,6 +390,7 @@ public sealed partial class EyesightControlPanel : Page
         }
         if (combo.VirtualKey != 0)
             assigner.SetDisplayText(main_interface.Controls.HotKeyCaptureControl.DescribeCombo(combo.Modifiers, combo.VirtualKey));
+        assigner.RefreshState();
     }
 
     private void TipsConstructor()

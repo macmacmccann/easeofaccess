@@ -44,35 +44,35 @@
                     <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,16,4"
                             PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                         <controls:HotKeyCaptureControl x:Name="NarratorAssigner"
-                                                       Label="Screen Reader (Narrator)"/>
+                                                       Label="Screen Reader (Narrator)" HotkeyId="1001"/>
                     </Border>
 
                     <!-- Magnifier -->
                     <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,16,4"
                             PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                         <controls:HotKeyCaptureControl x:Name="MagnifierAssigner"
-                                                       Label="Magnifier"/>
+                                                       Label="Magnifier" HotkeyId="1002"/>
                     </Border>
 
                     <!-- On-Screen Keyboard -->
                     <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,16,4"
                             PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                         <controls:HotKeyCaptureControl x:Name="OskAssigner"
-                                                       Label="On-Screen Keyboard"/>
+                                                       Label="On-Screen Keyboard" HotkeyId="1003"/>
                     </Border>
 
                     <!-- Dim Screen -->
                     <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,16,4"
                             PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                         <controls:HotKeyCaptureControl x:Name="DimScreenAssigner"
-                                                       Label="Toggle Dim Screen"/>
+                                                       Label="Toggle Dim Screen" HotkeyId="1004"/>
                     </Border>
 
                     <!-- Tiling Manager -->
                     <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,16,4"
                             PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                         <controls:HotKeyCaptureControl x:Name="TilingAssigner"
-                                                       Label="Toggle Tiling Manager"/>
+                                                       Label="Toggle Tiling Manager" HotkeyId="1005"/>
                     </Border>
 
                 </StackPanel>
@@ -86,35 +86,35 @@
                     <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,0,4"
                             PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                         <controls:HotKeyCaptureControl x:Name="DyslexiaAssigner"
-                                                       Label="Toggle Dyslexia Mode"/>
+                                                       Label="Toggle Dyslexia Mode" HotkeyId="1006"/>
                     </Border>
 
                     <!-- Mouseless Mode -->
                     <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,0,4"
                             PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                         <controls:HotKeyCaptureControl x:Name="MouselessAssigner"
-                                                       Label="Toggle Mouseless Mode"/>
+                                                       Label="Toggle Mouseless Mode" HotkeyId="1007"/>
                     </Border>
 
                     <!-- Commands Overlay -->
                     <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,0,4"
                             PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                         <controls:HotKeyCaptureControl x:Name="CommandsAssigner"
-                                                       Label="Open Commands Panel"/>
+                                                       Label="Open Commands Panel" HotkeyId="1008"/>
                     </Border>
 
                     <!-- High Contrast -->
                     <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,0,4"
                             PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                         <controls:HotKeyCaptureControl x:Name="HighContrastAssigner"
-                                                       Label="Toggle High Contrast"/>
+                                                       Label="Toggle High Contrast" HotkeyId="1009"/>
                     </Border>
 
                     <!-- Focus Mode -->
                     <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,4,0,4"
                             PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
                         <controls:HotKeyCaptureControl x:Name="FocusModeAssigner"
-                                                       Label="Focus Mode (minimise all others)"/>
+                                                       Label="Focus Mode (minimise all others)" HotkeyId="1010"/>
                     </Border>
 
                 </StackPanel>

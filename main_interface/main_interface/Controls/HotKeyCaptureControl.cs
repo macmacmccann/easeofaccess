@@ -1,3 +1,4 @@
+using main_interface;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -6,6 +7,7 @@ using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
 using Windows.System;
+using Windows.UI;
 using Windows.UI.Core;
 
 namespace main_interface.Controls
@@ -15,6 +17,19 @@ namespace main_interface.Controls
         // ── Public surface ───────────────────────────────────────────────────
 
         public event System.Action<uint, uint>? ComboCaptured;
+
+        // The hotkey ID this control owns (matches TakenCombinations / UsageTracker keys).
+        // Set this in XAML (e.g. HotkeyId="1001") and the control manages its own
+        // suggestion / usage display automatically.
+        public static readonly DependencyProperty HotkeyIdProperty =
+            DependencyProperty.Register(nameof(HotkeyId), typeof(int),
+                typeof(HotKeyCaptureControl), new PropertyMetadata(0));
+
+        public int HotkeyId
+        {
+            get => (int)GetValue(HotkeyIdProperty);
+            set => SetValue(HotkeyIdProperty, value);
+        }
 
         public static readonly DependencyProperty LabelProperty =
             DependencyProperty.Register(nameof(Label), typeof(string),
@@ -36,15 +51,75 @@ namespace main_interface.Controls
 
         public void SetDisplayText(string text) => HotkeyText.Text = text;
 
+        // Reads the current state from TakenCombinations / UsageTracker / HotKeyAdvisor
+        // and updates UsageLabel.  Call after registration or on page load.
+        public void RefreshState()
+        {
+            int id = HotkeyId;
+            if (id == 0) { UsageLabel.Text = string.Empty; return; }
+
+            if (TakenCombinations._assignedCombos.ContainsKey(id))
+            {
+                SetUsageStat(UsageTracker.GetCount(id), true);
+            }
+            else
+            {
+                var suggestion = HotKeyAdvisor.Suggest(id);
+                if (suggestion.HasValue)
+                {
+                    var (mod, vk) = suggestion.Value;
+                    UsageLabel.Text       = "Try: " + DescribeCombo((uint)mod, vk);
+                    UsageLabel.Foreground = new SolidColorBrush(Color.FromArgb(200, 96, 165, 250)); // blue
+                }
+                else
+                {
+                    UsageLabel.Text = string.Empty;
+                }
+            }
+        }
+
+        private void OnUsageFired(int id)
+        {
+            if (id != HotkeyId || HotkeyId == 0) return;
+            DispatcherQueue.TryEnqueue(RefreshState);
+        }
+
+        // isAssigned = the ID exists in TakenCombinations._assignedCombos.
+        private void SetUsageStat(int count, bool isAssigned)
+        {
+            if (!isAssigned)
+            {
+                UsageLabel.Text = string.Empty;
+                return;
+            }
+            if (count == 0)
+            {
+                UsageLabel.Text       = "Never triggered";
+                UsageLabel.Foreground = new SolidColorBrush(Color.FromArgb(220, 251, 191, 36));  // amber
+            }
+            else
+            {
+                UsageLabel.Text       = $"× {count}";
+                UsageLabel.Foreground = new SolidColorBrush(Color.FromArgb(180, 34, 197, 94));   // green (matches app "On" colour)
+            }
+        }
+
         public void StartCapture()
         {
-            _currentlyCapturing = this;   // cancel any other control that was mid-capture
+            _currentlyCapturing = this;
             _isCapturing        = true;
             _waitingForPrimary  = false;
             _capturedMods       = 0;
             _capturedVK         = 0;
             _modPressCount      = 0;
             HotkeyText.Text     = "Press keys…";
+            PopupKeyboard.MakeInstance.ShowOnScreen();
+        }
+
+        private static void HidePopup()
+        {
+            if (PopupKeyboard.Exists())
+                PopupKeyboard.MakeInstance.MoveOffScreen();
         }
 
         public static string DescribeCombo(uint modifiers, uint vk)
@@ -81,19 +156,18 @@ namespace main_interface.Controls
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            // Walk up the visual tree until we find the containing Page, then
-            // subscribe to its KeyDown.  This mirrors how CommandsControlPanel
-            // does it with "this.KeyDown += ..." — the difference is we're a
-            // UserControl so we find the Page ourselves.
             DependencyObject? node = this;
             while (node != null && node is not Page)
                 node = VisualTreeHelper.GetParent(node);
 
             if (node is Page page)
             {
-                _parentPage      = page;
-                page.KeyDown    += OnPageKeyDown;
+                _parentPage   = page;
+                page.KeyDown += OnPageKeyDown;
             }
+
+            UsageTracker.Fired += OnUsageFired;
+            RefreshState();
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
@@ -104,7 +178,11 @@ namespace main_interface.Controls
                 _parentPage          = null;
             }
             if (_currentlyCapturing == this)
+            {
                 _currentlyCapturing = null;
+                HidePopup();
+            }
+            UsageTracker.Fired -= OnUsageFired;
         }
 
         // ── Button ───────────────────────────────────────────────────────────
@@ -127,6 +205,7 @@ namespace main_interface.Controls
                 HotkeyText.Text = _capturedVK != 0
                     ? DescribeCombo(_capturedMods, _capturedVK)
                     : "Not assigned";
+                HidePopup();
                 return;
             }
 
@@ -189,6 +268,7 @@ namespace main_interface.Controls
                 _waitingForPrimary = false;
                 HotkeyText.Text    = DescribeCombo(_capturedMods, _capturedVK);
                 ComboCaptured?.Invoke(_capturedMods, _capturedVK);
+                HidePopup();
             }
         }
 

@@ -43,7 +43,7 @@
                 </StackPanel>
                 <Border Grid.Column="1" Background="#20FFFFFF" CornerRadius="10"
                         Padding="14,10" VerticalAlignment="Center" Margin="24,0,0,0">
-                    <controls:HotKeyCaptureControl x:Name="TilingShortcut" Label="Toggle hotkey"/>
+                    <controls:HotKeyCaptureControl x:Name="TilingShortcut" Label="Toggle hotkey" HotkeyId="2005"/>
                 </Border>
             </Grid>
 

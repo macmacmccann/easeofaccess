@@ -14,23 +14,13 @@ namespace main_interface
         public ShortcutsControlPanel()
         {
             InitializeComponent();
-
-            // Creating the singleton here starts the hidden window and hooks
-            // its HWND into the Win32 message loop — all future RegisterHotKey
-            // calls will route through it.
             _shortcutsWindow = ShortcutsWindow.Instance;
-
             WireAssigners();
-
             this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
         }
 
-        // ── Wire each assigner to its hotkey ID ──────────────────────────────
-        //
-        // ComboCaptured fires with the raw (modifiers uint, vk uint) that the
-        // user pressed.  RegisterShortcut hands those to the window's
-        // TryUpdateHotkey — the same method Commands uses — which checks
-        // TakenCombinations so no two features can share a combo.
+        // ── Wiring ───────────────────────────────────────────────────────────
+        // HotkeyId is set in XAML; the control handles RefreshState itself.
 
         private void WireAssigners()
         {
@@ -46,7 +36,7 @@ namespace main_interface
             FocusModeAssigner   .ComboCaptured += (m, v) => RegisterShortcut(FocusModeAssigner,    ShortcutsWindow.ID_FOCUS_MODE,    m, v);
         }
 
-        // ── Registration handler ─────────────────────────────────────────────
+        // ── Registration ─────────────────────────────────────────────────────
 
         private async void RegisterShortcut(HotKeyCaptureControl assigner, int id, uint mod, uint vk)
         {
@@ -54,23 +44,18 @@ namespace main_interface
 
             if (!success)
             {
-                // The combo is taken — show the shared conflict dialog.
-                // If the user presses "Try again" we restart capture on that assigner.
                 bool retry = await Dialogues.OnErrorDialogue_InUse(this.XamlRoot);
-                if (retry)
-                {
-                    assigner.StartCapture();
-                    return;
-                }
+                if (retry) { assigner.StartCapture(); return; }
             }
 
-            // Show what actually got registered (may be the old combo restored on failure).
             if (resultingCombo.VirtualKey != 0)
                 assigner.SetDisplayText(HotKeyCaptureControl.DescribeCombo(
                     resultingCombo.Modifiers, resultingCombo.VirtualKey));
+
+            assigner.RefreshState();
         }
 
-        // ── Hover animations (delegate to global helpers) ────────────────────
+        // ── Hover animations ─────────────────────────────────────────────────
 
         private void Border_PointerEntered(object sender, PointerRoutedEventArgs e)
             => DesignGlobalCode.Border_PointerEntered(sender, e);

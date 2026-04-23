@@ -46,7 +46,7 @@
                 </StackPanel>
                 <Border Grid.Column="1" Background="#20FFFFFF" CornerRadius="10"
                         Padding="14,10" VerticalAlignment="Center" Margin="24,0,0,0">
-                    <controls:HotKeyCaptureControl x:Name="CommandsShortcut" Label="Toggle hotkey"/>
+                    <controls:HotKeyCaptureControl x:Name="CommandsShortcut" Label="Toggle hotkey" HotkeyId="2004"/>
                 </Border>
             </Grid>
 
@@ -209,53 +209,32 @@ PointerExited="Border_PointerExited">
             </Grid>
 
 
-            <!-- BOTTOM TOGGLES ROW 3 of msin grid  -->
+            <!-- BOTTOM TOGGLES ROW 3 of main grid  -->
 
             <Grid Grid.Row="3" RowDefinitions="*,*,*"
                   ColumnDefinitions="*,*"
                   HorizontalAlignment="Stretch"
                   Margin="40,0,0,0">
 
-
                 <Border
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
-                    PointerExited="Border_PointerExited">
-
-                    <Grid ColumnDefinitions="*,*">
-
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                            <TextBlock x:Name="HotkeyText" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
-                            <TextBlock Text="See Commands w/" FontSize="12" Opacity="0.9" Foreground="White" />
-                        </StackPanel>
-
-                        <Button Grid.Column="1" x:Name="AssignHotkey"  Content="Assign Hotkey" Click="AssignHotkey_Clicked"></Button>
-
-
-                    </Grid>
+                    Grid.Row="0" Grid.Column="0"
+                    Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
+                    PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                    <StackPanel Spacing="4" VerticalAlignment="Center">
+                        <TextBlock Text="See Commands w/" FontSize="12" Opacity="0.9" Foreground="White"/>
+                        <controls:HotKeyCaptureControl x:Name="SeeCommandsAssigner" Label="Assign hotkey" HotkeyId="9000"/>
+                    </StackPanel>
                 </Border>
 
                 <Border
-                     Grid.Row="0"
-                     Grid.Column="1"
-                     Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8" PointerEntered="Border_PointerEntered"
-                     PointerExited="Border_PointerExited">
-
-                    <Grid ColumnDefinitions="*,*">
-
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="4">
-                            <TextBlock x:Name="HotkeyText2" Text="Ready ..." Margin="0,0,0,0"></TextBlock>
-                            <TextBlock Text="Save Command w/ " FontSize="12" Opacity="0.9" Foreground="White" />
-                        </StackPanel>
-
-                        <Button Grid.Column="1" x:Name="AssignHotkey2"  Content="Assign Hotkey" Click="AssignHotkey_Clicked"></Button>
-
-
-                    </Grid>
+                    Grid.Row="0" Grid.Column="1"
+                    Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
+                    PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                    <StackPanel Spacing="4" VerticalAlignment="Center">
+                        <TextBlock Text="Save Command w/" FontSize="12" Opacity="0.9" Foreground="White"/>
+                        <controls:HotKeyCaptureControl x:Name="SaveCommandAssigner" Label="Assign hotkey" HotkeyId="8000"/>
+                    </StackPanel>
                 </Border>
-
-
 
             </Grid>
            </Grid>

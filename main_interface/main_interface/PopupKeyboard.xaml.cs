@@ -3,19 +3,10 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Graphics;
 using Windows.System;
 using WinRT.Interop;
@@ -33,52 +24,77 @@ public sealed partial class PopupKeyboard : Window
 
     private Dictionary<VirtualKey, KeyboardKey>? _keyMap;
 
-
     private static PopupKeyboard? _instance;
-    IntPtr _previousforground; // What is the app to paste the command grab it hwnd
+    IntPtr _previousforground;
     DesktopAcrylicBackdrop? acrylic;
+
+    // ── LL hook (no XAML focus required) ─────────────────────────────────────
+    private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
+    private LowLevelKeyboardProc? _hookCallback; // keep alive — GC doesn't see unmanaged reference
+    private IntPtr _hookHandle = IntPtr.Zero;
+    private Microsoft.UI.Dispatching.DispatcherQueue _uiQueue = null!;
+
+    private const int WH_KEYBOARD_LL = 13;
+    private const int WM_KEYDOWN     = 0x0100;
+    private const int WM_SYSKEYDOWN  = 0x0104;
+    private const int WM_KEYUP       = 0x0101;
+    private const int WM_SYSKEYUP    = 0x0105;
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct KBDLLHOOKSTRUCT
+    {
+        public uint vkCode, scanCode, flags, time;
+        public IntPtr dwExtraInfo;
+    }
 
     public PopupKeyboard()
     {
         InitializeComponent();
-
-
         this.ExtendsContentIntoTitleBar = true;
-        
-        Activate(); // Create a native window(hwnd) for this object !
-        KeyListenerConstructor();
+        _uiQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+
+        Activate();
         HideFromTaskbar();
-        SetOverlayStyle(); // Attach a win32 message listener to this window 
+        SetOverlayStyle();
         ConstructDictionary();
         EnableAcrylic();
-
-        IntPtr hWnd = WindowNative.GetWindowHandle(this);
-    
+        this.Closed += (_, _) => UninstallHook();
     }
 
 
 
-    private void KeyListenerConstructor()
+    // ── Hook install / uninstall ──────────────────────────────────────────────
+
+    public void InstallHook()
     {
-        keyboard.IsTabStop = true;
-        keyboard.Focus(FocusState.Programmatic);
-        keyboard.KeyDown += OnKeyDown;
-      //  keyboard.KeyUp += OnKeyUp;
+        if (_hookHandle != IntPtr.Zero) return;
+        _hookCallback = HookCallback;
+        _hookHandle   = SetWindowsHookEx(WH_KEYBOARD_LL, _hookCallback, IntPtr.Zero, 0);
     }
 
-    private void OnKeyDown(object sender, KeyRoutedEventArgs e)
+    public void UninstallHook()
     {
-        if (_keyMap != null && _keyMap.TryGetValue(e.Key, out KeyboardKey? keyControl))
+        if (_hookHandle == IntPtr.Zero) return;
+        UnhookWindowsHookEx(_hookHandle);
+        _hookHandle = IntPtr.Zero;
+    }
+
+    private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+    {
+        if (nCode >= 0 && _keyMap != null)
         {
-            keyControl.TriggerPressedVisual();
+            var kb = Marshal.PtrToStructure<KBDLLHOOKSTRUCT>(lParam);
+            var vk = (VirtualKey)kb.vkCode;
+            if (_keyMap.TryGetValue(vk, out var keyCtrl))
+            {
+                int msg = wParam.ToInt32();
+                if (msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN)
+                    _uiQueue.TryEnqueue(() => keyCtrl.TriggerPressedVisual());
+                else if (msg == WM_KEYUP || msg == WM_SYSKEYUP)
+                    _uiQueue.TryEnqueue(() => keyCtrl.TriggerReleasedVisual());
+            }
         }
-    }
-    private void OnKeyUp(object sender, KeyRoutedEventArgs e)
-    {
-        if (_keyMap != null && _keyMap.TryGetValue(e.Key, out KeyboardKey? keyControl))
-        {
-            keyControl.TriggerReleasedVisual();
-        }
+        return CallNextHookEx(_hookHandle, nCode, wParam, lParam);
     }
 
     bool _visible; // Track where the overlay is currently visible 
@@ -101,11 +117,11 @@ public sealed partial class PopupKeyboard : Window
 
 
 
-    void ShowOnScreen() // Always on top is show on screen here 
+    public void ShowOnScreen()
     {
         AlwaysOnTop();
         ShowRelativeSize();
-
+        InstallHook();
     }
 
     public void ShowRelativeSize()
@@ -138,28 +154,23 @@ public sealed partial class PopupKeyboard : Window
     }
 
 
-    void MoveOffScreen()
+    public void MoveOffScreen()
     {
-        var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
-
-        SetWindowPos(
-            hwnd,
-            IntPtr.Zero, // dont change index when your hiding
-            -2000, -2000, // x and y screen postions 
-            0, 0,// width heigh 
-            0x0040); // Dont activate the window 
-
+        var hwnd = WindowNative.GetWindowHandle(this);
+        SetWindowPos(hwnd, IntPtr.Zero, -2000, -2000, 0, 0, 0x0040);
+        UninstallHook();
     }
 
 
     public static PopupKeyboard MakeInstance
     {
-        get// make sure only ONE overlay window exists 
+        get
         {
             if (_instance == null)
+            {
                 _instance = new PopupKeyboard();
-
-
+                _instance.MoveOffScreen(); // start hidden, not at random position
+            }
             return _instance;
         }
     }
@@ -267,7 +278,13 @@ public sealed partial class PopupKeyboard : Window
     // IMPORTS 
 
 
-    // Get currently focused window 
+    [DllImport("user32.dll", SetLastError = true)]
+    static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
+    [DllImport("user32.dll", SetLastError = true)]
+    static extern bool UnhookWindowsHookEx(IntPtr hhk);
+    [DllImport("user32.dll")]
+    static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+
     [DllImport("user32.dll")]
     static extern IntPtr GetForegroundWindow();
 
