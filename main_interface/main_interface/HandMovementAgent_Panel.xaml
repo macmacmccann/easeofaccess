@@ -83,6 +83,8 @@
                             <TextBlock Text="🤙  pinky      — pinky + thumb extended"       FontSize="12" Opacity="0.7"/>
                             <TextBlock Text="👈  swipe_left  — hand sweeps left"            FontSize="12" Opacity="0.7"/>
                             <TextBlock Text="👉  swipe_right — hand sweeps right"           FontSize="12" Opacity="0.7"/>
+                            <TextBlock Text="👆  swipe_up    — hand sweeps upward"          FontSize="12" Opacity="0.7"/>
+                            <TextBlock Text="👇  swipe_down  — hand sweeps downward"        FontSize="12" Opacity="0.7"/>
                         </StackPanel>
                     </Border>
 
@@ -91,6 +93,24 @@
                 <!-- RIGHT: per-gesture action dropdowns -->
                 <StackPanel Grid.Column="1" Spacing="8">
                     <TextBlock Text="Gesture actions" FontSize="20" Opacity="0.7" VerticalAlignment="Top" />
+
+                    <!-- Preset buttons -->
+                    <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,24,4">
+                        <Button x:Name="TilingPresetBtn" Click="TilingPreset_Click"
+                                Padding="12,8" CornerRadius="8">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="⊞" FontSize="13"/>
+                                <TextBlock Text="Tiling Preset" FontSize="12" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="WindowsPresetBtn" Click="WindowsPreset_Click"
+                                Padding="12,8" CornerRadius="8">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="🪟" FontSize="13"/>
+                                <TextBlock Text="Windows Preset" FontSize="12" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
 
                     <!-- open_hand -->
                     <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
@@ -120,6 +140,12 @@
                                 <ComboBoxItem Content="Tile Column"/>
                                 <ComboBoxItem Content="Tile Grid"/>
                                 <ComboBoxItem Content="Tile Master Stack"/>
+                                <ComboBoxItem Content="Tile: Cycle Modes"/>
+                                <ComboBoxItem Content="Tile: Maximize Focused"/>
+                                <ComboBoxItem Content="Tile: Retile All"/>
+                                <ComboBoxItem Content="Tile: Focus Next"/>
+                                <ComboBoxItem Content="Tile: Close Focused"/>
+                                <ComboBoxItem Content="Tile: Swap Next"/>
                             </ComboBox>
                         </Grid>
                     </Border>
@@ -152,6 +178,12 @@
                                 <ComboBoxItem Content="Tile Column"/>
                                 <ComboBoxItem Content="Tile Grid"/>
                                 <ComboBoxItem Content="Tile Master Stack"/>
+                                <ComboBoxItem Content="Tile: Cycle Modes"/>
+                                <ComboBoxItem Content="Tile: Maximize Focused"/>
+                                <ComboBoxItem Content="Tile: Retile All"/>
+                                <ComboBoxItem Content="Tile: Focus Next"/>
+                                <ComboBoxItem Content="Tile: Close Focused"/>
+                                <ComboBoxItem Content="Tile: Swap Next"/>
                             </ComboBox>
                         </Grid>
                     </Border>
@@ -184,6 +216,12 @@
                                 <ComboBoxItem Content="Tile Column"/>
                                 <ComboBoxItem Content="Tile Grid"/>
                                 <ComboBoxItem Content="Tile Master Stack"/>
+                                <ComboBoxItem Content="Tile: Cycle Modes"/>
+                                <ComboBoxItem Content="Tile: Maximize Focused"/>
+                                <ComboBoxItem Content="Tile: Retile All"/>
+                                <ComboBoxItem Content="Tile: Focus Next"/>
+                                <ComboBoxItem Content="Tile: Close Focused"/>
+                                <ComboBoxItem Content="Tile: Swap Next"/>
                             </ComboBox>
                         </Grid>
                     </Border>
@@ -216,6 +254,12 @@
                                 <ComboBoxItem Content="Tile Column"/>
                                 <ComboBoxItem Content="Tile Grid"/>
                                 <ComboBoxItem Content="Tile Master Stack"/>
+                                <ComboBoxItem Content="Tile: Cycle Modes"/>
+                                <ComboBoxItem Content="Tile: Maximize Focused"/>
+                                <ComboBoxItem Content="Tile: Retile All"/>
+                                <ComboBoxItem Content="Tile: Focus Next"/>
+                                <ComboBoxItem Content="Tile: Close Focused"/>
+                                <ComboBoxItem Content="Tile: Swap Next"/>
                             </ComboBox>
                         </Grid>
                     </Border>
@@ -248,6 +292,12 @@
                                 <ComboBoxItem Content="Tile Column"/>
                                 <ComboBoxItem Content="Tile Grid"/>
                                 <ComboBoxItem Content="Tile Master Stack"/>
+                                <ComboBoxItem Content="Tile: Cycle Modes"/>
+                                <ComboBoxItem Content="Tile: Maximize Focused"/>
+                                <ComboBoxItem Content="Tile: Retile All"/>
+                                <ComboBoxItem Content="Tile: Focus Next"/>
+                                <ComboBoxItem Content="Tile: Close Focused"/>
+                                <ComboBoxItem Content="Tile: Swap Next"/>
                             </ComboBox>
                         </Grid>
                     </Border>
@@ -280,6 +330,12 @@
                                 <ComboBoxItem Content="Tile Column"/>
                                 <ComboBoxItem Content="Tile Grid"/>
                                 <ComboBoxItem Content="Tile Master Stack"/>
+                                <ComboBoxItem Content="Tile: Cycle Modes"/>
+                                <ComboBoxItem Content="Tile: Maximize Focused"/>
+                                <ComboBoxItem Content="Tile: Retile All"/>
+                                <ComboBoxItem Content="Tile: Focus Next"/>
+                                <ComboBoxItem Content="Tile: Close Focused"/>
+                                <ComboBoxItem Content="Tile: Swap Next"/>
                             </ComboBox>
                         </Grid>
                     </Border>
@@ -312,6 +368,88 @@
                                 <ComboBoxItem Content="Tile Column"/>
                                 <ComboBoxItem Content="Tile Grid"/>
                                 <ComboBoxItem Content="Tile Master Stack"/>
+                                <ComboBoxItem Content="Tile: Cycle Modes"/>
+                                <ComboBoxItem Content="Tile: Maximize Focused"/>
+                                <ComboBoxItem Content="Tile: Retile All"/>
+                                <ComboBoxItem Content="Tile: Focus Next"/>
+                                <ComboBoxItem Content="Tile: Close Focused"/>
+                                <ComboBoxItem Content="Tile: Swap Next"/>
+                            </ComboBox>
+                        </Grid>
+                    </Border>
+
+                    <!-- swipe_up -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Grid.Column="0" Text="👆  Swipe Up" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="White" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" x:Name="SwipeUpCombo" SelectedIndex="0"
+                                      VerticalAlignment="Center" Margin="16,0,0,0" MinWidth="170">
+                                <ComboBoxItem Content="None"/>
+                                <ComboBoxItem Content="Minimize Window"/>
+                                <ComboBoxItem Content="Maximize Window"/>
+                                <ComboBoxItem Content="Close Window"/>
+                                <ComboBoxItem Content="Left Click"/>
+                                <ComboBoxItem Content="Right Click"/>
+                                <ComboBoxItem Content="Double Click"/>
+                                <ComboBoxItem Content="Scroll Up"/>
+                                <ComboBoxItem Content="Scroll Down"/>
+                                <ComboBoxItem Content="Volume Up"/>
+                                <ComboBoxItem Content="Volume Down"/>
+                                <ComboBoxItem Content="Play/Pause"/>
+                                <ComboBoxItem Content="Previous Desktop"/>
+                                <ComboBoxItem Content="Next Desktop"/>
+                                <ComboBoxItem Content="Copy"/>
+                                <ComboBoxItem Content="Paste"/>
+                                <ComboBoxItem Content="Tile Stacked"/>
+                                <ComboBoxItem Content="Tile Column"/>
+                                <ComboBoxItem Content="Tile Grid"/>
+                                <ComboBoxItem Content="Tile Master Stack"/>
+                                <ComboBoxItem Content="Tile: Cycle Modes"/>
+                                <ComboBoxItem Content="Tile: Maximize Focused"/>
+                                <ComboBoxItem Content="Tile: Retile All"/>
+                                <ComboBoxItem Content="Tile: Focus Next"/>
+                                <ComboBoxItem Content="Tile: Close Focused"/>
+                                <ComboBoxItem Content="Tile: Swap Next"/>
+                            </ComboBox>
+                        </Grid>
+                    </Border>
+
+                    <!-- swipe_down -->
+                    <Border Background="Transparent" CornerRadius="8" Padding="16" Margin="0,8,24,8"
+                            PointerEntered="Border_PointerEntered" PointerExited="Border_PointerExited">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Grid.Column="0" Text="👇  Swipe Down" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="White" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" x:Name="SwipeDownCombo" SelectedIndex="0"
+                                      VerticalAlignment="Center" Margin="16,0,0,0" MinWidth="170">
+                                <ComboBoxItem Content="None"/>
+                                <ComboBoxItem Content="Minimize Window"/>
+                                <ComboBoxItem Content="Maximize Window"/>
+                                <ComboBoxItem Content="Close Window"/>
+                                <ComboBoxItem Content="Left Click"/>
+                                <ComboBoxItem Content="Right Click"/>
+                                <ComboBoxItem Content="Double Click"/>
+                                <ComboBoxItem Content="Scroll Up"/>
+                                <ComboBoxItem Content="Scroll Down"/>
+                                <ComboBoxItem Content="Volume Up"/>
+                                <ComboBoxItem Content="Volume Down"/>
+                                <ComboBoxItem Content="Play/Pause"/>
+                                <ComboBoxItem Content="Previous Desktop"/>
+                                <ComboBoxItem Content="Next Desktop"/>
+                                <ComboBoxItem Content="Copy"/>
+                                <ComboBoxItem Content="Paste"/>
+                                <ComboBoxItem Content="Tile Stacked"/>
+                                <ComboBoxItem Content="Tile Column"/>
+                                <ComboBoxItem Content="Tile Grid"/>
+                                <ComboBoxItem Content="Tile Master Stack"/>
+                                <ComboBoxItem Content="Tile: Cycle Modes"/>
+                                <ComboBoxItem Content="Tile: Maximize Focused"/>
+                                <ComboBoxItem Content="Tile: Retile All"/>
+                                <ComboBoxItem Content="Tile: Focus Next"/>
+                                <ComboBoxItem Content="Tile: Close Focused"/>
+                                <ComboBoxItem Content="Tile: Swap Next"/>
                             </ComboBox>
                         </Grid>
                     </Border>

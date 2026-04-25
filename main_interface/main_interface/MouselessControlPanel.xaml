@@ -33,6 +33,21 @@
                         Padding="14,10" VerticalAlignment="Center" Margin="24,0,0,0">
                     <controls:HotKeyCaptureControl x:Name="MouselessShortcut" Label="Toggle hotkey" HotkeyId="2003"/>
                 </Border>
+
+                <!-- Smart Assistant card -->
+                <Border Grid.Column="2" Background="#1522C55E" BorderBrush="#22C55E" BorderThickness="1"
+                        CornerRadius="12" Padding="16,10" VerticalAlignment="Center" Margin="24,0,24,0">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Grid.Column="0" Spacing="2" VerticalAlignment="Center">
+                            <TextBlock Text="Smart Assistant" FontSize="14" FontWeight="SemiBold"/>
+                            <TextBlock Text="Auto-enables when no USB mouse detected" FontSize="11" Opacity="0.7"/>
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1" x:Name="SmartAssistantMouselessToggle"
+                                      OnContent="On" OffContent="Off"
+                                      VerticalAlignment="Center" Margin="12,0,0,0"
+                                      Toggled="SmartAssistantMouselessToggle_Toggled"/>
+                    </Grid>
+                </Border>
             </Grid>
         </Border>
 

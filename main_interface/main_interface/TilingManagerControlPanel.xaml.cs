@@ -14,7 +14,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -38,7 +40,8 @@ namespace main_interface
 
         public void ToggleEnable() => TilingManagerToggle.IsOn = !TilingManagerToggle.IsOn;
 
-        private Modifiers CapturedModiferKeys; // not uint casting problem its cast to None in enum method below 
+        private Modifiers CapturedModiferKeys; // not uint casting problem its cast to None in enum method below
+        private DispatcherTimer? _smartAssistantTimer;
 
         public TilingManagerControlPanel()
         {
@@ -84,8 +87,11 @@ namespace main_interface
         {
 
             
-            // this sets the ui from bool 
+            // this sets the ui from bool
             TilingManagerToggle.IsOn = StateSettings.TilingManagerEnabled;
+            SmartAssistantToggle.IsOn = StateSettings.SmartAssistantTilingManagerToggle;
+            if (StateSettings.SmartAssistantTilingManagerToggle)
+                StartSmartAssistantTimer();
             StackedModeToggle.IsOn = StateSettings.StackedModeEnabled;
             ColumnModeToggle.IsOn = StateSettings.ColumnModeEnabled;
             GridModeToggle.IsOn = StateSettings.GridModeEnabled;
@@ -143,9 +149,17 @@ namespace main_interface
             //Now its set to on or off 
 
 
-            // if you turned off logic + background window + disable toggles  
+            // if you turned off logic + background window + disable toggles
             if (!StateSettings.TilingManagerEnabled)
             {
+                // If smart assistant was the one monitoring, respect the manual override
+                if (StateSettings.SmartAssistantTilingManagerToggle)
+                {
+                    SmartAssistantToggle.IsOn = false;
+                    StateSettings.SmartAssistantTilingManagerToggle = false;
+                    StopSmartAssistantTimer();
+                }
+
                 if (TilingManager.Exists())
                 {
                     // var tm -> getinstance would just create another one if i said getinstance twice in a row 
@@ -1171,6 +1185,109 @@ namespace main_interface
                     _activeHotkeyTextBlock.Text = _previousHotkeyText ?? "Not assigned";
             });
         }
+
+
+
+        // ── Smart Assistant ──────────────────────────────────────────────────
+
+        private void SmartAssistantToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            StateSettings.SmartAssistantTilingManagerToggle = SmartAssistantToggle.IsOn;
+
+            if (SmartAssistantToggle.IsOn)
+                StartSmartAssistantTimer();
+            else
+                StopSmartAssistantTimer();
+        }
+
+        private void StartSmartAssistantTimer()
+        {
+            _smartAssistantTimer?.Stop();
+            _smartAssistantTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(30) };
+            _smartAssistantTimer.Tick += (s, e) => CheckSmartAssistantRule();
+            _smartAssistantTimer.Start();
+            CheckSmartAssistantRule(); // immediate check on enable
+        }
+
+        private void StopSmartAssistantTimer()
+        {
+            _smartAssistantTimer?.Stop();
+            _smartAssistantTimer = null;
+        }
+
+        private void CheckSmartAssistantRule()
+        {
+            if (!StateSettings.SmartAssistantTilingManagerToggle) return;
+            if (StateSettings.TilingManagerEnabled) return; // already on, nothing to do
+            if (CountVisibleWindows() < 6) return;
+
+            // Pre-select grid mode before activating tiling so TilingManagerToggle_Toggled
+            // passes the "at least one mode enabled" guard and applies the right layout.
+            if (!StateSettings.GridModeEnabled)
+                Grid_SetStateAndToggle_DontRead();
+
+            // Activating via the toggle fires TilingManagerToggle_Toggled and all its logic.
+            TilingManagerToggle.IsOn = true;
+        }
+
+        private int CountVisibleWindows()
+        {
+            var windows = new List<IntPtr>();
+            EnumWindowsForSmart((hWnd, _) =>
+            {
+                if (!IsWindowVisibleForSmart(hWnd)) return true;
+                uint exStyle = (uint)GetWindowLongForSmart(hWnd, GWL_EXSTYLE_SMART);
+                if ((exStyle & WS_EX_TOOLWINDOW_SMART) != 0) return true;
+                if ((exStyle & WS_EX_NOACTIVATE_SMART)  != 0) return true;
+                if (GetAncestorForSmart(hWnd, GA_ROOTOWNER_SMART) != hWnd) return true;
+                string title = GetWindowTitleForSmart(hWnd);
+                if (string.IsNullOrWhiteSpace(title)) return true;
+                if (title is "Program Manager"
+                          or "Microsoft Text Input Application"
+                          or "Windows Input Experience"
+                          or "Ease Of Access")
+                    return true;
+                windows.Add(hWnd);
+                return true;
+            }, IntPtr.Zero);
+            return windows.Count;
+        }
+
+        private static string GetWindowTitleForSmart(IntPtr hWnd)
+        {
+            int len = GetWindowTextLengthForSmart(hWnd);
+            if (len == 0) return string.Empty;
+            var sb = new StringBuilder(len + 1);
+            GetWindowTextForSmart(hWnd, sb, sb.Capacity);
+            return sb.ToString();
+        }
+
+        // ── Win32 (Smart Assistant window counter) ───────────────────────────
+
+        delegate bool SmartEnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+
+        [DllImport("user32.dll", EntryPoint = "EnumWindows")]
+        static extern bool EnumWindowsForSmart(SmartEnumWindowsProc lpEnumFunc, IntPtr lParam);
+
+        [DllImport("user32.dll", EntryPoint = "IsWindowVisible")]
+        static extern bool IsWindowVisibleForSmart(IntPtr hWnd);
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowLongW")]
+        static extern int GetWindowLongForSmart(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowTextLength")]
+        static extern int GetWindowTextLengthForSmart(IntPtr hWnd);
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowText")]
+        static extern int GetWindowTextForSmart(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+
+        [DllImport("user32.dll", EntryPoint = "GetAncestor")]
+        static extern IntPtr GetAncestorForSmart(IntPtr hwnd, uint gaFlags);
+
+        const int  GWL_EXSTYLE_SMART      = -20;
+        const uint WS_EX_TOOLWINDOW_SMART = 0x00000080;
+        const uint WS_EX_NOACTIVATE_SMART = 0x08000000;
+        const uint GA_ROOTOWNER_SMART     = 3;
 
     } // end of class
  } // end of namespace

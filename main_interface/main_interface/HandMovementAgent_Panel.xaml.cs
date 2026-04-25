@@ -230,6 +230,8 @@ namespace main_interface
                     "pinky"       => PinkyCombo,
                     "swipe_left"  => SwipeLeftCombo,
                     "swipe_right" => SwipeRightCombo,
+                    "swipe_up"    => SwipeUpCombo,
+                    "swipe_down"  => SwipeDownCombo,
                     _             => null
                 };
 
@@ -241,7 +243,9 @@ namespace main_interface
 // Index matches ComboBox item order: 1=Minimize, 2=Maximize, 3=Close,
     // 4=LeftClick, 5=RightClick, 6=DoubleClick, 7=ScrollUp, 8=ScrollDown,
     // 9=VolumeUp, 10=VolumeDown, 11=PlayPause, 12=PrevDesktop, 13=NextDesktop,
-    // 14=Copy, 15=Paste, 16=TileStacked, 17=TileColumn, 18=TileGrid, 19=TileMasterStack
+    // 14=Copy, 15=Paste, 16=TileStacked, 17=TileColumn, 18=TileGrid, 19=TileMasterStack,
+    // 20=TileCycleModes, 21=TileMaximizeFocused, 22=TileRetileAll,
+    // 23=TileFocusNext, 24=TileCloseFocused, 25=TileSwapNext
     private void ExecuteActionByIndex(int index)
     {
         switch (index)
@@ -249,22 +253,37 @@ namespace main_interface
             case 1:  MinimizeWindow(); break;
             case 2:  MaximizeWindow(); break;
             case 3:  CloseWindow();    break;
-            case 4:  LeftClick();     break;
-            case 5:  RightClick();    break;
-            case 6:  DoubleClick();  break;
-            case 7:  ScrollUp();     break;
-            case 8:  ScrollDown();  break;
-            case 9:  VolumeUp();     break;
-            case 10: VolumeDown();   break;
-            case 11: PlayPause();    break;
-            case 12: PrevDesktop();  break;
-            case 13: NextDesktop();  break;
-            case 14: Copy();       break;
-            case 15: Paste();      break;
+            case 4:  LeftClick();      break;
+            case 5:  RightClick();     break;
+            case 6:  DoubleClick();    break;
+            case 7:  ScrollUp();       break;
+            case 8:  ScrollDown();     break;
+            case 9:  VolumeUp();       break;
+            case 10: VolumeDown();     break;
+            case 11: PlayPause();      break;
+            case 12: PrevDesktop();    break;
+            case 13: NextDesktop();    break;
+            case 14: Copy();           break;
+            case 15: Paste();          break;
             case 16: TileStacked();    break;
-            case 17: TileColumn();    break;
-            case 18: TileGrid();     break;
+            case 17: TileColumn();     break;
+            case 18: TileGrid();       break;
             case 19: TileMasterStack(); break;
+
+            // TilingManager hook actions — no-op if tiling is off
+            case 20: case 21: case 22: case 23: case 24: case 25:
+                if (!StateSettings.TilingManagerEnabled || !TilingManager.Exists()) break;
+                var tm = TilingManager.GetInstance();
+                switch (index)
+                {
+                    case 20: tm.ProgressWhatIsOn();      break;
+                    case 21: tm.MaximizeFocusedWindow(); break;
+                    case 22: tm.TilePrimaryMonitorWindows(); break;
+                    case 23: tm.FocusNextWindow();       break;
+                    case 24: tm.CloseFocusedWindow();    break;
+                    case 25: tm.SwapFocusedWithNext();   break;
+                }
+                break;
         }
     }
 
@@ -462,6 +481,34 @@ namespace main_interface
             keybd_event(VK_LWIN,    0, KEYEVENTF_KEYUP, 0);
             keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, 0);
             Debug.WriteLine("[HandMovement] Action: next desktop");
+        }
+
+        // ── Presets ──────────────────────────────────────────────────────────
+
+        private void TilingPreset_Click(object sender, RoutedEventArgs e)
+        {
+            OpenHandCombo.SelectedIndex   = 22; // Tile: Retile All       — spread hand = spread windows
+            FistCombo.SelectedIndex       = 21; // Tile: Maximize Focused — clench = fill screen
+            PointingCombo.SelectedIndex   = 23; // Tile: Focus Next        — point at next window
+            PeaceCombo.SelectedIndex      = 20; // Tile: Cycle Modes       — two fingers, flip layouts
+            PinkyCombo.SelectedIndex      = 25; // Tile: Swap Next
+            SwipeLeftCombo.SelectedIndex  = 20; // Tile: Cycle Modes       — swipe left = flip layout
+            SwipeRightCombo.SelectedIndex = 22; // Tile: Retile All        — swipe right = reset
+            SwipeUpCombo.SelectedIndex    = 21; // Tile: Maximize Focused  — swipe up = fill screen
+            SwipeDownCombo.SelectedIndex  = 20; // Tile: Cycle Modes       — swipe down = cycle
+        }
+
+        private void WindowsPreset_Click(object sender, RoutedEventArgs e)
+        {
+            OpenHandCombo.SelectedIndex   = 2;  // Maximize Window  — spread out
+            FistCombo.SelectedIndex       = 1;  // Minimize Window  — shrink down
+            PointingCombo.SelectedIndex   = 4;  // Left Click        — point and click
+            PeaceCombo.SelectedIndex      = 5;  // Right Click       — context menu
+            PinkyCombo.SelectedIndex      = 9;  // Volume Up
+            SwipeLeftCombo.SelectedIndex  = 12; // Previous Desktop  — swipe left = go left
+            SwipeRightCombo.SelectedIndex = 13; // Next Desktop      — swipe right = go right
+            SwipeUpCombo.SelectedIndex    = 9;  // Volume Up         — swipe up = louder
+            SwipeDownCombo.SelectedIndex  = 10; // Volume Down       — swipe down = quieter
         }
 
         // ── Design helpers ───────────────────────────────────────────────────

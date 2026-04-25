@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.UI;
 
@@ -46,6 +47,28 @@ namespace main_interface
             }.Count(b => b);
 
             ActiveCountText.Text = activeCount.ToString();
+
+            PopulateInsights(InsightEngine.GetInsights());
+        }
+
+        private void PopulateInsights(List<InsightEngine.Insight> insights)
+        {
+            InsightsPanel.Children.Clear();
+            foreach (var insight in insights)
+            {
+                string text = insight.Suggestion != null
+                    ? $"{insight.Body}. Try {insight.Suggestion}."
+                    : $"{insight.Body}.";
+                InsightsPanel.Children.Add(new TextBlock
+                {
+                    Text            = text,
+                    FontSize        = 12,
+                    Foreground      = new SolidColorBrush(Color.FromArgb(220, 255, 255, 255)),
+                    Opacity         = 0.7,
+                    TextWrapping    = Microsoft.UI.Xaml.TextWrapping.Wrap
+                });
+            }
+            InsightsCard.Visibility = insights.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private static void SetBadge(Border badge, TextBlock label, bool isActive)

@@ -15,6 +15,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <!-- Hero -->
@@ -194,8 +195,22 @@
 
             </Grid>
 
+            <!-- Insights card (hidden when no suggestions) -->
+            <Border x:Name="InsightsCard" Grid.Row="3" CornerRadius="12" Padding="20,16"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    Visibility="Collapsed">
+                <Grid ColumnDefinitions="Auto,*">
+                    <TextBlock Grid.Column="0" Text="💡" FontSize="20"
+                               VerticalAlignment="Top" Margin="0,2,16,0"/>
+                    <StackPanel Grid.Column="1" Spacing="8">
+                        <TextBlock Text="Suggestions" FontSize="13" FontWeight="SemiBold" Foreground="White"/>
+                        <StackPanel x:Name="InsightsPanel" Spacing="4"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
             <!-- Tip card -->
-            <Border Grid.Row="3" CornerRadius="12" Padding="20,16"
+            <Border Grid.Row="4" CornerRadius="12" Padding="20,16"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                 <Grid ColumnDefinitions="Auto,*">
                     <TextBlock Grid.Column="0" Text="💡" FontSize="20"

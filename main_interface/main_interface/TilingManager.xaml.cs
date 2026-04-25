@@ -1216,14 +1216,14 @@ namespace main_interface
         static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
         const uint WM_CLOSE = 0x0010;
 
-        private void MaximizeFocusedWindow()
+        public void MaximizeFocusedWindow()
         {
             IntPtr hwnd = GetForegroundWindow();
             if (hwnd == IntPtr.Zero || hwnd == WindowNative.GetWindowHandle(this)) return;
             ShowWindow(hwnd, 3); // SW_MAXIMIZE
         }
 
-        private void FocusNextWindow()
+        public void FocusNextWindow()
         {
             if (_tiledOrder.Count == 0) return;
             IntPtr focused = GetForegroundWindow();
@@ -1232,7 +1232,7 @@ namespace main_interface
             SwitchToThisWindow(_tiledOrder[next], true);
         }
 
-        private void CloseFocusedWindow()
+        public void CloseFocusedWindow()
         {
             IntPtr hwnd = GetForegroundWindow();
             if (hwnd == IntPtr.Zero || hwnd == WindowNative.GetWindowHandle(this)) return;
@@ -1240,7 +1240,7 @@ namespace main_interface
             // WinEvent hook fires automatically when the window disappears and retiles
         }
 
-        private void SwapFocusedWithNext()
+        public void SwapFocusedWithNext()
         {
             if (_tiledOrder.Count < 2) return;
             IntPtr focused = GetForegroundWindow();

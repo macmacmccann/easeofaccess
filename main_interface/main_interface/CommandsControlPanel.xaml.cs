@@ -55,10 +55,11 @@ public sealed partial class CommandsControlPanel : Page
 
     private void LoadPreferencesOnStart()
     {
-        OverlayEnabledToggle.IsOn     = StateSettings.OverlayEnabled;
-        AlwaysOnTopEnabledToggle.IsOn = StateSettings.AlwaysOnTopEnabled;
-        AutoPasteEnabledToggle.IsOn   = StateSettings.AutoPasteEnabled;
-        SearchAutoFocusToggle.IsOn    = StateSettings.SearchBoxAutoFocusEnabled;
+        OverlayEnabledToggle.IsOn          = StateSettings.OverlayEnabled;
+        AlwaysOnTopEnabledToggle.IsOn      = StateSettings.AlwaysOnTopEnabled;
+        AutoPasteEnabledToggle.IsOn        = StateSettings.AutoPasteEnabled;
+        SearchAutoFocusToggle.IsOn         = StateSettings.SearchBoxAutoFocusEnabled;
+        SmartAssistantCommandsToggle.IsOn  = StateSettings.SmartAssistantCommandsToggle;
 
         if (Commands.Exists())
             Commands.Instance.ApplySettings();
@@ -86,6 +87,15 @@ public sealed partial class CommandsControlPanel : Page
     private void SearchAutoFocus_Toggled(object sender, RoutedEventArgs e)
     {
         StateSettings.SearchBoxAutoFocusEnabled = SearchAutoFocusToggle.IsOn;
+    }
+
+    private void SmartAssistantCommandsToggle_Toggled(object sender, RoutedEventArgs e)
+    {
+        StateSettings.SmartAssistantCommandsToggle = SmartAssistantCommandsToggle.IsOn;
+
+        // If turned off, clear any visible hint immediately so the user knows tracking stopped
+        if (!SmartAssistantCommandsToggle.IsOn && Commands.Exists())
+            Commands.Instance.HideSmartHint();
     }
 
     // ── Tips ─────────────────────────────────────────────────────────────────

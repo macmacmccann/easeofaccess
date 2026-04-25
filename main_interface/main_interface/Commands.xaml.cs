@@ -1,4 +1,4 @@
-using main_interface;
+﻿using main_interface;
 using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
 // Get the apps window for .Show() or Hide () 
@@ -238,6 +238,12 @@ namespace main_interface
 
         private void SelectCommand(string text)
         {
+            if (StateSettings.SmartAssistantCommandsToggle)
+            {
+                StateSettings.CommandsUsageCount++;
+                EvaluateSmartHint();
+            }
+
             CopyToClipboard(text);
             MoveOffScreen();
             SetForegroundWindow(_previousforground);
@@ -653,8 +659,11 @@ if (wParam.ToInt32() == HOTKEY_ID_FAKE_OTHER_FUNCTION)
 
             // No SWP_NOACTIVATE here — we want focus
             SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, w, h, 0);
-            SetForegroundWindow(hwnd); // pop up is is focus 
+            SetForegroundWindow(hwnd); // pop up is is focus
             FadeIn();
+
+            // Refresh hint on each open so it clears if the user acted on the suggestion
+            EvaluateSmartHint();
         }
 
 
@@ -910,6 +919,57 @@ if (wParam.ToInt32() == HOTKEY_ID_FAKE_OTHER_FUNCTION)
 
 
 
+
+
+        // ── Smart Assistant hint ─────────────────────────────────────────────
+
+        private readonly HashSet<int> _dismissedThresholds = new();
+
+        private void EvaluateSmartHint()
+        {
+            if (!StateSettings.SmartAssistantCommandsToggle) { HideSmartHint(); return; }
+
+            int count = StateSettings.CommandsUsageCount;
+
+            // Evaluate highest threshold first — AutoPaste is the key discovery target
+            if (count >= 50 && !_dismissedThresholds.Contains(50) && !StateSettings.AutoPasteEnabled)
+            {
+                ShowSmartHint($"Commands used {count}× — enabling Auto Command would save time on every use");
+                return;
+            }
+            if (count >= 25 && !_dismissedThresholds.Contains(25) && !StateSettings.AutoPasteEnabled)
+            {
+                ShowSmartHint($"Commands used {count}× — Auto Command skips the manual paste step");
+                return;
+            }
+            if (count >= 10 && !_dismissedThresholds.Contains(10) && !StateSettings.AutoPasteEnabled)
+            {
+                ShowSmartHint($"Commands used {count}× — try Auto Command to skip Ctrl+V");
+                return;
+            }
+
+            // AutoPaste now on, or no threshold reached, or all dismissed
+            HideSmartHint();
+        }
+
+        private void ShowSmartHint(string text)
+        {
+            SmartHintText.Text = text;
+            SmartHintBar.Visibility = Visibility.Visible;
+        }
+
+        public void HideSmartHint()
+        {
+            SmartHintBar.Visibility = Visibility.Collapsed;
+        }
+
+        private void SmartHintDismiss_Click(object sender, RoutedEventArgs e)
+        {
+            int count = StateSettings.CommandsUsageCount;
+            int threshold = count >= 50 ? 50 : count >= 25 ? 25 : count >= 10 ? 10 : 0;
+            if (threshold > 0) _dismissedThresholds.Add(threshold);
+            HideSmartHint();
+        }
     }
 
     public static class CommandStore
