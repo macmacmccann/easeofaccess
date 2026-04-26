@@ -62,6 +62,7 @@ namespace main_interface
         private TilingManager()
         {
             InitializeComponent();
+            InitScreenSize();
             var hwnd = WindowNative.GetWindowHandle(this);
             this.ExtendsContentIntoTitleBar = true;
             _instanceTilingManager = this; // Save this instance to the static variable ! Singleton needs to track 
@@ -345,12 +346,18 @@ namespace main_interface
                 width, height, // width heigh 
                SWP_NOACTIVATE);
         }
-        [DllImport("user32.dll")]
-        static extern int GetSystemMetrics(int nIndex);
-        const int SM_CXSCREEN = 0; // width of primary monitor
-        const int SM_CYSCREEN = 1; // height of primary monitor
-        int width = GetSystemMetrics(SM_CXSCREEN);
-        int height = GetSystemMetrics(SM_CYSCREEN);
+        int width;
+        int height;
+
+        private void InitScreenSize()
+        {
+            IntPtr hMon = MonitorFromPoint(new Win32Point { X = 0, Y = 0 }, MONITOR_DEFAULTTOPRIMARY);
+            MONITORINFO mi = new MONITORINFO();
+            mi.cbSize = Marshal.SizeOf(mi);
+            GetMonitorInfo(hMon, ref mi);
+            width  = mi.rcMonitor.Right  - mi.rcMonitor.Left;
+            height = mi.rcMonitor.Bottom - mi.rcMonitor.Top;
+        }
         // Logic happens when i activate / click window 
         private void TilingManager_Activated(object sender, WindowActivatedEventArgs e)
         {
@@ -1066,6 +1073,7 @@ namespace main_interface
         const uint VK_T     = 0x54;
         const uint VK_W     = 0x57;
         const uint VK_A     = 0x41;
+        const uint VK_Z     = 0x5A;
 
 
         const int HOTKEY_ID_OVERLAY = 9000;     // cycle modes

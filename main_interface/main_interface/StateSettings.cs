@@ -59,6 +59,9 @@ namespace main_interface
         // Mouseless Smart Assistant
         public static bool SmartAssistantMouselessToggle = false;
 
+        // Eyesight Smart Assistant
+        public static bool SmartAssistantEyesightToggle = false;
+
         // Reprogam Keys // Key Control
 
         public static bool ReprogramKeysEnabled = false;

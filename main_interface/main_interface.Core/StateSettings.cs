@@ -24,6 +24,8 @@ namespace main_interface
         public static bool MigraineEnabled = false;
         public static bool FireEnabled = false;
 
+        public static bool SmartAssistantEyesightToggle = false;
+
         // Mouseless Toggles
         public static bool MouselessEnabled = false;
         public static bool SpeedFastEnabled = false;

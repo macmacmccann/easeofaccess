@@ -162,11 +162,16 @@ namespace main_interface.Controls
 
             if (node is Page page)
             {
-                _parentPage   = page;
+                if (_parentPage != null)
+                    _parentPage.KeyDown -= OnPageKeyDown;
+                _parentPage = page;
+                page.KeyDown -= OnPageKeyDown;
                 page.KeyDown += OnPageKeyDown;
             }
 
-            UsageTracker.Fired        += OnUsageFired;
+            UsageTracker.Fired            -= OnUsageFired;
+            UsageTracker.Fired            += OnUsageFired;
+            PopupKeyboard.CancelRequested -= OnPopupCancel;
             PopupKeyboard.CancelRequested += OnPopupCancel;
             RefreshState();
         }

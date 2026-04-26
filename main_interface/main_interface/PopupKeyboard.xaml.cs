@@ -47,6 +47,7 @@ public sealed partial class PopupKeyboard : Window
     private static readonly Color _colorTaken  = Color.FromArgb(200, 220,  38,  38); // red   — taken under current mods
     private static readonly Color _colorActive = Color.FromArgb(200, 251, 146,  60); // orange — held modifier key
     private static readonly Color _colorHint   = Color.FromArgb( 80, 251, 191,  36); // amber  — modifier has some taken combos
+    private static readonly Color _colorFree   = Color.FromArgb(160,  34, 197,  94); // green  — available under current mods
 
     [StructLayout(LayoutKind.Sequential)]
     private struct KBDLLHOOKSTRUCT
@@ -153,7 +154,14 @@ public sealed partial class PopupKeyboard : Window
         if ((mods & (uint)Modifiers.MOD_CONTROL) != 0) { TryHighlight(VirtualKey.LeftControl, _colorActive); TryHighlight(VirtualKey.RightControl, _colorActive); }
         if ((mods & (uint)Modifiers.MOD_SHIFT)   != 0) { TryHighlight(VirtualKey.LeftShift,   _colorActive); TryHighlight(VirtualKey.RightShift,   _colorActive); }
 
-        // Keys taken under exactly these modifiers: red
+        // Non-modifier keys: green (available under current mods)
+        foreach (var (vk, key) in _keyMap)
+        {
+            if (ModBitFor(vk) == 0)
+                key.SetHighlight(_colorFree);
+        }
+
+        // Keys taken under exactly these modifiers: red (overrides green)
         foreach (var combo in _taken)
         {
             if (combo.Modifiers == mods && combo.VirtualKey != 0)
@@ -204,38 +212,27 @@ public sealed partial class PopupKeyboard : Window
 
     public void ShowOnScreen()
     {
-        AlwaysOnTop();
-        ShowRelativeSize();
+        ShowCenteredAndSized();
+        FadeIn();
         InstallHook();
     }
 
-    public void ShowRelativeSize()
+    private void ShowCenteredAndSized()
     {
-    IntPtr hWnd = WindowNative.GetWindowHandle(this);
-    WindowId windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
-    AppWindow appWindowId = AppWindow.GetFromWindowId(windowId);
-    appWindowId.Resize(new SizeInt32 { Width =950, Height = 400 });
+        IntPtr hWnd = WindowNative.GetWindowHandle(this);
+        WindowId windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
+        AppWindow appWindow = AppWindow.GetFromWindowId(windowId);
+        var workArea = DisplayArea.GetFromWindowId(windowId, DisplayAreaFallback.Primary).WorkArea;
 
-    // Pick a bine with this as on dif cpu dif size 
-    }
+        // Scale target logical size to physical pixels so layout is never squashed on high-DPI screens
+        float scale = GetDpiForWindow(hWnd) / 96f;
+        int w = Math.Min((int)(workArea.Width * 0.90), (int)(1100 * scale));
+        int h = (int)(460 * scale);
+        int x = workArea.X + (workArea.Width  - w) / 2;
+        int y = workArea.Y + (workArea.Height - h) / 2;
 
-
-    public void AlwaysOnTop()
-    {
-        var hwnd = WindowNative.GetWindowHandle(this); // Get the hwnd for THIS  window 
-
-
-        SetWindowPos(
-            hwnd,
-            HWND_TOPMOST, // Keep it on top var in docuemntation 
-            100, 100, // x and y screen postions 
-            0,0, // width heigh 
-            SWP_NOACTIVATE
-            // SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE // Keep position and size dont steal focus 
-            );
-
-        FadeIn();
-
+        appWindow.MoveAndResize(new RectInt32(x, y, w, h));
+        SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
     }
 
 
@@ -328,24 +325,18 @@ public sealed partial class PopupKeyboard : Window
     double _opacity;
     public void FadeIn()
     {
-
         keyboard.Opacity = 0;
         _opacity = 0;
 
-        _animationTimer = new DispatcherTimer();
-
-        _animationTimer.Interval = TimeSpan.FromMilliseconds(16); // docuemented to be 60 fps 
-
+        _animationTimer?.Stop();
+        _animationTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10) };
         _animationTimer.Tick += (s, e) =>
         {
-            _opacity += 0.1;
+            _opacity = Math.Min(1.0, _opacity + 0.07);
             keyboard.Opacity = _opacity;
-
-            if (_opacity >= 1) // Okay now its visible 
+            if (_opacity >= 1)
                 _animationTimer.Stop();
-
         };
-
         _animationTimer.Start();
     }
 
@@ -391,6 +382,9 @@ public sealed partial class PopupKeyboard : Window
     static extern bool SetWindowPos(IntPtr hWnd, int HwnInsertAfter, int X, int Y, int cs, int cy, uint uFlags);    // declaration of parameters for simply sizing of window (impleneted above)
 
 
+
+    [DllImport("user32.dll")]
+    static extern int GetDpiForWindow(IntPtr hwnd);
 
     [DllImport("kernel32.dll")]
     static extern void Sleep(uint dwMilliseconds);
