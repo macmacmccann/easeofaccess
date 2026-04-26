@@ -12,23 +12,63 @@
 
         <Border x:Name="RootPanel" Opacity="0" Background="Transparent" CornerRadius="0" Padding="24">
 
-            <Grid RowDefinitions="Auto,Auto,*,Auto">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto">
 
                 <!-- Title -->
                 <TextBlock Grid.Row="0" Text="Saved Commands" FontSize="22" FontWeight="SemiBold"
                            Foreground="White" Margin="0,0,0,16"/>
 
                 <!-- Row 1: Search -->
-                <Grid Grid.Row="1" ColumnDefinitions="Auto,*" Margin="0,0,0,12">
-                    <TextBlock Grid.Column="0" Text="[1]" Foreground="White" Opacity="0.5"
-                               FontFamily="Consolas" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                    <TextBox Grid.Column="1" x:Name="SearchBox" PlaceholderText=" [ 1 ] Search commands... Press Enter - then the number"
+                <Grid Grid.Row="1" ColumnDefinitions="*" Margin="0,0,0,12">
+                    <TextBox x:Name="SearchBox" PlaceholderText=" Search...  [1][2][3] top used · [4]+ pick by number"
                              Background="Transparent" Foreground="White" FontFamily="Consolas"
                              TextChanged="SearchBox_TextChanged" KeyDown="SearchBox_KeyDown"/>
                 </Grid>
 
+                <!-- Smart Assistant hint bar -->
+                <Border x:Name="SmartHintBar" Grid.Row="2" Visibility="Collapsed"
+                        Background="#1522C55E" BorderBrush="#22C55E" BorderThickness="0,0,0,1"
+                        CornerRadius="6" Padding="10,5" Margin="0,0,0,4">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <TextBlock Grid.Column="0" Text="✦" FontSize="11" Foreground="#4ADE80"
+                                   VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBlock Grid.Column="1" x:Name="SmartHintText" FontSize="11"
+                                   Foreground="White" Opacity="0.85" VerticalAlignment="Center"
+                                   TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+                        <Button Grid.Column="2" x:Name="SmartHintDismissBtn" Content="×"
+                                FontSize="11" Padding="6,2" Margin="8,0,0,0"
+                                Click="SmartHintDismiss_Click"/>
+                    </Grid>
+                </Border>
+
+                <!-- Most Used -->
+                <Border Grid.Row="3" x:Name="MostUsedSection" Visibility="Collapsed"
+                        Background="#0DFFFFFF" CornerRadius="6" Padding="10,6" Margin="0,0,0,8">
+                    <StackPanel>
+                        <TextBlock Text="MOST USED" FontSize="10" Opacity="0.4" Foreground="White"
+                                   Margin="0,0,0,4" FontWeight="SemiBold" CharacterSpacing="100"/>
+                        <ListView x:Name="MostUsedList" Background="Transparent" BorderThickness="0"
+                                  SelectionMode="None">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="local:CommandItem">
+                                    <Grid ColumnDefinitions="Auto,*" Margin="0,1">
+                                        <TextBlock Grid.Column="0" Text="{Binding ShortcutLabel}"
+                                                   Foreground="White" Opacity="0.5" FontFamily="Consolas"
+                                                   FontSize="14" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Text}"
+                                                   Foreground="#4ADE80" FontFamily="Consolas" FontSize="14"
+                                                   VerticalAlignment="Center" TextWrapping="NoWrap"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   PointerPressed="Command_Clicked" Tag="{Binding Id}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+                </Border>
+
                 <!-- Command List -->
-                <ListView Grid.Row="2" x:Name="CommandList" Background="Transparent" BorderThickness="0"
+                <ListView Grid.Row="4" x:Name="CommandList" Background="Transparent" BorderThickness="0"
                           SelectionMode="None">
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="local:CommandItem">
@@ -56,7 +96,7 @@
                 </ListView>
 
                 <!-- Add new command -->
-                <Grid Grid.Row="3" ColumnDefinitions="*,Auto" Margin="0,12,0,0">
+                <Grid Grid.Row="5" ColumnDefinitions="*,Auto" Margin="0,12,0,0">
                     <TextBox x:Name="NewCommandBox" PlaceholderText="New command..."
                              Background="Transparent" Foreground="White" FontFamily="Consolas"
                              AcceptsReturn="False"/>

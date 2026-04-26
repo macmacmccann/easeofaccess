@@ -1,8 +1,8 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.UI;
 
@@ -46,6 +46,28 @@ namespace main_interface
             }.Count(b => b);
 
             ActiveCountText.Text = activeCount.ToString();
+
+            PopulateInsights(InsightEngine.GetInsights());
+        }
+
+        private void PopulateInsights(List<InsightEngine.Insight> insights)
+        {
+            InsightsPanel.Children.Clear();
+            foreach (var insight in insights)
+            {
+                string text = insight.Suggestion != null
+                    ? $"{insight.Body}. Try {insight.Suggestion}."
+                    : $"{insight.Body}.";
+                InsightsPanel.Children.Add(new TextBlock
+                {
+                    Text            = text,
+                    FontSize        = 12,
+                    Foreground      = new SolidColorBrush(Color.FromArgb(220, 255, 255, 255)),
+                    Opacity         = 0.7,
+                    TextWrapping    = Microsoft.UI.Xaml.TextWrapping.Wrap
+                });
+            }
+            InsightsCard.Visibility = insights.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private static void SetBadge(Border badge, TextBlock label, bool isActive)
@@ -56,15 +78,14 @@ namespace main_interface
             label.Text = isActive ? "On" : "Off";
         }
 
-        // Scale-only hover — does not touch card backgrounds
-        private void Card_PointerEntered(object sender, PointerRoutedEventArgs e) => DesignGlobalCode.Key_PointerEntered(sender, e);
-        private void Card_PointerExited(object sender,  PointerRoutedEventArgs e) => DesignGlobalCode.Key_PointerExited(sender, e);
-
         private void ReprogramKeys_Click(object sender, RoutedEventArgs e) => Frame.Navigate(typeof(ReprogramKeysControlPanel));
         private void TilingManager_Click(object sender, RoutedEventArgs e) => Frame.Navigate(typeof(TilingManagerControlPanel));
         private void Mouseless_Click(object sender,     RoutedEventArgs e) => Frame.Navigate(typeof(MouselessControlPanel));
         private void Commands_Click(object sender,      RoutedEventArgs e) => Frame.Navigate(typeof(CommandsControlPanel));
         private void Eyesight_Click(object sender,      RoutedEventArgs e) => Frame.Navigate(typeof(EyesightControlPanel));
         private void Assistant_Click(object sender,     RoutedEventArgs e) => Frame.Navigate(typeof(AssistantControlPanel));
+
+        private void Login_Click(object sender,    RoutedEventArgs e) { }
+        private void Register_Click(object sender, RoutedEventArgs e) { }
     }
 }

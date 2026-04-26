@@ -16,7 +16,7 @@
             <Border x:Name="Headertop">
                 <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Top" Height="120" Padding="16" Margin="24,24,0,0">
                     <StackPanel Spacing="4">
-                        <TextBlock Text="Let the App Think For You" FontSize="30" FontWeight="SemiBold" />
+                        <TextBlock Text="FineTune Smart Agents To Your Liking" FontSize="30" FontWeight="SemiBold" />
                         <TextBlock Text="Set rules and let your accessibility features activate automatically" FontSize="14" Opacity="0.7" />
                     </StackPanel>
 

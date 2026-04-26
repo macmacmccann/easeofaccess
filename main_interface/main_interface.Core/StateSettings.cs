@@ -8,6 +8,8 @@ namespace main_interface
         public static bool AutoPasteEnabled = false;
         public static bool BackdropEnabled = false;
         public static bool SearchBoxAutoFocusEnabled = true;
+        public static bool SmartAssistantCommandsToggle = false;
+        public static int CommandsUsageCount = 0;
 
         // Color gradients
         public static bool MonitorColorFixEnabled = false;
@@ -22,18 +24,26 @@ namespace main_interface
         public static bool MigraineEnabled = false;
         public static bool FireEnabled = false;
 
+        public static bool SmartAssistantEyesightToggle = false;
+
         // Mouseless Toggles
         public static bool MouselessEnabled = false;
         public static bool SpeedFastEnabled = false;
         public static bool SpeedMedEnabled = false;
         public static bool SpeedSlowEnabled = false;
 
+
+        public static bool SmartAssistantMouselessToggle = false;
+
         // Tiling Manager
         public static bool TilingManagerEnabled = false;
         public static bool FocusModeEnabled = false;
         public static bool StackedModeEnabled = false;
         public static bool ColumnModeEnabled = true;
-        public static bool GridModeEnabled = true;
+        public static bool GridModeEnabled = false;
+        public static bool MasterStackModeEnabled = false;
+        public static int FocusDimOpacity = 90;
+        public static bool SmartAssistantTilingManagerToggle = false;
 
 
 

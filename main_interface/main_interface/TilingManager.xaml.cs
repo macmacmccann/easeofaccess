@@ -29,9 +29,7 @@ using AppWindow = Microsoft.UI.Windowing.AppWindow;
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 namespace main_interface
 {
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
+
     public sealed partial class TilingManager : Window
     {
         DesktopAcrylicBackdrop? acrylic; // Dont garbage collect / global / exists in lifecycle of whole class not just a method
@@ -64,6 +62,7 @@ namespace main_interface
         private TilingManager()
         {
             InitializeComponent();
+            InitScreenSize();
             var hwnd = WindowNative.GetWindowHandle(this);
             this.ExtendsContentIntoTitleBar = true;
             _instanceTilingManager = this; // Save this instance to the static variable ! Singleton needs to track 
@@ -76,14 +75,21 @@ namespace main_interface
 
             EnableAcrylic();
             HideFromTaskbar();
-      
-            //TilePrimaryMonitor();
+
             GetTileableWindows();
             TilePrimaryMonitorWindows();
-       
 
-            // " Subscription" logic -> dump method into this 
-            Activated += OnActivated; 
+            SetupSubclass();
+
+            // Register hotkeys from _assignedCombos (pre-seeded defaults or user-set while tiling was off)
+            RegisterFromAssigned(HOTKEY_ID_OVERLAY,    Modifiers.MOD_ALT,                       VK_A);
+            RegisterFromAssigned(HOTKEY_ID_FOCUS_NEXT, Modifiers.MOD_ALT,                       VK_RIGHT);
+            RegisterFromAssigned(HOTKEY_ID_SWAP_NEXT,  Modifiers.MOD_ALT | Modifiers.MOD_SHIFT, VK_RIGHT);
+            RegisterFromAssigned(HOTKEY_ID_MAXIMIZE,   Modifiers.MOD_ALT,                       VK_F);
+            RegisterFromAssigned(HOTKEY_ID_RETILE,     Modifiers.MOD_ALT,                       VK_T);
+            RegisterFromAssigned(HOTKEY_ID_CLOSE,      Modifiers.MOD_ALT,                       VK_W);
+
+            Activated += OnActivated;
 
 
 
@@ -108,7 +114,53 @@ namespace main_interface
             );
         }
 
-        //Delegate required by enumerate windows to reveive the window handle 
+        public void ActivateFocusHook()
+        {
+            _focusEventDelegate = OnFocusChanged;
+            _focusEventHook = SetWinEventHook(
+                EVENT_SYSTEM_FOREGROUND,
+                EVENT_SYSTEM_FOREGROUND,
+                IntPtr.Zero,
+                _focusEventDelegate,
+                0, 0,
+                WINEVENT_OUTOFCONTEXT
+            );
+        }
+
+        private void OnFocusChanged(IntPtr hWinEventHook, uint eventType, IntPtr hWnd,
+            int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
+        {
+            if (idObject != 0) return;
+            DispatcherQueue.TryEnqueue(() => ApplyFocusDim(hWnd));
+        }
+
+        public void ApplyFocusDim(IntPtr focusedHwnd)
+        {
+            if (_tiledOrder.Count == 0) return;
+            if (_focusEventHook == IntPtr.Zero) return;
+            byte dimAlpha = (byte)(StateSettings.FocusDimOpacity * 255 / 100);
+            foreach (var hwnd in _tiledOrder)
+            {
+                byte alpha = hwnd == focusedHwnd ? (byte)255 : dimAlpha;
+                uint exStyle = (uint)GetWindowLong(hwnd, GWL_EXSTYLE);
+                SetWindowLong(hwnd, GWL_EXSTYLE, exStyle | WS_EX_LAYERED);
+                SetLayeredWindowAttributes(hwnd, 0, alpha, LWA_ALPHA);
+            }
+        }
+
+        public void ReapplyFocusDim() => ApplyFocusDim(GetForegroundWindow());
+
+        public void RestoreAllOpacity()
+        {
+            foreach (var hwnd in _tiledOrder)
+            {
+                uint exStyle = (uint)GetWindowLong(hwnd, GWL_EXSTYLE);
+                SetWindowLong(hwnd, GWL_EXSTYLE, exStyle | WS_EX_LAYERED);
+                SetLayeredWindowAttributes(hwnd, 0, 255, LWA_ALPHA);
+            }
+        }
+
+        //Delegate required by enumerate windows to reveive the window handle
         delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
 
 
@@ -125,6 +177,9 @@ namespace main_interface
              int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
 
         private WinEventDelegate? _winEventDelegate; // must hold reference or GC will collect it
+
+        private IntPtr _focusEventHook;
+        private WinEventDelegate? _focusEventDelegate;
 
 
         //In constructor   _winEventDelegate = OnWinEvent;
@@ -170,6 +225,7 @@ namespace main_interface
         const uint EVENT_OBJECT_SHOW = 0x8002;
         const uint EVENT_OBJECT_HIDE = 0x8003;
         const uint EVENT_OBJECT_DESTROY = 0x8001;
+        const uint EVENT_SYSTEM_FOREGROUND = 0x0003;
         const uint WINEVENT_OUTOFCONTEXT = 0x0000;
 
 
@@ -189,8 +245,13 @@ namespace main_interface
 
             if (_winEventHook != IntPtr.Zero)
                 UnhookWinEvent(_winEventHook);
-            _winEventHook = IntPtr.Zero; // clear delegate
-            _winEventDelegate = null; // Global delegate aswell
+            _winEventHook = IntPtr.Zero;
+            _winEventDelegate = null;
+
+            if (_focusEventHook != IntPtr.Zero)
+                UnhookWinEvent(_focusEventHook);
+            _focusEventHook = IntPtr.Zero;
+            _focusEventDelegate = null;
 
 
             //_instanceTilingManager = null; // Clear the singleton reference 
@@ -207,27 +268,8 @@ namespace main_interface
 
 
 
-        private bool _isHookUpSet = false;
-
-        private void OnActivated(object sender, WindowActivatedEventArgs args) // hwnd exists after the fact thats why is activated when window is constructred not in the construcotr 
+        private void OnActivated(object sender, WindowActivatedEventArgs args)
         {
-          //  MoveOffScreen();
-            //thhis will run once im not unsuncribing to this method 
-            if (!_isHookUpSet)
-            {
-                //SetupHook(); old method not dynamic hardcoded keys commented below 
-                // UpdateHotkey(0,0);
-                SetupSubclass(); // Hook into Win32 message loops 
-                UpdateHotkey(1, MOD_CONTROL, VK_O); // id set to match in method (as page doesnt know it only here does ) 
-                _isHookUpSet = true; // now never try again 
-                                     // HotKeyErrorOccured?.Invoke("In Use. Try again");
-
-            }
-            // Elevated command choice cuts off code -> no way to override -> only after regaining focus 
-            if (args.WindowActivationState == WindowActivationState.Deactivated)
-            {
-
-            }
         }
 
 
@@ -304,12 +346,18 @@ namespace main_interface
                 width, height, // width heigh 
                SWP_NOACTIVATE);
         }
-        [DllImport("user32.dll")]
-        static extern int GetSystemMetrics(int nIndex);
-        const int SM_CXSCREEN = 0; // width of primary monitor
-        const int SM_CYSCREEN = 1; // height of primary monitor
-        int width = GetSystemMetrics(SM_CXSCREEN);
-        int height = GetSystemMetrics(SM_CYSCREEN);
+        int width;
+        int height;
+
+        private void InitScreenSize()
+        {
+            IntPtr hMon = MonitorFromPoint(new Win32Point { X = 0, Y = 0 }, MONITOR_DEFAULTTOPRIMARY);
+            MONITORINFO mi = new MONITORINFO();
+            mi.cbSize = Marshal.SizeOf(mi);
+            GetMonitorInfo(hMon, ref mi);
+            width  = mi.rcMonitor.Right  - mi.rcMonitor.Left;
+            height = mi.rcMonitor.Bottom - mi.rcMonitor.Top;
+        }
         // Logic happens when i activate / click window 
         private void TilingManager_Activated(object sender, WindowActivatedEventArgs e)
         {
@@ -521,6 +569,10 @@ namespace main_interface
                 StackWindows(windows, workWidth, workHeight, tileHeight, tileWidth, workX, workY);
             if (StateSettings.GridModeEnabled)
                 GridWindows(windows, workWidth, workHeight, workX, workY);
+            if (StateSettings.MasterStackModeEnabled)
+                MasterStackWindows(windows, workWidth, workHeight, workX, workY);
+
+            ApplyFocusDim(GetForegroundWindow());
         }
 
 
@@ -597,6 +649,43 @@ namespace main_interface
                 _ = FadeInWindowAsync(windows[i]);
             }
 
+        }
+
+        public void MasterStackWindows(List<IntPtr> windows, int workWidth, int workHeight, int workX, int workY)
+        {
+            int count = windows.Count;
+            if (count == 0) return;
+
+            if (count == 1)
+            {
+                ShowWindow(windows[0], 9);
+                SetWindowPos(windows[0], IntPtr.Zero, workX, workY, workWidth, workHeight, SWP_NOACTIVATE);
+                _ = FadeInWindowAsync(windows[0]);
+                return;
+            }
+
+            int masterWidth = workWidth / 2;
+            int stackWidth = workWidth - masterWidth;
+            int stackHeight = workHeight / (count - 1);
+
+            ShowWindow(windows[0], 9);
+            SetWindowPos(windows[0], IntPtr.Zero, workX, workY, masterWidth, workHeight, SWP_NOACTIVATE);
+            _ = FadeInWindowAsync(windows[0]);
+
+            for (int i = 1; i < count; i++)
+            {
+                ShowWindow(windows[i], 9);
+                SetWindowPos(
+                    windows[i],
+                    IntPtr.Zero,
+                    workX + masterWidth,
+                    workY + (i - 1) * stackHeight,
+                    stackWidth,
+                    stackHeight,
+                    SWP_NOACTIVATE
+                );
+                _ = FadeInWindowAsync(windows[i]);
+            }
         }
 
         public void GridWindows(List<IntPtr> windows, int workWidth, int workHeight, int workX, int workY)
@@ -781,7 +870,8 @@ namespace main_interface
         {
             StepOne,
             StepTwo,
-            StepThree
+            StepThree,
+            StepFour
         }
 
 
@@ -822,6 +912,11 @@ namespace main_interface
                     TilingManagerControlPanel._tilingControlPanelPage.Grid_SetStateAndToggle_DontRead();
                     break;
 
+                case ProgressState.StepFour:
+                    Debug.WriteLine("Turn on Master Stack ");
+
+                    TilingManagerControlPanel._tilingControlPanelPage.MasterStack_SetStateAndToggle_DontRead();
+                    break;
 
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -970,9 +1065,15 @@ namespace main_interface
         const int MOD_ALT = 0x0001;  // alt 
         const int MOD_WIN = 0x0008; // win 
 
-        const int VK_V = 0x56; // Virtual Key for the letter v so meaning shift + v 
-        const int VK_O = 0x4F; // letter o 
+        const int VK_V = 0x56;
+        const int VK_O = 0x4F;
         const int VK_8 = 0x38;
+        const uint VK_RIGHT = 0x27;
+        const uint VK_F     = 0x46;
+        const uint VK_T     = 0x54;
+        const uint VK_W     = 0x57;
+        const uint VK_A     = 0x41;
+        const uint VK_Z     = 0x5A;
 
 
         const int HOTKEY_ID_OVERLAY = 9000;     // cycle modes
@@ -981,6 +1082,38 @@ namespace main_interface
         const int HOTKEY_ID_FOCUS_NEXT = 6000;  // focus next tiled window
         const int HOTKEY_ID_CLOSE = 5000;       // close focused window
         const int HOTKEY_ID_SWAP_NEXT = 4000;   // swap focused window with next in tile order
+        // Populates TakenCombinations with the 6 hardcoded defaults WITHOUT creating the window.
+        // Call this from the control panel on startup so the popup keyboard shows them as taken
+        // even when the tiling toggle is off.
+        public static void SeedDefaultsTaken()
+        {
+            static void Seed(int id, uint mod, uint vk)
+            {
+                if (!TakenCombinations._assignedCombos.ContainsKey(id))
+                {
+                    TakenCombinations.Add(mod, vk);
+                    TakenCombinations._assignedCombos[id] = new HotKeyCombo(mod, vk);
+                }
+            }
+            Seed(HOTKEY_ID_OVERLAY,    (uint)Modifiers.MOD_ALT,                                    VK_A);
+            Seed(HOTKEY_ID_MAXIMIZE,   (uint)Modifiers.MOD_ALT,                                    VK_F);
+            Seed(HOTKEY_ID_RETILE,     (uint)Modifiers.MOD_ALT,                                    VK_T);
+            Seed(HOTKEY_ID_FOCUS_NEXT, (uint)Modifiers.MOD_ALT,                                    VK_RIGHT);
+            Seed(HOTKEY_ID_CLOSE,      (uint)Modifiers.MOD_ALT,                                    VK_W);
+            Seed(HOTKEY_ID_SWAP_NEXT,  (uint)(Modifiers.MOD_ALT | Modifiers.MOD_SHIFT),            VK_RIGHT);
+        }
+
+        // Registers a hotkey using whatever is in _assignedCombos for this ID (user-set or seeded
+        // default), falling back to the default only if no entry exists at all.
+        private void RegisterFromAssigned(int id, Modifiers defaultMod, uint defaultVk)
+        {
+            var hwnd = WindowNative.GetWindowHandle(this);
+            if (TakenCombinations._assignedCombos.TryGetValue(id, out var stored) && stored.VirtualKey != 0)
+                RegisterHotKey(hwnd, id, stored.Modifiers, stored.VirtualKey);
+            else
+                TryUpdateHotkey(id, defaultMod, defaultVk, out _);
+        }
+
         public bool TryUpdateHotkey(int id, Modifiers modkey, uint vk, out HotKeyCombo resultingCombo)
         {
 
@@ -1091,14 +1224,14 @@ namespace main_interface
         static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
         const uint WM_CLOSE = 0x0010;
 
-        private void MaximizeFocusedWindow()
+        public void MaximizeFocusedWindow()
         {
             IntPtr hwnd = GetForegroundWindow();
             if (hwnd == IntPtr.Zero || hwnd == WindowNative.GetWindowHandle(this)) return;
             ShowWindow(hwnd, 3); // SW_MAXIMIZE
         }
 
-        private void FocusNextWindow()
+        public void FocusNextWindow()
         {
             if (_tiledOrder.Count == 0) return;
             IntPtr focused = GetForegroundWindow();
@@ -1107,7 +1240,7 @@ namespace main_interface
             SwitchToThisWindow(_tiledOrder[next], true);
         }
 
-        private void CloseFocusedWindow()
+        public void CloseFocusedWindow()
         {
             IntPtr hwnd = GetForegroundWindow();
             if (hwnd == IntPtr.Zero || hwnd == WindowNative.GetWindowHandle(this)) return;
@@ -1115,7 +1248,7 @@ namespace main_interface
             // WinEvent hook fires automatically when the window disappears and retiles
         }
 
-        private void SwapFocusedWithNext()
+        public void SwapFocusedWithNext()
         {
             if (_tiledOrder.Count < 2) return;
             IntPtr focused = GetForegroundWindow();

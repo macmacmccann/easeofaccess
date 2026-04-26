@@ -42,7 +42,7 @@ public sealed partial class Eyesight : Window
         AlwaysOnTop();
         ApplySettings();
 
-        
+
         //MakeDyslexiaOverlay();
 
         //HideFromTaskbar();
@@ -173,22 +173,22 @@ public sealed partial class Eyesight : Window
 
     const int SM_CXSCREEN = 0; // width of primary monitor
     const int SM_CYSCREEN = 1; // height of primary monitor
-        int width = GetSystemMetrics(SM_CXSCREEN);
-        int height = GetSystemMetrics(SM_CYSCREEN);
+    int width = GetSystemMetrics(SM_CXSCREEN);
+    int height = GetSystemMetrics(SM_CYSCREEN);
 
 
     public void ShowOnScreen()
     {
 
         var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
-       
+
         SetWindowPos(
             hwnd,
             IntPtr.Zero, // Dont change x index i set in OnTop()
-            0,0, // x and y screen postions 
-            width,height, // width heigh 
+            0, 0, // x and y screen postions 
+            width, height, // width heigh 
         0x0040);
-            }
+    }
 
 
 
@@ -245,8 +245,8 @@ public sealed partial class Eyesight : Window
         SetWindowPos(
             hwnd,
             HWND_TOPMOST, // Keep it on top var in docuemntation 
-            0,0, // x and y screen postions 
-            width,height, // width heigh 
+            0, 0, // x and y screen postions 
+            width, height, // width heigh 
             SWP_NOACTIVATE
             // SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE // Keep position and size dont steal focus 
             );
@@ -269,7 +269,7 @@ public sealed partial class Eyesight : Window
         SetWindowStyle();
         var hwnd = WindowNative.GetWindowHandle(this);
 
-       // SetWindowLong(hwnd, GWL_EXSTYLE, exStyle); // Apply styles 
+        // SetWindowLong(hwnd, GWL_EXSTYLE, exStyle); // Apply styles 
 
         // Optional: Set opacity (255 = opaque, 0 = fully transparent)
         SetLayeredWindowAttributes(hwnd, 0, 255, LWA_ALPHA);
@@ -304,7 +304,7 @@ public sealed partial class Eyesight : Window
         var grid = new Grid
         {
             Background = new SolidColorBrush(
-                Windows.UI.Color.FromArgb(255, 255, 230, 240) 
+                Windows.UI.Color.FromArgb(255, 255, 230, 240)
             )
         };
 
@@ -388,7 +388,7 @@ public sealed partial class Eyesight : Window
             Source = new BitmapImage(
                 new Uri("ms-appx:///Assets/gifs/fireblurred.gif")),
             Opacity = 0.9,
-             Stretch = Stretch.UniformToFill
+            Stretch = Stretch.UniformToFill
 
         };
 
@@ -451,29 +451,29 @@ public sealed partial class Eyesight : Window
 
     // IMPORTS 
     const int GWL_EXSTYLE = -20;
-        const int WS_EX_TRANSPARENT = 0x00000020;
-        const int WS_EX_LAYERED = 0x00080000;
+    const int WS_EX_TRANSPARENT = 0x00000020;
+    const int WS_EX_LAYERED = 0x00080000;
 
 
 
-        // Win32 function to reposition windows . 
-        [DllImport("user32.dll")]
-        static extern bool SetWindowPos(
-        IntPtr hWnd,
-        IntPtr hWndInsertAfter, // Special HWND (topmost, notopmost etc ) 
-        int X, // x position 
-        int Y, // y poisiotn 
-        int cx, // Width 
-        int cy, // Height
-        uint uFlags // Flags controlling behavior 
-        );
+    // Win32 function to reposition windows . 
+    [DllImport("user32.dll")]
+    static extern bool SetWindowPos(
+    IntPtr hWnd,
+    IntPtr hWndInsertAfter, // Special HWND (topmost, notopmost etc ) 
+    int X, // x position 
+    int Y, // y poisiotn 
+    int cx, // Width 
+    int cy, // Height
+    uint uFlags // Flags controlling behavior 
+    );
 
-        //Declare constants 
-        static readonly IntPtr HWND_NOTTOPMOST = new IntPtr(-2);
-        static readonly IntPtr HWND_TOPMOST = new IntPtr(-1); // Special value telling windows " keep this above all otheres 
-        const uint SWP_NOMOVE = 0x0002; // Dont move window 
-        const uint SWP_NOSIZE = 0X0001; // Dont change window size 
-        const uint SWP_NOACTIVATE = 0x0010; // Dont steal keyboard focus 
+    //Declare constants 
+    static readonly IntPtr HWND_NOTTOPMOST = new IntPtr(-2);
+    static readonly IntPtr HWND_TOPMOST = new IntPtr(-1); // Special value telling windows " keep this above all otheres 
+    const uint SWP_NOMOVE = 0x0002; // Dont move window 
+    const uint SWP_NOSIZE = 0X0001; // Dont change window size 
+    const uint SWP_NOACTIVATE = 0x0010; // Dont steal keyboard focus 
 
 
 
@@ -493,5 +493,3 @@ public sealed partial class Eyesight : Window
 
 
 }
-
-

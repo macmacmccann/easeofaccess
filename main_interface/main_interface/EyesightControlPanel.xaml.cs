@@ -30,6 +30,9 @@ public sealed partial class EyesightControlPanel : Page
 
     public void ToggleEnable() => MonitorColorFixEnabledToggle.IsOn = !MonitorColorFixEnabledToggle.IsOn;
 
+    private DispatcherTimer? _smartEyesightTimer;
+    private DateTime _lastEyesightTriggerDate = DateTime.MinValue;
+
     public EyesightControlPanel()
     {
         InitializeComponent();
@@ -43,6 +46,10 @@ public sealed partial class EyesightControlPanel : Page
 
         // Keep the page alive / no duplicates upon nav switch by caching / reflected states preserved in ui
         this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+
+        SmartAssistantEyesightToggle.IsOn = StateSettings.SmartAssistantEyesightToggle;
+        EyesightTimePicker.SelectedTime   = new TimeSpan(18, 0, 0);
+        if (StateSettings.SmartAssistantEyesightToggle) StartSmartEyesightTimer();
     }
 
 
@@ -390,6 +397,58 @@ public sealed partial class EyesightControlPanel : Page
         }
         if (combo.VirtualKey != 0)
             assigner.SetDisplayText(main_interface.Controls.HotKeyCaptureControl.DescribeCombo(combo.Modifiers, combo.VirtualKey));
+        assigner.RefreshState();
+    }
+
+    private void SmartAssistantEyesightToggle_Toggled(object sender, RoutedEventArgs e)
+    {
+        StateSettings.SmartAssistantEyesightToggle = SmartAssistantEyesightToggle.IsOn;
+        if (SmartAssistantEyesightToggle.IsOn) StartSmartEyesightTimer();
+        else StopSmartEyesightTimer();
+    }
+
+    private void StartSmartEyesightTimer()
+    {
+        _smartEyesightTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(60) };
+        _smartEyesightTimer.Tick += (_, _) => CheckEyesightTime();
+        _smartEyesightTimer.Start();
+        CheckEyesightTime();
+    }
+
+    private void StopSmartEyesightTimer()
+    {
+        _smartEyesightTimer?.Stop();
+        _smartEyesightTimer = null;
+    }
+
+    private void CheckEyesightTime()
+    {
+        if (_lastEyesightTriggerDate == DateTime.Today) return;
+        var target = EyesightTimePicker.SelectedTime ?? new TimeSpan(18, 0, 0);
+        if (DateTime.Now.TimeOfDay >= target)
+        {
+            _lastEyesightTriggerDate = DateTime.Today;
+            ActivateEyesightFilter();
+        }
+    }
+
+    private void ActivateEyesightFilter()
+    {
+        StateSettings.DyslexiaEnabled        = false;
+        StateSettings.LightSensitiveEnabled  = false;
+        StateSettings.MigraineEnabled        = false;
+        StateSettings.FireEnabled            = false;
+        StateSettings.MonitorColorFixEnabled = true;
+        StateSettings.DimScreenEnabled       = true;
+        Eyesight.Instance.ApplySettings();
+
+        MonitorColorFixEnabledToggle.IsOn = true;
+        DimScreenEnabledToggle.IsOn       = true;
+        DyslexiaEnabledToggle.IsOn        = false;
+        LightSensitiveEnabledToggle.IsOn  = false;
+        MigraineEnabledToggle.IsOn        = false;
+        FireEnabledToggle.IsOn            = false;
+        HeaderColour(Headertop);
     }
 
     private void TipsConstructor()

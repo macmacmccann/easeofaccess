@@ -46,7 +46,7 @@ xmlns:system="using:Windows.System"
                     </StackPanel>
                     <Border Grid.Column="1" Background="#20FFFFFF" CornerRadius="10"
                             Padding="14,10" VerticalAlignment="Center" Margin="24,0,0,0">
-                        <controls:HotKeyCaptureControl x:Name="ReprogramShortcut" Label="Toggle hotkey"/>
+                        <controls:HotKeyCaptureControl x:Name="ReprogramShortcut" Label="Toggle hotkey" HotkeyId="2002"/>
                     </Border>
                 </Grid>
 

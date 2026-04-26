@@ -1,4 +1,4 @@
-using main_interface;
+﻿using main_interface;
 using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
 // Get the apps window for .Show() or Hide () 
@@ -158,9 +158,19 @@ namespace main_interface
         {
             var items = CommandStore.All()
                 .Where(kvp => string.IsNullOrEmpty(filter) || kvp.Value.Contains(filter, StringComparison.OrdinalIgnoreCase))
-                .Select((kvp, i) => new CommandItem(kvp.Key, kvp.Value, $"[{i + 2}]"))
+                .Select((kvp, i) => new CommandItem(kvp.Key, kvp.Value, $"[{i + 4}]"))
                 .ToList();
             CommandList.ItemsSource = items;
+            RefreshMostUsed();
+        }
+
+        private void RefreshMostUsed()
+        {
+            var top = CommandStore.TopN(6)
+                .Select((kvp, i) => new CommandItem(kvp.Key, kvp.Value, $"[{i + 1}]"))
+                .ToList();
+            MostUsedList.ItemsSource = top;
+            MostUsedSection.Visibility = top.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -171,13 +181,6 @@ namespace main_interface
 
         private void OnWindowKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == Windows.System.VirtualKey.Number1)
-            {
-                SearchBox.Focus(FocusState.Programmatic);
-                e.Handled = true;
-                return;
-            }
-
             if (e.Key == Windows.System.VirtualKey.Escape)
             {
                 Toggle();
@@ -185,9 +188,9 @@ namespace main_interface
                 return;
             }
 
-            // digits 2-9 feed the buffer
             int digit = e.Key switch
             {
+                Windows.System.VirtualKey.Number1 => 1,
                 Windows.System.VirtualKey.Number2 => 2,
                 Windows.System.VirtualKey.Number3 => 3,
                 Windows.System.VirtualKey.Number4 => 4,
@@ -208,17 +211,36 @@ namespace main_interface
                 _numberTimer.Tick += (s, ev) =>
                 {
                     _numberTimer.Stop();
-                    if (int.TryParse(_numberBuffer, out int index) && index >= 2)
+                    if (int.TryParse(_numberBuffer, out int index))
                     {
-                        int listIndex = index - 2; // [2] = index 0
-                        if (CommandList.ItemsSource is List<CommandItem> items && listIndex < items.Count)
-                            SelectCommand(items[listIndex].Text);
+                        if (index >= 1 && index <= 3)
+                        {
+                            // [1][2][3] → most-used; [1] falls back to search focus if section is empty
+                            if (!TrySelectMostUsed(index - 1) && index == 1)
+                                SearchBox.Focus(FocusState.Programmatic);
+                        }
+                        else if (index >= 4)
+                        {
+                            int listIndex = index - 4; // [4] = index 0
+                            if (CommandList.ItemsSource is List<CommandItem> items && listIndex < items.Count)
+                                SelectCommand(items[listIndex].Id, items[listIndex].Text);
+                        }
                     }
                     _numberBuffer = "";
                 };
                 _numberTimer.Start();
                 e.Handled = true;
             }
+        }
+
+        private bool TrySelectMostUsed(int index)
+        {
+            if (MostUsedList.ItemsSource is List<CommandItem> items && index < items.Count)
+            {
+                SelectCommand(items[index].Id, items[index].Text);
+                return true;
+            }
+            return false;
         }
 
         private void SearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -232,12 +254,18 @@ namespace main_interface
 
         public void Command_Clicked(object sender, PointerRoutedEventArgs e)
         {
-            if (sender is TextBlock tb)
-                SelectCommand(tb.Text);
+            if (sender is TextBlock tb && tb.Tag is int id)
+                SelectCommand(id, tb.Text);
         }
 
-        private void SelectCommand(string text)
+        private void SelectCommand(int id, string text)
         {
+            if (StateSettings.SmartAssistantCommandsToggle)
+            {
+                StateSettings.CommandsUsageCount++;
+                EvaluateSmartHint();
+            }
+            CommandStore.RecordUse(id);
             CopyToClipboard(text);
             MoveOffScreen();
             SetForegroundWindow(_previousforground);
@@ -547,10 +575,12 @@ namespace main_interface
                     ToggleOverlay(); //Lets open our overlay screen
                     return IntPtr.Zero; // tell win32 the message was handled  
                 }
-                if (wParam.ToInt32() == HOTKEY_ID_FAKE_OTHER_FUNCTION)
+if (wParam.ToInt32() == HOTKEY_ID_FAKE_OTHER_FUNCTION)
                 {
-                    Debug.WriteLine("Other function called");
-                    return IntPtr.Zero; // tell win32 the message was handled  
+                    Debug.WriteLine("Hide window hotkey");
+                    MoveOffScreen();
+                    _visible = false;
+                    return IntPtr.Zero;  // tell win32 the message was handled  
                 }
 
 
@@ -651,8 +681,12 @@ namespace main_interface
 
             // No SWP_NOACTIVATE here — we want focus
             SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, w, h, 0);
-            SetForegroundWindow(hwnd); // pop up is is focus 
+            SetForegroundWindow(hwnd); // pop up is is focus
             FadeIn();
+
+            // Refresh hint on each open so it clears if the user acted on the suggestion
+            EvaluateSmartHint();
+            RefreshMostUsed();
         }
 
 
@@ -908,11 +942,63 @@ namespace main_interface
 
 
 
+
+
+        // ── Smart Assistant hint ─────────────────────────────────────────────
+
+        private readonly HashSet<int> _dismissedThresholds = new();
+
+        private void EvaluateSmartHint()
+        {
+            if (!StateSettings.SmartAssistantCommandsToggle) { HideSmartHint(); return; }
+
+            int count = StateSettings.CommandsUsageCount;
+
+            // Evaluate highest threshold first — AutoPaste is the key discovery target
+            if (count >= 50 && !_dismissedThresholds.Contains(50) && !StateSettings.AutoPasteEnabled)
+            {
+                ShowSmartHint($"Commands used {count}× — enabling Auto Command would save time on every use");
+                return;
+            }
+            if (count >= 25 && !_dismissedThresholds.Contains(25) && !StateSettings.AutoPasteEnabled)
+            {
+                ShowSmartHint($"Commands used {count}× — Auto Command skips the manual paste step");
+                return;
+            }
+            if (count >= 10 && !_dismissedThresholds.Contains(10) && !StateSettings.AutoPasteEnabled)
+            {
+                ShowSmartHint($"Commands used {count}× — try Auto Command to skip Ctrl+V");
+                return;
+            }
+
+            // AutoPaste now on, or no threshold reached, or all dismissed
+            HideSmartHint();
+        }
+
+        private void ShowSmartHint(string text)
+        {
+            SmartHintText.Text = text;
+            SmartHintBar.Visibility = Visibility.Visible;
+        }
+
+        public void HideSmartHint()
+        {
+            SmartHintBar.Visibility = Visibility.Collapsed;
+        }
+
+        private void SmartHintDismiss_Click(object sender, RoutedEventArgs e)
+        {
+            int count = StateSettings.CommandsUsageCount;
+            int threshold = count >= 50 ? 50 : count >= 25 ? 25 : count >= 10 ? 10 : 0;
+            if (threshold > 0) _dismissedThresholds.Add(threshold);
+            HideSmartHint();
+        }
     }
 
     public static class CommandStore
     {
         private static readonly Dictionary<int, string> _commands = new();
+        private static readonly Dictionary<int, int> _usageCounts = new();
         private static int _nextId = 1;
 
         public static void Add(string text)
@@ -927,7 +1013,21 @@ namespace main_interface
                 _commands[id] = text;
         }
 
-        public static void Delete(int id) => _commands.Remove(id);
+        public static void Delete(int id)
+        {
+            _commands.Remove(id);
+            _usageCounts.Remove(id);
+        }
+
+        public static void RecordUse(int id) =>
+            _usageCounts[id] = _usageCounts.GetValueOrDefault(id) + 1;
+
+        public static IEnumerable<KeyValuePair<int, string>> TopN(int n) =>
+            _usageCounts
+                .Where(kv => _commands.ContainsKey(kv.Key))
+                .OrderByDescending(kv => kv.Value)
+                .Take(n)
+                .Select(kv => new KeyValuePair<int, string>(kv.Key, _commands[kv.Key]));
 
         public static bool TryGet(int id, out string? text) => _commands.TryGetValue(id, out text);
 

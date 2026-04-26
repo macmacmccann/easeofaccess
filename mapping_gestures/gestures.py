@@ -38,30 +38,49 @@ def classify_static(hand):
 
 
 class SwipeDetector:
-    # detects left/right swipe by watching wrist x over a short history.
+    # detects left/right/up/down swipe by watching wrist position over a short history.
 
     def __init__(self, history_len=12, threshold=0.15):
-        self.history = deque(maxlen=history_len)
-        self.threshold = threshold  # fraction of frame width
+        self.history_x = deque(maxlen=history_len)
+        self.history_y = deque(maxlen=history_len)
+        self.threshold = threshold  # fraction of frame dimension
 
     def update(self, hand):
-        self.history.append(hand[WRIST].x)
+        self.history_x.append(hand[WRIST].x)
+        self.history_y.append(hand[WRIST].y)
 
-        if len(self.history) < self.history.maxlen:
+        if len(self.history_x) < self.history_x.maxlen:
             return None
 
-        delta = self.history[-1] - self.history[0]
-        # In mediapipe x coords:
-        #  0=left edge
-        #  1=right edge of the mirrored frame.
-        # moving hand left  → x decreases → delta negative
-        # moving hand right → x increases → delta positive
-        if delta < -self.threshold:
-            self.history.clear()
-            return "swipe_left"
-        if delta > self.threshold:
-            self.history.clear()
-            return "swipe_right"
+        dx = self.history_x[-1] - self.history_x[0]
+        dy = self.history_y[-1] - self.history_y[0]
+
+        # Only fire when one axis clearly dominates the other
+        if abs(dx) < self.threshold and abs(dy) < self.threshold:
+            return None
+
+        if abs(dx) >= abs(dy):
+            # Horizontal swipe dominates
+            # x=0 left edge, x=1 right edge (mirrored frame)
+            # moving hand left  → x decreases → delta negative
+            # moving hand right → x increases → delta positive
+            if dx < -self.threshold:
+                self.history_x.clear(); self.history_y.clear()
+                return "swipe_left"
+            if dx > self.threshold:
+                self.history_x.clear(); self.history_y.clear()
+                return "swipe_right"
+        else:
+            # vertical swipe dominates
+            # y=0 top edge y=1 bottom edge
+            # moving hand up   → y decreases → delta negative
+            # moving hand down → y increases → delta positive
+            if dy < -self.threshold:
+                self.history_x.clear(); self.history_y.clear()
+                return "swipe_up"
+            if dy > self.threshold:
+                self.history_x.clear(); self.history_y.clear()
+                return "swipe_down"
         return None
 
 

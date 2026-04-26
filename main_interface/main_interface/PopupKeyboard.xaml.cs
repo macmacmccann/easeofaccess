@@ -3,21 +3,14 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Graphics;
 using Windows.System;
+using Windows.UI;
 using WinRT.Interop;
 using static main_interface.TakenCombinations;
 
@@ -33,55 +26,171 @@ public sealed partial class PopupKeyboard : Window
 
     private Dictionary<VirtualKey, KeyboardKey>? _keyMap;
 
-
     private static PopupKeyboard? _instance;
-    IntPtr _previousforground; // What is the app to paste the command grab it hwnd
+    IntPtr _previousforground;
     DesktopAcrylicBackdrop? acrylic;
+
+    // ── LL hook (no XAML focus required) ─────────────────────────────────────
+    private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
+    private LowLevelKeyboardProc? _hookCallback; // keep alive — GC doesn't see unmanaged reference
+    private IntPtr _hookHandle = IntPtr.Zero;
+    private Microsoft.UI.Dispatching.DispatcherQueue _uiQueue = null!;
+    private uint _currentHookMods = 0; // modifier keys currently held
+
+    private const int WH_KEYBOARD_LL = 13;
+    private const int WM_KEYDOWN     = 0x0100;
+    private const int WM_SYSKEYDOWN  = 0x0104;
+    private const int WM_KEYUP       = 0x0101;
+    private const int WM_SYSKEYUP    = 0x0105;
+
+    // Overlay colors
+    private static readonly Color _colorTaken  = Color.FromArgb(200, 220,  38,  38); // red   — taken under current mods
+    private static readonly Color _colorActive = Color.FromArgb(200, 251, 146,  60); // orange — held modifier key
+    private static readonly Color _colorHint   = Color.FromArgb( 80, 251, 191,  36); // amber  — modifier has some taken combos
+    private static readonly Color _colorFree   = Color.FromArgb(160,  34, 197,  94); // green  — available under current mods
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct KBDLLHOOKSTRUCT
+    {
+        public uint vkCode, scanCode, flags, time;
+        public IntPtr dwExtraInfo;
+    }
 
     public PopupKeyboard()
     {
         InitializeComponent();
-
-
         this.ExtendsContentIntoTitleBar = true;
-        
-        Activate(); // Create a native window(hwnd) for this object !
-        KeyListenerConstructor();
+        _uiQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+
+        Activate();
         HideFromTaskbar();
-        SetOverlayStyle(); // Attach a win32 message listener to this window 
+        SetOverlayStyle();
         ConstructDictionary();
         EnableAcrylic();
-
-        IntPtr hWnd = WindowNative.GetWindowHandle(this);
-    
+        this.Closed += (_, _) => UninstallHook();
     }
 
 
 
-    private void KeyListenerConstructor()
+    // ── Hook install / uninstall ──────────────────────────────────────────────
+
+    public void InstallHook()
     {
-        keyboard.IsTabStop = true;
-        keyboard.Focus(FocusState.Programmatic);
-        keyboard.KeyDown += OnKeyDown;
-      //  keyboard.KeyUp += OnKeyUp;
+        if (_hookHandle != IntPtr.Zero) return;
+        _hookCallback    = HookCallback;
+        _hookHandle      = SetWindowsHookEx(WH_KEYBOARD_LL, _hookCallback, IntPtr.Zero, 0);
+        _currentHookMods = 0;
+        _uiQueue.TryEnqueue(() => UpdateTakenOverlay(0)); // paint at-rest hint on open
     }
 
-    private void OnKeyDown(object sender, KeyRoutedEventArgs e)
+    public void UninstallHook()
     {
-        if (_keyMap != null && _keyMap.TryGetValue(e.Key, out KeyboardKey? keyControl))
+        if (_hookHandle == IntPtr.Zero) return;
+        UnhookWindowsHookEx(_hookHandle);
+        _hookHandle      = IntPtr.Zero;
+        _currentHookMods = 0;
+        _uiQueue.TryEnqueue(ClearAllHighlights);
+    }
+
+    private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+    {
+        if (nCode >= 0 && _keyMap != null)
         {
-            keyControl.TriggerPressedVisual();
+            var kb  = Marshal.PtrToStructure<KBDLLHOOKSTRUCT>(lParam);
+            var vk  = (VirtualKey)kb.vkCode;
+            int msg = wParam.ToInt32();
+            bool down = msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN;
+            bool up   = msg == WM_KEYUP   || msg == WM_SYSKEYUP;
+
+            // Track modifier state — when it changes, repaint the taken overlay
+            uint modBit = ModBitFor(vk);
+            if (modBit != 0)
+            {
+                if (down) _currentHookMods |=  modBit;
+                if (up)   _currentHookMods &= ~modBit;
+                uint snap = _currentHookMods;
+                _uiQueue.TryEnqueue(() => UpdateTakenOverlay(snap));
+            }
+
+            // Key press visual
+            if (_keyMap.TryGetValue(vk, out var keyCtrl))
+            {
+                if (down) _uiQueue.TryEnqueue(() => keyCtrl.TriggerPressedVisual());
+                else if (up) _uiQueue.TryEnqueue(() => keyCtrl.TriggerReleasedVisual());
+            }
+        }
+        return CallNextHookEx(_hookHandle, nCode, wParam, lParam);
+    }
+
+    // Returns the MOD_* bit for modifier virtual keys, 0 for everything else.
+    private static uint ModBitFor(VirtualKey vk) => vk switch
+    {
+        VirtualKey.LeftMenu    or VirtualKey.RightMenu    or VirtualKey.Menu    => (uint)Modifiers.MOD_ALT,
+        VirtualKey.LeftControl or VirtualKey.RightControl or VirtualKey.Control => (uint)Modifiers.MOD_CONTROL,
+        VirtualKey.LeftShift   or VirtualKey.RightShift   or VirtualKey.Shift   => (uint)Modifiers.MOD_SHIFT,
+        _                                                                         => 0
+    };
+
+    // Paints the keyboard to show which keys are taken under the current modifier state.
+    private void UpdateTakenOverlay(uint mods)
+    {
+        if (_keyMap == null) return;
+        foreach (var k in _keyMap.Values) k.SetHighlight(null);
+
+        if (mods == 0)
+        {
+            // At rest: subtle amber hint on modifier keys that have any taken combo
+            bool altHas   = _taken.Any(c => (c.Modifiers & (uint)Modifiers.MOD_ALT)     != 0);
+            bool ctrlHas  = _taken.Any(c => (c.Modifiers & (uint)Modifiers.MOD_CONTROL) != 0);
+            bool shiftHas = _taken.Any(c => (c.Modifiers & (uint)Modifiers.MOD_SHIFT)   != 0);
+            if (altHas)   { TryHighlight(VirtualKey.LeftMenu,    _colorHint); TryHighlight(VirtualKey.RightMenu,    _colorHint); }
+            if (ctrlHas)  { TryHighlight(VirtualKey.LeftControl, _colorHint); TryHighlight(VirtualKey.RightControl, _colorHint); }
+            if (shiftHas) { TryHighlight(VirtualKey.LeftShift,   _colorHint); TryHighlight(VirtualKey.RightShift,   _colorHint); }
+            return;
+        }
+
+        // Active modifier keys: orange
+        if ((mods & (uint)Modifiers.MOD_ALT)     != 0) { TryHighlight(VirtualKey.LeftMenu,    _colorActive); TryHighlight(VirtualKey.RightMenu,    _colorActive); }
+        if ((mods & (uint)Modifiers.MOD_CONTROL) != 0) { TryHighlight(VirtualKey.LeftControl, _colorActive); TryHighlight(VirtualKey.RightControl, _colorActive); }
+        if ((mods & (uint)Modifiers.MOD_SHIFT)   != 0) { TryHighlight(VirtualKey.LeftShift,   _colorActive); TryHighlight(VirtualKey.RightShift,   _colorActive); }
+
+        // Non-modifier keys: green (available under current mods)
+        foreach (var (vk, key) in _keyMap)
+        {
+            if (ModBitFor(vk) == 0)
+                key.SetHighlight(_colorFree);
+        }
+
+        // Keys taken under exactly these modifiers: red (overrides green)
+        foreach (var combo in _taken)
+        {
+            if (combo.Modifiers == mods && combo.VirtualKey != 0)
+                TryHighlight((VirtualKey)combo.VirtualKey, _colorTaken);
         }
     }
-    private void OnKeyUp(object sender, KeyRoutedEventArgs e)
+
+    private void TryHighlight(VirtualKey vk, Color color)
     {
-        if (_keyMap != null && _keyMap.TryGetValue(e.Key, out KeyboardKey? keyControl))
-        {
-            keyControl.TriggerReleasedVisual();
-        }
+        if (_keyMap != null && _keyMap.TryGetValue(vk, out var key))
+            key.SetHighlight(color);
     }
 
-    bool _visible; // Track where the overlay is currently visible 
+    private void ClearAllHighlights()
+    {
+        if (_keyMap == null) return;
+        foreach (var k in _keyMap.Values) k.SetHighlight(null);
+    }
+
+    // Fired when the user clicks Cancel — active capture controls subscribe to revert.
+    public static event Action? CancelRequested;
+
+    private void CancelButton_Click(object sender, RoutedEventArgs e)
+    {
+        MoveOffScreen();           // always close the popup
+        CancelRequested?.Invoke(); // let active capture revert its state
+    }
+
+    bool _visible; // Track where the overlay is currently visible
 
     public void Toggle()
     {
@@ -101,65 +210,49 @@ public sealed partial class PopupKeyboard : Window
 
 
 
-    void ShowOnScreen() // Always on top is show on screen here 
+    public void ShowOnScreen()
     {
-        AlwaysOnTop();
-        ShowRelativeSize();
-
-    }
-
-    public void ShowRelativeSize()
-    {
-    IntPtr hWnd = WindowNative.GetWindowHandle(this);
-    WindowId windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
-    AppWindow appWindowId = AppWindow.GetFromWindowId(windowId);
-    appWindowId.Resize(new SizeInt32 { Width =950, Height = 400 });
-
-    // Pick a bine with this as on dif cpu dif size 
-    }
-
-
-    public void AlwaysOnTop()
-    {
-        var hwnd = WindowNative.GetWindowHandle(this); // Get the hwnd for THIS  window 
-
-
-        SetWindowPos(
-            hwnd,
-            HWND_TOPMOST, // Keep it on top var in docuemntation 
-            100, 100, // x and y screen postions 
-            0,0, // width heigh 
-            SWP_NOACTIVATE
-            // SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE // Keep position and size dont steal focus 
-            );
-
+        ShowCenteredAndSized();
         FadeIn();
+        InstallHook();
+    }
 
+    private void ShowCenteredAndSized()
+    {
+        IntPtr hWnd = WindowNative.GetWindowHandle(this);
+        WindowId windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
+        AppWindow appWindow = AppWindow.GetFromWindowId(windowId);
+        var workArea = DisplayArea.GetFromWindowId(windowId, DisplayAreaFallback.Primary).WorkArea;
+
+        // Scale target logical size to physical pixels so layout is never squashed on high-DPI screens
+        float scale = GetDpiForWindow(hWnd) / 96f;
+        int w = Math.Min((int)(workArea.Width * 0.90), (int)(1100 * scale));
+        int h = (int)(460 * scale);
+        int x = workArea.X + (workArea.Width  - w) / 2;
+        int y = workArea.Y + (workArea.Height - h) / 2;
+
+        appWindow.MoveAndResize(new RectInt32(x, y, w, h));
+        SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
     }
 
 
-    void MoveOffScreen()
+    public void MoveOffScreen()
     {
-        var hwnd = WindowNative.GetWindowHandle(this); // Gets HWND of the overlay window 
-
-        SetWindowPos(
-            hwnd,
-            IntPtr.Zero, // dont change index when your hiding
-            -2000, -2000, // x and y screen postions 
-            0, 0,// width heigh 
-            0x0040); // Dont activate the window 
-
+        var hwnd = WindowNative.GetWindowHandle(this);
+        SetWindowPos(hwnd, IntPtr.Zero, -2000, -2000, 0, 0, 0x0040);
+        UninstallHook();
     }
 
 
     public static PopupKeyboard MakeInstance
     {
-        get// make sure only ONE overlay window exists 
+        get
         {
             if (_instance == null)
+            {
                 _instance = new PopupKeyboard();
-
-
+                _instance.MoveOffScreen(); // start hidden, not at random position
+            }
             return _instance;
         }
     }
@@ -232,24 +325,18 @@ public sealed partial class PopupKeyboard : Window
     double _opacity;
     public void FadeIn()
     {
-
         keyboard.Opacity = 0;
         _opacity = 0;
 
-        _animationTimer = new DispatcherTimer();
-
-        _animationTimer.Interval = TimeSpan.FromMilliseconds(16); // docuemented to be 60 fps 
-
+        _animationTimer?.Stop();
+        _animationTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10) };
         _animationTimer.Tick += (s, e) =>
         {
-            _opacity += 0.1;
+            _opacity = Math.Min(1.0, _opacity + 0.07);
             keyboard.Opacity = _opacity;
-
-            if (_opacity >= 1) // Okay now its visible 
+            if (_opacity >= 1)
                 _animationTimer.Stop();
-
         };
-
         _animationTimer.Start();
     }
 
@@ -267,7 +354,13 @@ public sealed partial class PopupKeyboard : Window
     // IMPORTS 
 
 
-    // Get currently focused window 
+    [DllImport("user32.dll", SetLastError = true)]
+    static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
+    [DllImport("user32.dll", SetLastError = true)]
+    static extern bool UnhookWindowsHookEx(IntPtr hhk);
+    [DllImport("user32.dll")]
+    static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+
     [DllImport("user32.dll")]
     static extern IntPtr GetForegroundWindow();
 
@@ -289,6 +382,9 @@ public sealed partial class PopupKeyboard : Window
     static extern bool SetWindowPos(IntPtr hWnd, int HwnInsertAfter, int X, int Y, int cs, int cy, uint uFlags);    // declaration of parameters for simply sizing of window (impleneted above)
 
 
+
+    [DllImport("user32.dll")]
+    static extern int GetDpiForWindow(IntPtr hwnd);
 
     [DllImport("kernel32.dll")]
     static extern void Sleep(uint dwMilliseconds);

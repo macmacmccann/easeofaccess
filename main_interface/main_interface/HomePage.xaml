@@ -9,204 +9,242 @@
     mc:Ignorable="d">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <Grid Padding="32,24,32,32" RowSpacing="16">
+        <Grid Padding="32,28,32,32" RowSpacing="24">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Hero -->
-            <Border Grid.Row="0" CornerRadius="16" Padding="28,22"
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                <Grid ColumnDefinitions="*,Auto">
-                    <StackPanel Grid.Column="0" Spacing="6" VerticalAlignment="Center">
-                        <TextBlock Text="Welcome back" FontSize="12" Opacity="0.45" Foreground="White" FontWeight="Medium"/>
-                        <TextBlock Text="Ease of Access" FontSize="34" FontWeight="Bold" Foreground="White"/>
-                        <TextBlock Text="Your accessibility control centre — pick a feature below to get started."
-                                   FontSize="13" Opacity="0.6" Foreground="White"/>
-                    </StackPanel>
-                    <Border Grid.Column="1" CornerRadius="12" Padding="24,14"
-                            VerticalAlignment="Center" Margin="24,0,0,0"
-                            Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
-                        <StackPanel HorizontalAlignment="Center" Spacing="2">
-                            <TextBlock x:Name="ActiveCountText" Text="0" FontSize="32" FontWeight="Bold"
-                                       Foreground="White" HorizontalAlignment="Center"/>
-                            <TextBlock Text="features on" FontSize="11" Opacity="0.5"
-                                       Foreground="White" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Border>
-                </Grid>
+            <!-- ── Header ─────────────────────────────────────────────────── -->
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                <StackPanel Spacing="3" VerticalAlignment="Center">
+                    <TextBlock Text="Ease of Access" FontSize="26" FontWeight="SemiBold" Foreground="White"/>
+                    <TextBlock Text="Accessibility control centre" FontSize="12" Opacity="0.4" Foreground="White"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Spacing="0">
+                    <TextBlock x:Name="ActiveCountText" Text="0" FontSize="34" FontWeight="Light"
+                               Foreground="White" HorizontalAlignment="Right" Opacity="0.55"/>
+                    <TextBlock Text="features active" FontSize="10" Opacity="0.3"
+                               Foreground="White" HorizontalAlignment="Right"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- ── Intro banner ───────────────────────────────────────────── -->
+            <Border Grid.Row="1" CornerRadius="8" Padding="24,20"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Built for accessibility" FontSize="16" FontWeight="SemiBold" Foreground="White"/>
+                    <TextBlock Text="Ease of Access puts you back in control of Windows. Adapt your hardware, organise your workspace, and reduce friction across every task — all from one place."
+                               FontSize="13" Opacity="0.55" Foreground="White" TextWrapping="Wrap"/>
+                </StackPanel>
             </Border>
 
-            <!-- Row 1: Key Reprogramming · Tiling Manager · Mouseless -->
-            <Grid Grid.Row="1" ColumnDefinitions="*,*,*" ColumnSpacing="16">
+            <!-- ── Intro sub-cards ────────────────────────────────────────── -->
+            <Grid Grid.Row="2" ColumnDefinitions="*,*,*" ColumnSpacing="12">
 
-                <!-- Key Reprogramming -->
-                <Border Grid.Column="0" CornerRadius="12" Padding="20"
+                <Border Grid.Column="0" CornerRadius="8" Padding="20,16"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                        BorderBrush="#3B82F6" BorderThickness="0,3,0,0"
-                        PointerEntered="Card_PointerEntered" PointerExited="Card_PointerExited">
-                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="12">
-                        <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-                            <TextBlock Text="⌨" FontSize="30" VerticalAlignment="Center"/>
-                            <Border x:Name="ReprogramBadge" Grid.Column="1" CornerRadius="20" Padding="10,4"
-                                    Background="#50647484" VerticalAlignment="Center">
-                                <TextBlock x:Name="ReprogramBadgeText" Text="Off" FontSize="11"
-                                           FontWeight="Medium" Foreground="White"/>
-                            </Border>
-                        </Grid>
-                        <StackPanel Grid.Row="1" Spacing="4">
-                            <TextBlock Text="Key Reprogramming" FontSize="15" FontWeight="SemiBold" Foreground="White"/>
-                            <TextBlock Text="Remap any key to another key or mouse button system-wide."
-                                       FontSize="12" Opacity="0.6" Foreground="White" TextWrapping="Wrap"/>
-                        </StackPanel>
-                        <Button Grid.Row="2" Content="Open →" HorizontalAlignment="Stretch"
-                                Click="ReprogramKeys_Click"/>
-                    </Grid>
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="Scale Your Workflow" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Keyboard shortcuts, tiling layouts and macros that grow as your habits do."
+                                   FontSize="12" Opacity="0.5" Foreground="White" TextWrapping="Wrap"/>
+                    </StackPanel>
                 </Border>
 
-                <!-- Tiling Manager -->
-                <Border Grid.Column="1" CornerRadius="12" Padding="20"
+                <Border Grid.Column="1" CornerRadius="8" Padding="20,16"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                        BorderBrush="#8B5CF6" BorderThickness="0,3,0,0"
-                        PointerEntered="Card_PointerEntered" PointerExited="Card_PointerExited">
-                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="12">
-                        <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-                            <TextBlock Text="▦" FontSize="30" VerticalAlignment="Center"/>
-                            <Border x:Name="TilingBadge" Grid.Column="1" CornerRadius="20" Padding="10,4"
-                                    Background="#50647484" VerticalAlignment="Center">
-                                <TextBlock x:Name="TilingBadgeText" Text="Off" FontSize="11"
-                                           FontWeight="Medium" Foreground="White"/>
-                            </Border>
-                        </Grid>
-                        <StackPanel Grid.Row="1" Spacing="4">
-                            <TextBlock Text="Tiling Manager" FontSize="15" FontWeight="SemiBold" Foreground="White"/>
-                            <TextBlock Text="Snap and organise windows into tiled layouts automatically."
-                                       FontSize="12" Opacity="0.6" Foreground="White" TextWrapping="Wrap"/>
-                        </StackPanel>
-                        <Button Grid.Row="2" Content="Open →" HorizontalAlignment="Stretch"
-                                Click="TilingManager_Click"/>
-                    </Grid>
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="Reprogram I/O Devices" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Remap any key, mouse button or input device to suit the way you work."
+                                   FontSize="12" Opacity="0.5" Foreground="White" TextWrapping="Wrap"/>
+                    </StackPanel>
                 </Border>
 
-                <!-- Mouseless -->
-                <Border Grid.Column="2" CornerRadius="12" Padding="20"
+                <Border Grid.Column="2" CornerRadius="8" Padding="20,16"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                        BorderBrush="#F97316" BorderThickness="0,3,0,0"
-                        PointerEntered="Card_PointerEntered" PointerExited="Card_PointerExited">
-                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="12">
-                        <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-                            <TextBlock Text="🖱" FontSize="30" VerticalAlignment="Center"/>
-                            <Border x:Name="MouselessBadge" Grid.Column="1" CornerRadius="20" Padding="10,4"
-                                    Background="#50647484" VerticalAlignment="Center">
-                                <TextBlock x:Name="MouselessBadgeText" Text="Off" FontSize="11"
-                                           FontWeight="Medium" Foreground="White"/>
-                            </Border>
-                        </Grid>
-                        <StackPanel Grid.Row="1" Spacing="4">
-                            <TextBlock Text="Mouseless" FontSize="15" FontWeight="SemiBold" Foreground="White"/>
-                            <TextBlock Text="Control your mouse cursor entirely from the keyboard."
-                                       FontSize="12" Opacity="0.6" Foreground="White" TextWrapping="Wrap"/>
-                        </StackPanel>
-                        <Button Grid.Row="2" Content="Open →" HorizontalAlignment="Stretch"
-                                Click="Mouseless_Click"/>
-                    </Grid>
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="Reduce Friction" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Command overlays, gesture controls and auto-paste remove repetitive steps from your day."
+                                   FontSize="12" Opacity="0.5" Foreground="White" TextWrapping="Wrap"/>
+                    </StackPanel>
                 </Border>
 
             </Grid>
 
-            <!-- Row 2: Commands · Eyesight · Assistant -->
-            <Grid Grid.Row="2" ColumnDefinitions="*,*,*" ColumnSpacing="16">
+            <!-- ── Feature grid ───────────────────────────────────────────── -->
+            <Grid Grid.Row="3" RowDefinitions="Auto,Auto" ColumnDefinitions="*,*,*"
+                  RowSpacing="12" ColumnSpacing="12">
 
-                <!-- Commands -->
-                <Border Grid.Column="0" CornerRadius="12" Padding="20"
+                <Border Grid.Row="0" Grid.Column="0" CornerRadius="8" Padding="20,16"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                        BorderBrush="#EAB308" BorderThickness="0,3,0,0"
-                        PointerEntered="Card_PointerEntered" PointerExited="Card_PointerExited">
-                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="12">
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
                         <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-                            <TextBlock Text="⚡" FontSize="30" VerticalAlignment="Center"/>
-                            <Border x:Name="CommandsBadge" Grid.Column="1" CornerRadius="20" Padding="10,4"
-                                    Background="#50647484" VerticalAlignment="Center">
-                                <TextBlock x:Name="CommandsBadgeText" Text="Off" FontSize="11"
+                            <TextBlock Text="Key Reprogramming" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="White" VerticalAlignment="Center"/>
+                            <Border x:Name="ReprogramBadge" Grid.Column="1" CornerRadius="20"
+                                    Padding="8,3" VerticalAlignment="Center">
+                                <TextBlock x:Name="ReprogramBadgeText" Text="Off" FontSize="10"
                                            FontWeight="Medium" Foreground="White"/>
                             </Border>
                         </Grid>
-                        <StackPanel Grid.Row="1" Spacing="4">
-                            <TextBlock Text="Commands" FontSize="15" FontWeight="SemiBold" Foreground="White"/>
-                            <TextBlock Text="Bind hotkeys to launch apps, scripts and custom actions fast."
-                                       FontSize="12" Opacity="0.6" Foreground="White" TextWrapping="Wrap"/>
-                        </StackPanel>
-                        <Button Grid.Row="2" Content="Open →" HorizontalAlignment="Stretch"
+                        <TextBlock Grid.Row="1" Text="Remap any key to another key or mouse button system-wide."
+                                   FontSize="12" Opacity="0.5" Foreground="White" TextWrapping="Wrap"/>
+                        <Button Grid.Row="2" Content="Open" HorizontalAlignment="Stretch"
+                                Click="ReprogramKeys_Click"/>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="0" Grid.Column="1" CornerRadius="8" Padding="20,16"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
+                        <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                            <TextBlock Text="Tiling Manager" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="White" VerticalAlignment="Center"/>
+                            <Border x:Name="TilingBadge" Grid.Column="1" CornerRadius="20"
+                                    Padding="8,3" VerticalAlignment="Center">
+                                <TextBlock x:Name="TilingBadgeText" Text="Off" FontSize="10"
+                                           FontWeight="Medium" Foreground="White"/>
+                            </Border>
+                        </Grid>
+                        <TextBlock Grid.Row="1" Text="Snap and organise windows into tiled layouts automatically."
+                                   FontSize="12" Opacity="0.5" Foreground="White" TextWrapping="Wrap"/>
+                        <Button Grid.Row="2" Content="Open" HorizontalAlignment="Stretch"
+                                Click="TilingManager_Click"/>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="0" Grid.Column="2" CornerRadius="8" Padding="20,16"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
+                        <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                            <TextBlock Text="Mouseless" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="White" VerticalAlignment="Center"/>
+                            <Border x:Name="MouselessBadge" Grid.Column="1" CornerRadius="20"
+                                    Padding="8,3" VerticalAlignment="Center">
+                                <TextBlock x:Name="MouselessBadgeText" Text="Off" FontSize="10"
+                                           FontWeight="Medium" Foreground="White"/>
+                            </Border>
+                        </Grid>
+                        <TextBlock Grid.Row="1" Text="Control your mouse cursor entirely from the keyboard."
+                                   FontSize="12" Opacity="0.5" Foreground="White" TextWrapping="Wrap"/>
+                        <Button Grid.Row="2" Content="Open" HorizontalAlignment="Stretch"
+                                Click="Mouseless_Click"/>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="0" CornerRadius="8" Padding="20,16"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
+                        <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                            <TextBlock Text="Commands" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="White" VerticalAlignment="Center"/>
+                            <Border x:Name="CommandsBadge" Grid.Column="1" CornerRadius="20"
+                                    Padding="8,3" VerticalAlignment="Center">
+                                <TextBlock x:Name="CommandsBadgeText" Text="Off" FontSize="10"
+                                           FontWeight="Medium" Foreground="White"/>
+                            </Border>
+                        </Grid>
+                        <TextBlock Grid.Row="1" Text="Quick-access overlay for saved shell and code commands."
+                                   FontSize="12" Opacity="0.5" Foreground="White" TextWrapping="Wrap"/>
+                        <Button Grid.Row="2" Content="Open" HorizontalAlignment="Stretch"
                                 Click="Commands_Click"/>
                     </Grid>
                 </Border>
 
-                <!-- Eyesight -->
-                <Border Grid.Column="1" CornerRadius="12" Padding="20"
+                <Border Grid.Row="1" Grid.Column="1" CornerRadius="8" Padding="20,16"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                        BorderBrush="#06B6D4" BorderThickness="0,3,0,0"
-                        PointerEntered="Card_PointerEntered" PointerExited="Card_PointerExited">
-                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="12">
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
                         <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-                            <TextBlock Text="👁" FontSize="30" VerticalAlignment="Center"/>
-                            <Border x:Name="EyesightBadge" Grid.Column="1" CornerRadius="20" Padding="10,4"
-                                    Background="#50647484" VerticalAlignment="Center">
-                                <TextBlock x:Name="EyesightBadgeText" Text="Off" FontSize="11"
+                            <TextBlock Text="Eyesight" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="White" VerticalAlignment="Center"/>
+                            <Border x:Name="EyesightBadge" Grid.Column="1" CornerRadius="20"
+                                    Padding="8,3" VerticalAlignment="Center">
+                                <TextBlock x:Name="EyesightBadgeText" Text="Off" FontSize="10"
                                            FontWeight="Medium" Foreground="White"/>
                             </Border>
                         </Grid>
-                        <StackPanel Grid.Row="1" Spacing="4">
-                            <TextBlock Text="Eyesight" FontSize="15" FontWeight="SemiBold" Foreground="White"/>
-                            <TextBlock Text="Visual aids and screen enhancements for easier reading."
-                                       FontSize="12" Opacity="0.6" Foreground="White" TextWrapping="Wrap"/>
-                        </StackPanel>
-                        <Button Grid.Row="2" Content="Open →" HorizontalAlignment="Stretch"
+                        <TextBlock Grid.Row="1" Text="Visual aids and screen enhancements for easier reading."
+                                   FontSize="12" Opacity="0.5" Foreground="White" TextWrapping="Wrap"/>
+                        <Button Grid.Row="2" Content="Open" HorizontalAlignment="Stretch"
                                 Click="Eyesight_Click"/>
                     </Grid>
                 </Border>
 
-                <!-- Assistant -->
-                <Border Grid.Column="2" CornerRadius="12" Padding="20"
+                <Border Grid.Row="1" Grid.Column="2" CornerRadius="8" Padding="20,16"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                        BorderBrush="#22C55E" BorderThickness="0,3,0,0"
-                        PointerEntered="Card_PointerEntered" PointerExited="Card_PointerExited">
-                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="12">
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
                         <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-                            <TextBlock Text="🤖" FontSize="30" VerticalAlignment="Center"/>
-                            <Border x:Name="AssistantBadge" Grid.Column="1" CornerRadius="20" Padding="10,4"
-                                    Background="#50647484" VerticalAlignment="Center">
-                                <TextBlock x:Name="AssistantBadgeText" Text="Off" FontSize="11"
+                            <TextBlock Text="Assistant" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="White" VerticalAlignment="Center"/>
+                            <Border x:Name="AssistantBadge" Grid.Column="1" CornerRadius="20"
+                                    Padding="8,3" VerticalAlignment="Center">
+                                <TextBlock x:Name="AssistantBadgeText" Text="Off" FontSize="10"
                                            FontWeight="Medium" Foreground="White"/>
                             </Border>
                         </Grid>
-                        <StackPanel Grid.Row="1" Spacing="4">
-                            <TextBlock Text="Assistant" FontSize="15" FontWeight="SemiBold" Foreground="White"/>
-                            <TextBlock Text="AI-powered assistant to help you navigate and use the app."
-                                       FontSize="12" Opacity="0.6" Foreground="White" TextWrapping="Wrap"/>
-                        </StackPanel>
-                        <Button Grid.Row="2" Content="Open →" HorizontalAlignment="Stretch"
+                        <TextBlock Grid.Row="1" Text="Gesture and hand-tracking controls for hands-free navigation."
+                                   FontSize="12" Opacity="0.5" Foreground="White" TextWrapping="Wrap"/>
+                        <Button Grid.Row="2" Content="Open" HorizontalAlignment="Stretch"
                                 Click="Assistant_Click"/>
                     </Grid>
                 </Border>
 
             </Grid>
 
-            <!-- Tip card -->
-            <Border Grid.Row="3" CornerRadius="12" Padding="20,16"
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                <Grid ColumnDefinitions="Auto,*">
-                    <TextBlock Grid.Column="0" Text="💡" FontSize="20"
-                               VerticalAlignment="Center" Margin="0,0,16,0"/>
-                    <StackPanel Grid.Column="1" Spacing="3">
-                        <TextBlock Text="Getting started" FontSize="13" FontWeight="SemiBold" Foreground="White"/>
-                        <TextBlock Text="Enable a feature using its toggle, then configure it from its panel. Features run silently in the background once switched on."
-                                   FontSize="12" Opacity="0.55" Foreground="White" TextWrapping="Wrap"/>
-                    </StackPanel>
-                </Grid>
+            <!-- ── Insights (hidden when empty) ──────────────────────────── -->
+            <Border x:Name="InsightsCard" Grid.Row="4" CornerRadius="8" Padding="20,14"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                    Visibility="Collapsed">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Suggestions" FontSize="12" FontWeight="SemiBold"
+                               Foreground="White" Opacity="0.5"/>
+                    <StackPanel x:Name="InsightsPanel" Spacing="4"/>
+                </StackPanel>
             </Border>
+
+            <!-- ── Account ────────────────────────────────────────────────── -->
+            <Grid Grid.Row="5" ColumnDefinitions="*,*" ColumnSpacing="12">
+
+                <Border Grid.Column="0" CornerRadius="8" Padding="20,16"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
+                        <TextBlock Grid.Row="0" Text="Sign In" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Grid.Row="1" Text="Access your saved configuration and preferences across devices."
+                                   FontSize="12" Opacity="0.5" Foreground="White" TextWrapping="Wrap"/>
+                        <Button Grid.Row="2" Content="Sign In" HorizontalAlignment="Stretch"
+                                Click="Login_Click"/>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="1" CornerRadius="8" Padding="20,16"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
+                        <TextBlock Grid.Row="0" Text="Create Account" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Grid.Row="1" Text="Register to sync your settings and unlock additional features."
+                                   FontSize="12" Opacity="0.5" Foreground="White" TextWrapping="Wrap"/>
+                        <Button Grid.Row="2" Content="Register" HorizontalAlignment="Stretch"
+                                Click="Register_Click"/>
+                    </Grid>
+                </Border>
+
+            </Grid>
 
         </Grid>
     </ScrollViewer>

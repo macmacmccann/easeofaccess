@@ -16,7 +16,7 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
 
-        <Grid RowDefinitions="0.2*,*,Auto,Auto">
+        <Grid RowDefinitions="0.2*,*,Auto,Auto,Auto">
 
         <!-- HEADER -->
         <Border x:Name="Headertop">
@@ -44,7 +44,7 @@
                 </StackPanel>
                 <Border Grid.Column="1" Background="#20FFFFFF" CornerRadius="10"
                         Padding="14,10" VerticalAlignment="Center" Margin="24,0,0,0">
-                    <controls:HotKeyCaptureControl x:Name="EyesightShortcut" Label="Toggle hotkey"/>
+                    <controls:HotKeyCaptureControl x:Name="EyesightShortcut" Label="Toggle hotkey" HotkeyId="2001"/>
                 </Border>
             </Grid>
 
@@ -338,6 +338,28 @@
 
 
             </Grid>
+            <!-- SMART ASSISTANT ROW 4 -->
+            <Border Grid.Row="4" Background="#20FFFFFF" CornerRadius="10"
+                    Padding="20,16" Margin="40,12,40,24">
+                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="12">
+                    <StackPanel Grid.Column="0" Grid.Row="0" Spacing="4">
+                        <TextBlock Text="Smart Assistant" FontSize="16" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Automatically activate Dim Screen at a set time each evening."
+                                   FontSize="12" Opacity="0.7" Foreground="White" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <ToggleSwitch Grid.Column="1" Grid.Row="0"
+                                  x:Name="SmartAssistantEyesightToggle"
+                                  OffContent="Off" OnContent="On"
+                                  Toggled="SmartAssistantEyesightToggle_Toggled"
+                                  VerticalAlignment="Center" Margin="16,0,0,0"/>
+                    <StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
+                                Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                        <TextBlock Text="Activate at" FontSize="13" Opacity="0.7"
+                                   VerticalAlignment="Center" Foreground="White"/>
+                        <TimePicker x:Name="EyesightTimePicker" ClockIdentifier="24HourClock"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
 
 
 
@@ -346,6 +368,8 @@
 
 
     </Grid>
+
+
 
 
 

@@ -10,7 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Microsoft.UI;
@@ -32,6 +34,9 @@ public sealed partial class MouselessControlPanel : Page
     public void ToggleEnable() => MouselessToggle.IsOn = !MouselessToggle.IsOn;
 
     private Mouseless? _mouselesswindow;
+    private DispatcherTimer? _smartMouseTimer;
+    private bool _smartEnabledMouseless; // true when smart assistant was the one that turned Mouseless on
+
     public MouselessControlPanel()
     {
         Instance = this;
@@ -66,17 +71,24 @@ public sealed partial class MouselessControlPanel : Page
         HeaderColour(Headertop);
 
         // if (false)
-        if (!enabledOrNot) // if its off ( meaning im turning it on ) 
+        if (!enabledOrNot) // if its off ( meaning im turning it on )
         {
-            // if you turnt it off delete the window 
+            // Respect the manual override — stop smart assistant so it doesn't fight the user
+            if (StateSettings.SmartAssistantMouselessToggle)
+            {
+                SmartAssistantMouselessToggle.IsOn = false;
+                StateSettings.SmartAssistantMouselessToggle = false;
+                StopSmartMouseTimer();
+            }
+
+            // if you turnt it off delete the window
             if (_mouselesswindow != null)
             {
                 _mouselesswindow.Close();
-                // remove the reference dont just close the ui 
                 _mouselesswindow = null;
                 HeaderColour(Headertop);
             }
-            //Dont call the code below of 'ON' logic 
+            //Dont call the code below of 'ON' logic
             return;
         }
 
@@ -204,6 +216,7 @@ public sealed partial class MouselessControlPanel : Page
         }
         if (combo.VirtualKey != 0)
             assigner.SetDisplayText(main_interface.Controls.HotKeyCaptureControl.DescribeCombo(combo.Modifiers, combo.VirtualKey));
+        assigner.RefreshState();
     }
 
 
@@ -266,6 +279,114 @@ public sealed partial class MouselessControlPanel : Page
         }
     }
 
+
+    // ── Smart Assistant ──────────────────────────────────────────────────────
+
+    private void SmartAssistantMouselessToggle_Toggled(object sender, RoutedEventArgs e)
+    {
+        StateSettings.SmartAssistantMouselessToggle = SmartAssistantMouselessToggle.IsOn;
+
+        if (SmartAssistantMouselessToggle.IsOn)
+            StartSmartMouseTimer();
+        else
+            StopSmartMouseTimer();
+    }
+
+    private void StartSmartMouseTimer()
+    {
+        _smartMouseTimer?.Stop();
+        _smartMouseTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
+        _smartMouseTimer.Tick += (s, e) => CheckMouseConnected();
+        _smartMouseTimer.Start();
+        CheckMouseConnected(); // immediate check on enable
+    }
+
+    private void StopSmartMouseTimer()
+    {
+        _smartMouseTimer?.Stop();
+        _smartMouseTimer = null;
+    }
+
+    private void CheckMouseConnected()
+    {
+        if (!StateSettings.SmartAssistantMouselessToggle) return;
+
+        bool mousePresent = IsPhysicalMouseConnected();
+
+        if (!mousePresent && !StateSettings.MouselessEnabled)
+        {
+            // No mouse — activate Mouseless as a protective fallback
+            _smartEnabledMouseless = true;
+            MouselessToggle.IsOn = true; // fires MouselessToggle_Toggled
+        }
+        else if (mousePresent && StateSettings.MouselessEnabled && _smartEnabledMouseless)
+        {
+            // Mouse came back — release the protection we applied
+            _smartEnabledMouseless = false;
+            MouselessToggle.IsOn = false; // fires MouselessToggle_Toggled
+        }
+    }
+
+    // ── USB mouse detection (user32.dll) ─────────────────────────────────────
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct RAWINPUTDEVICELIST
+    {
+        public IntPtr hDevice;
+        public uint   dwType;
+    }
+
+    private const uint RIM_TYPEMOUSE   = 0;
+    private const uint RIDI_DEVICENAME = 0x20000007;
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern uint GetRawInputDeviceList(
+        [In, Out] RAWINPUTDEVICELIST[]? pRawInputDeviceList,
+        ref uint puiNumDevices,
+        uint cbSize);
+
+    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    private static extern uint GetRawInputDeviceInfo(
+        IntPtr hDevice,
+        uint uiCommand,
+        StringBuilder? pData,
+        ref uint pcbSize);
+
+    private bool IsPhysicalMouseConnected()
+    {
+        uint count = 0;
+        GetRawInputDeviceList(null, ref count, (uint)Marshal.SizeOf<RAWINPUTDEVICELIST>());
+        if (count == 0) return false;
+
+        var devices = new RAWINPUTDEVICELIST[count];
+        GetRawInputDeviceList(devices, ref count, (uint)Marshal.SizeOf<RAWINPUTDEVICELIST>());
+
+        foreach (var dev in devices)
+        {
+            if (dev.dwType != RIM_TYPEMOUSE) continue;
+
+            // Query device name length then fetch it
+            uint nameLen = 0;
+            GetRawInputDeviceInfo(dev.hDevice, RIDI_DEVICENAME, null, ref nameLen);
+            if (nameLen == 0) continue;
+
+            var sb = new StringBuilder((int)nameLen);
+            GetRawInputDeviceInfo(dev.hDevice, RIDI_DEVICENAME, sb, ref nameLen);
+            string name = sb.ToString();
+
+            // Skip RDP virtual mice and known touchpad identifiers
+            if (name.Contains("RDP_MOU",   StringComparison.OrdinalIgnoreCase)) continue;
+            if (name.Contains("TOUCHPAD",  StringComparison.OrdinalIgnoreCase)) continue;
+            if (name.Contains("SYNAPTICS", StringComparison.OrdinalIgnoreCase)) continue;
+            if (name.Contains("ELAN",      StringComparison.OrdinalIgnoreCase)) continue;
+            if (name.Contains("ACPI",      StringComparison.OrdinalIgnoreCase)) continue;
+
+            // Real USB mice have a VID_ (vendor ID) in their HID path
+            if (name.Contains("VID_", StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+        return false;
+    }
 
     private void Border_PointerExited(object sender, PointerRoutedEventArgs e)
     {

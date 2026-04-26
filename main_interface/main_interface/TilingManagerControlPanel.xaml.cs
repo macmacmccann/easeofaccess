@@ -14,7 +14,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -38,7 +40,8 @@ namespace main_interface
 
         public void ToggleEnable() => TilingManagerToggle.IsOn = !TilingManagerToggle.IsOn;
 
-        private Modifiers CapturedModiferKeys; // not uint casting problem its cast to None in enum method below 
+        private Modifiers CapturedModiferKeys; // not uint casting problem its cast to None in enum method below
+        private DispatcherTimer? _smartAssistantTimer;
 
         public TilingManagerControlPanel()
         {
@@ -60,6 +63,13 @@ namespace main_interface
             DesignGlobalCode.HeaderColour(Headertop);
             TipsConstructor();
             TilingShortcut.ComboCaptured += (m, v) => RegisterFeatureShortcut(TilingShortcut, ShortcutsWindow.ID_FEAT_TILING, m, v);
+
+            // Pre-populate TakenCombinations with the hardcoded defaults so the popup keyboard
+            // shows them as taken even while the tiling toggle is off.
+            TilingManager.SeedDefaultsTaken();
+
+            PopupKeyboard.CancelRequested += OnPopupCancelRequested;
+            this.Unloaded += (_, _) => PopupKeyboard.CancelRequested -= OnPopupCancelRequested;
         }
 
 
@@ -77,12 +87,18 @@ namespace main_interface
         {
 
             
-            // this sets the ui from bool 
+            // this sets the ui from bool
             TilingManagerToggle.IsOn = StateSettings.TilingManagerEnabled;
+            SmartAssistantToggle.IsOn = StateSettings.SmartAssistantTilingManagerToggle;
+            if (StateSettings.SmartAssistantTilingManagerToggle)
+                StartSmartAssistantTimer();
             StackedModeToggle.IsOn = StateSettings.StackedModeEnabled;
             ColumnModeToggle.IsOn = StateSettings.ColumnModeEnabled;
             GridModeToggle.IsOn = StateSettings.GridModeEnabled;
+            MasterStackModeToggle.IsOn = StateSettings.MasterStackModeEnabled;
             FocusModeToggle.IsOn = StateSettings.FocusModeEnabled;
+            DimOpacitySlider.Value = StateSettings.FocusDimOpacity;
+            DimOpacityValue.Text = $"{StateSettings.FocusDimOpacity}%";
 
 
             // this sets the bool from the ui - tricky note 
@@ -107,16 +123,17 @@ namespace main_interface
             // Usecase User controlling boolean through ui
             // OverlayEnabledToggle.IsOn = StateSettings.OverlayEnabled;
 
+            SyncHotkeyLabelsFromState();
         }
 
 
 
-        private void TilingManagerToggle_Toggled(object sender, RoutedEventArgs e)
+        public void TilingManagerToggle_Toggled(object sender, RoutedEventArgs e)
         {
 
             // You cant turn it on if you dont have one enabled
             // For now -> but force one enabled 
-            if(!StateSettings.ColumnModeEnabled && !StateSettings.StackedModeEnabled && !StateSettings.GridModeEnabled)
+            if(!StateSettings.ColumnModeEnabled && !StateSettings.StackedModeEnabled && !StateSettings.GridModeEnabled && !StateSettings.MasterStackModeEnabled)
             {
                 TilingManagerToggle.IsOn = false;
                 StateSettings.TilingManagerEnabled = false;
@@ -132,17 +149,25 @@ namespace main_interface
             //Now its set to on or off 
 
 
-            // if you turned off logic + background window + disable toggles  
+            // if you turned off logic + background window + disable toggles
             if (!StateSettings.TilingManagerEnabled)
             {
+                // If smart assistant was the one monitoring, respect the manual override
+                if (StateSettings.SmartAssistantTilingManagerToggle)
+                {
+                    SmartAssistantToggle.IsOn = false;
+                    StateSettings.SmartAssistantTilingManagerToggle = false;
+                    StopSmartAssistantTimer();
+                }
+
                 if (TilingManager.Exists())
                 {
                     // var tm -> getinstance would just create another one if i said getinstance twice in a row 
                     var tm = TilingManager.GetInstance();
-                    tm.ReturntoMaxedAfterClosing();
-                    tm.RemoveSubclass(); // Stops double creation accidentally - delete it when done !
                     tm.TurnOffHooks();
-             
+                    tm.RemoveSubclass();
+                    tm.ReturntoMaxedAfterClosing();
+                    tm.RestoreAllOpacity();
                     tm.Destroy();
                     bool exists = TilingManager.Exists();
                     Debug.WriteLine(exists);
@@ -162,6 +187,7 @@ namespace main_interface
 
                     tm.ApplySettings();
                     tm.ActivateWindowListenerHook();
+                    tm.ActivateFocusHook();
 
                      HeaderColour(sender, e);
 
@@ -245,6 +271,8 @@ namespace main_interface
                 StateSettings.ColumnModeEnabled = false;
                 GridModeToggle.IsOn = false;
                 StateSettings.GridModeEnabled = false;
+                MasterStackModeToggle.IsOn = false;
+                StateSettings.MasterStackModeEnabled = false;
             }
 
             if (TilingManager.Exists())
@@ -281,11 +309,46 @@ namespace main_interface
                 StateSettings.StackedModeEnabled = false;
                 ColumnModeToggle.IsOn = false;
                 StateSettings.ColumnModeEnabled = false;
+                MasterStackModeToggle.IsOn = false;
+                StateSettings.MasterStackModeEnabled = false;
             }
 
             if (TilingManager.Exists())
             {
                 Debug.WriteLine($"(should be) Grid mode on : {StateSettings.GridModeEnabled}");
+                TilingManager.GetInstance().ApplySettings();
+                TilingManager.GetInstance().TilePrimaryMonitorWindows();
+            }
+        }
+
+        private void MasterStackModeToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            GlobalMasterStackToggle();
+        }
+
+        public void MasterStack_SetStateAndToggle_DontRead()
+        {
+            MasterStackModeToggle.IsOn = true;
+            StateSettings.MasterStackModeEnabled = true;
+            GlobalMasterStackToggle();
+        }
+
+        public void GlobalMasterStackToggle()
+        {
+            StateSettings.MasterStackModeEnabled = MasterStackModeToggle.IsOn;
+
+            if (!MasterStackModeToggle.IsOn)
+                return;
+
+            StackedModeToggle.IsOn = false;
+            StateSettings.StackedModeEnabled = false;
+            ColumnModeToggle.IsOn = false;
+            StateSettings.ColumnModeEnabled = false;
+            GridModeToggle.IsOn = false;
+            StateSettings.GridModeEnabled = false;
+
+            if (TilingManager.Exists())
+            {
                 TilingManager.GetInstance().ApplySettings();
                 TilingManager.GetInstance().TilePrimaryMonitorWindows();
             }
@@ -332,6 +395,8 @@ namespace main_interface
                 StateSettings.StackedModeEnabled = false;
                 GridModeToggle.IsOn = false;
                 StateSettings.GridModeEnabled = false;
+                MasterStackModeToggle.IsOn = false;
+                StateSettings.MasterStackModeEnabled = false;
             }
 
 
@@ -348,6 +413,15 @@ namespace main_interface
    
   
 
+
+        private void DimOpacitySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            StateSettings.FocusDimOpacity = (int)e.NewValue;
+            DimOpacityValue.Text = $"{StateSettings.FocusDimOpacity}%";
+
+            if (TilingManager.Exists())
+                TilingManager.GetInstance().ReapplyFocusDim();
+        }
 
         private void Border_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
@@ -433,10 +507,11 @@ namespace main_interface
 
 
 
-        bool _isCapturingHotKey; // guard flag - stop when false 
+        bool _isCapturingHotKey;
         bool _waitingForPrimaryKey;
-        private TextBlock? _activeHotkeyTextBlock; // Track which Textblock to update
+        private TextBlock? _activeHotkeyTextBlock;
         private Microsoft.UI.Xaml.Controls.Button? _activeButton;
+        private string? _previousHotkeyText; // saved text to restore on cancel
 
         //event not method 
         private void AssignHotkey_Clicked(object sender, RoutedEventArgs e)
@@ -454,36 +529,25 @@ namespace main_interface
                 _activeButton = button;
                 // Determine which button was clicked and set the corresponding TextBlock
                 if (button.Name == "AssignHotkey")
-                {
                     _activeHotkeyTextBlock = HotkeyText;
-                    _activeHotkeyTextBlock.Text = "Press keys...";
-                }
                 else if (button.Name == "AssignHotkey2")
-                {
                     _activeHotkeyTextBlock = HotkeyText2;
-                    _activeHotkeyTextBlock.Text = "Press keys...";
-                }
                 else if (button.Name == "AssignHotkey3")
-                {
                     _activeHotkeyTextBlock = HotkeyText3;
-                    _activeHotkeyTextBlock.Text = "Press keys...";
-                }
                 else if (button.Name == "AssignHotkey4")
-                {
                     _activeHotkeyTextBlock = HotkeyText4;
-                    _activeHotkeyTextBlock.Text = "Press keys...";
-                }
                 else if (button.Name == "AssignHotkey5")
-                {
                     _activeHotkeyTextBlock = HotkeyText5;
-                    _activeHotkeyTextBlock.Text = "Press keys...";
-                }
                 else if (button.Name == "AssignHotkey6")
-                {
                     _activeHotkeyTextBlock = HotkeyText6;
+
+                if (_activeHotkeyTextBlock != null)
+                {
+                    _previousHotkeyText = _activeHotkeyTextBlock.Text; // save for cancel revert
                     _activeHotkeyTextBlock.Text = "Press keys...";
                 }
 
+                PopupKeyboard.MakeInstance.ShowOnScreen();
             }
         }
         // method
@@ -742,12 +806,13 @@ namespace main_interface
 
 
 
-            //Update button to show what was pressed
             if (_isCapturingHotKey == false && _waitingForPrimaryKey == false)
             {
                 _activeHotkeyTextBlock.Text = DescribeHotKey(CapturedModiferKeys, CapturedVK);
                 await OnHotkeyCaptured(CapturedModiferKeys, CapturedVK);
-
+                // Hide popup only if capture is truly finished (not retrying after error)
+                if (!_isCapturingHotKey && PopupKeyboard.Exists())
+                    PopupKeyboard.MakeInstance.MoveOffScreen();
             }
             atLeastOneModFirst = 0;
         }
@@ -802,6 +867,40 @@ namespace main_interface
             return string.Join(" ", keyschosen);
         }
 
+        public void SetHotkeyLabel(int hotkeyId, string text)
+        {
+            switch (hotkeyId)
+            {
+                case HOTKEY_ID_OVERLAY:    HotkeyText.Text  = text; break;
+                case HOTKEY_ID_MAXIMIZE:   HotkeyText2.Text = text; break;
+                case HOTKEY_ID_RETILE:     HotkeyText3.Text = text; break;
+                case HOTKEY_ID_FOCUS_NEXT: HotkeyText4.Text = text; break;
+                case HOTKEY_ID_CLOSE:      HotkeyText5.Text = text; break;
+                case HOTKEY_ID_SWAP_NEXT:  HotkeyText6.Text = text; break;
+            }
+        }
+
+        // Called on page load — reads registered combos from TakenCombinations, falling back
+        // to the hardcoded defaults from TilingManager's constructor when none are registered yet
+        // (e.g. when the tiling toggle is off and TilingManager hasn't been constructed).
+        private void SyncHotkeyLabelsFromState()
+        {
+            SetLabel(HOTKEY_ID_OVERLAY,    HotkeyText,  "Alt + A");
+            SetLabel(HOTKEY_ID_MAXIMIZE,   HotkeyText2, "Alt + F");
+            SetLabel(HOTKEY_ID_RETILE,     HotkeyText3, "Alt + T");
+            SetLabel(HOTKEY_ID_FOCUS_NEXT, HotkeyText4, "Alt + Right");
+            SetLabel(HOTKEY_ID_CLOSE,      HotkeyText5, "Alt + W");
+            SetLabel(HOTKEY_ID_SWAP_NEXT,  HotkeyText6, "Alt + Shift + Right");
+
+            void SetLabel(int id, TextBlock tb, string defaultText)
+            {
+                if (TakenCombinations.TryGetCombo(id, out var combo) && combo.VirtualKey != 0)
+                    tb.Text = Controls.HotKeyCaptureControl.DescribeCombo(combo.Modifiers, combo.VirtualKey);
+                else
+                    tb.Text = defaultText;
+            }
+        }
+
         private const int HOTKEY_ID_OVERLAY    = 9000;
         private const int HOTKEY_ID_MAXIMIZE   = 8000;
         private const int HOTKEY_ID_RETILE     = 7000;
@@ -835,16 +934,35 @@ namespace main_interface
 
 
             }
-            // Try to update
+            // If tiling is off, reserve the combo in TakenCombinations without creating the window.
+            // The actual RegisterHotKey call happens in TilingManager.RegisterFromAssigned() when
+            // the user later turns tiling on.
+            if (!StateSettings.TilingManagerEnabled)
+            {
+                TakenCombinations.RemoveById(hotkeyId);
+                if (TakenCombinations.IsTaken((uint)modifiers, vk))
+                {
+                    bool retry = await Dialogues.OnErrorDialogue_InUse(this.XamlRoot);
+                    if (retry) { GuideRedirect(); return; }
+                    // Restore label to whatever was previously assigned
+                    if (TakenCombinations.TryGetCombo(hotkeyId, out var old) && old.VirtualKey != 0)
+                        _activeHotkeyTextBlock.Text = DescribeHotKey((Modifiers)old.Modifiers, old.VirtualKey);
+                    _isCapturingHotKey = false;
+                    return;
+                }
+                var reserved = new TakenCombinations.HotKeyCombo((uint)modifiers, vk);
+                TakenCombinations.Add((uint)modifiers, vk);
+                TakenCombinations._assignedCombos[hotkeyId] = reserved;
+                _activeHotkeyTextBlock.Text = DescribeHotKey(modifiers, vk);
+                _isCapturingHotKey = false;
+                return;
+            }
 
-
+            // Tiling is on — route through the live window which can RegisterHotKey immediately.
             bool success = TilingManager.GetInstance().TryUpdateHotkey(hotkeyId, modifiers, vk, out var resultingCombo);
-
-
 
             if (!success)
             {
-                // Only if awauit returns true do you exit out of this and try again 
                 Debug.WriteLine("REFUSED - already in use or registration failed");
                 bool confirmed = await Dialogues.OnErrorDialogue_InUse(this.XamlRoot);
                 if (confirmed)
@@ -852,16 +970,11 @@ namespace main_interface
                     GuideRedirect();
                     return;
                 }
-
-
-
-                // Always update UI with resulting combo
                 _activeHotkeyTextBlock.Text = DescribeHotKey((Modifiers)resultingCombo.Modifiers, resultingCombo.VirtualKey);
             }
             else
             {
                 _activeHotkeyTextBlock.Text = DescribeHotKey((Modifiers)resultingCombo.Modifiers, resultingCombo.VirtualKey);
-
                 Debug.WriteLine($"SUCCESS - registered: {resultingCombo}");
             }
             _isCapturingHotKey = false;
@@ -1059,7 +1172,122 @@ namespace main_interface
             }
             if (combo.VirtualKey != 0)
                 assigner.SetDisplayText(main_interface.Controls.HotKeyCaptureControl.DescribeCombo(combo.Modifiers, combo.VirtualKey));
+            assigner.RefreshState();
         }
+
+        private void OnPopupCancelRequested()
+        {
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                if (!_isCapturingHotKey) return;
+                Stop();
+                if (_activeHotkeyTextBlock != null)
+                    _activeHotkeyTextBlock.Text = _previousHotkeyText ?? "Not assigned";
+            });
+        }
+
+
+
+        // ── Smart Assistant ──────────────────────────────────────────────────
+
+        private void SmartAssistantToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            StateSettings.SmartAssistantTilingManagerToggle = SmartAssistantToggle.IsOn;
+
+            if (SmartAssistantToggle.IsOn)
+                StartSmartAssistantTimer();
+            else
+                StopSmartAssistantTimer();
+        }
+
+        private void StartSmartAssistantTimer()
+        {
+            _smartAssistantTimer?.Stop();
+            _smartAssistantTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(30) };
+            _smartAssistantTimer.Tick += (s, e) => CheckSmartAssistantRule();
+            _smartAssistantTimer.Start();
+            CheckSmartAssistantRule(); // immediate check on enable
+        }
+
+        private void StopSmartAssistantTimer()
+        {
+            _smartAssistantTimer?.Stop();
+            _smartAssistantTimer = null;
+        }
+
+        private void CheckSmartAssistantRule()
+        {
+            if (!StateSettings.SmartAssistantTilingManagerToggle) return;
+            if (StateSettings.TilingManagerEnabled) return; // already on, nothing to do
+            if (CountVisibleWindows() < 6) return;
+
+            // Pre-select grid mode before activating tiling so TilingManagerToggle_Toggled
+            // passes the "at least one mode enabled" guard and applies the right layout.
+            if (!StateSettings.GridModeEnabled)
+                Grid_SetStateAndToggle_DontRead();
+
+            // Activating via the toggle fires TilingManagerToggle_Toggled and all its logic.
+            TilingManagerToggle.IsOn = true;
+        }
+
+        private int CountVisibleWindows()
+        {
+            var windows = new List<IntPtr>();
+            EnumWindowsForSmart((hWnd, _) =>
+            {
+                if (!IsWindowVisibleForSmart(hWnd)) return true;
+                uint exStyle = (uint)GetWindowLongForSmart(hWnd, GWL_EXSTYLE_SMART);
+                if ((exStyle & WS_EX_TOOLWINDOW_SMART) != 0) return true;
+                if ((exStyle & WS_EX_NOACTIVATE_SMART)  != 0) return true;
+                if (GetAncestorForSmart(hWnd, GA_ROOTOWNER_SMART) != hWnd) return true;
+                string title = GetWindowTitleForSmart(hWnd);
+                if (string.IsNullOrWhiteSpace(title)) return true;
+                if (title is "Program Manager"
+                          or "Microsoft Text Input Application"
+                          or "Windows Input Experience"
+                          or "Ease Of Access")
+                    return true;
+                windows.Add(hWnd);
+                return true;
+            }, IntPtr.Zero);
+            return windows.Count;
+        }
+
+        private static string GetWindowTitleForSmart(IntPtr hWnd)
+        {
+            int len = GetWindowTextLengthForSmart(hWnd);
+            if (len == 0) return string.Empty;
+            var sb = new StringBuilder(len + 1);
+            GetWindowTextForSmart(hWnd, sb, sb.Capacity);
+            return sb.ToString();
+        }
+
+        // ── Win32 (Smart Assistant window counter) ───────────────────────────
+
+        delegate bool SmartEnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+
+        [DllImport("user32.dll", EntryPoint = "EnumWindows")]
+        static extern bool EnumWindowsForSmart(SmartEnumWindowsProc lpEnumFunc, IntPtr lParam);
+
+        [DllImport("user32.dll", EntryPoint = "IsWindowVisible")]
+        static extern bool IsWindowVisibleForSmart(IntPtr hWnd);
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowLongW")]
+        static extern int GetWindowLongForSmart(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowTextLength")]
+        static extern int GetWindowTextLengthForSmart(IntPtr hWnd);
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowText")]
+        static extern int GetWindowTextForSmart(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+
+        [DllImport("user32.dll", EntryPoint = "GetAncestor")]
+        static extern IntPtr GetAncestorForSmart(IntPtr hwnd, uint gaFlags);
+
+        const int  GWL_EXSTYLE_SMART      = -20;
+        const uint WS_EX_TOOLWINDOW_SMART = 0x00000080;
+        const uint WS_EX_NOACTIVATE_SMART = 0x08000000;
+        const uint GA_ROOTOWNER_SMART     = 3;
 
     } // end of class
  } // end of namespace

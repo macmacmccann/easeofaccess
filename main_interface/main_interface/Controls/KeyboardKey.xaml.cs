@@ -88,7 +88,10 @@ namespace main_interface.Controls
         private void Key_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             DesignGlobalCode.Key_PointerExited(sender, e);
-            if (_isMapped) RootBorder.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(180, 34, 197, 94));
+            if (_isMapped)
+                RootBorder.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(180, 34, 197, 94));
+            else if (_highlight.HasValue)
+                RootBorder.Background = new SolidColorBrush(_highlight.Value);
         }
 
         private void OnPointerEntered(object sender, PointerRoutedEventArgs e) => VisualStateManager.GoToState(this, "PointerOver", true);
@@ -110,6 +113,20 @@ namespace main_interface.Controls
         public void TriggerReleasedVisual()
         {
             DesignGlobalCode.Key_PointerExited(RootBorder, null!);
+            // Restore persistent highlight — DesignGlobalCode resets to theme background
+            if (_highlight.HasValue)
+                RootBorder.Background = new SolidColorBrush(_highlight.Value);
+        }
+
+        // Persistent overlay color set by PopupKeyboard (taken=red, active-mod=orange, hint=amber)
+        private Windows.UI.Color? _highlight = null;
+
+        public void SetHighlight(Windows.UI.Color? color)
+        {
+            _highlight = color;
+            RootBorder.Background = color.HasValue
+                ? new SolidColorBrush(color.Value)
+                : new SolidColorBrush(Windows.UI.Color.FromArgb(0, 0, 0, 0));
         }
 
         private bool _isMapped = false;

@@ -2,6 +2,7 @@ import cv2
 import mediapipe as mp
 import urllib.request
 import os
+import time
 from gestures import GestureClassifier
 from pipe_client import PipeClient
 
@@ -27,7 +28,14 @@ def main():
     classifier = GestureClassifier()
     pipe = PipeClient()
     pipe.connect()
-    last_gesture = None
+
+    HOLD_SECONDS   = 0.45   # static gesture must be held this long before firing
+    SWIPE_COOLDOWN = 1.5    # silence everything after a swipe fires (hand-drop window)
+
+    stable_gesture = None
+    stable_since   = 0.0
+    hold_fired     = False
+    cooldown_until = 0.0    # time.time() value after which gestures are accepted again
 
     with mp.tasks.vision.HandLandmarker.create_from_options(options) as detector:
         while cap.isOpened():
@@ -39,10 +47,10 @@ def main():
             mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb)
             result = detector.detect(mp_image)
 
+            gesture = None
             if result.hand_landmarks:
                 h, w = frame.shape[:2]
                 for i, hand in enumerate(result.hand_landmarks):
-                    # draw landmarks
                     for lm in hand:
                         cx, cy = int(lm.x * w), int(lm.y * h)
                         cv2.circle(frame, (cx, cy), 5, (0, 255, 0), -1)
@@ -53,9 +61,45 @@ def main():
                         label_pos = (int(wrist.x * w), int(wrist.y * h) - 20)
                         cv2.putText(frame, gesture, label_pos,
                                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 200, 255), 2)
-                        if gesture != last_gesture:
-                            pipe.send(gesture)
-                            last_gesture = gesture
+
+            now = time.time()
+            h, w = frame.shape[:2]
+            in_cooldown = now < cooldown_until
+
+            if in_cooldown:
+                # keep resetting hold state so no time pre-accumulates for the
+                # shapes the hand passes through while being lowered after a swipe
+                if gesture != stable_gesture:
+                    stable_gesture = gesture
+                stable_since = now
+                hold_fired   = False
+            elif gesture and gesture.startswith("swipe_"):
+                pipe.send(gesture)
+                cooldown_until = now + SWIPE_COOLDOWN
+                stable_gesture = None
+                hold_fired     = False
+            else:
+                if gesture != stable_gesture:
+                    stable_gesture = gesture
+                    stable_since   = now
+                    hold_fired     = False
+                elif gesture and not hold_fired and (now - stable_since) >= HOLD_SECONDS:
+                    pipe.send(gesture)
+                    hold_fired = True
+
+            # visual feedback bar at the bottom of the camera window:
+            #  green  = charging toward static-gesture fire
+            #  blue   = swipe cooldown draining
+            if in_cooldown:
+                remaining = (cooldown_until - now) / SWIPE_COOLDOWN
+                bar_w = int(w * remaining)
+                cv2.rectangle(frame, (0, h - 8), (w, h),      (40, 40, 40),    -1)
+                cv2.rectangle(frame, (0, h - 8), (bar_w, h),  (180, 100, 0),   -1)
+            elif stable_gesture and not hold_fired:
+                progress = min((now - stable_since) / HOLD_SECONDS, 1.0)
+                bar_w = int(w * progress)
+                cv2.rectangle(frame, (0, h - 8), (w, h),      (40, 40, 40),    -1)
+                cv2.rectangle(frame, (0, h - 8), (bar_w, h),  (0, 200, 100),   -1)
 
             cv2.imshow("hand tracking", frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):

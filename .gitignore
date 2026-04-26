@@ -38,6 +38,13 @@ x86/
 *.txt
 *.xml
 
+# Windows app package output
+**/AppPackages/
+*.msix
+*.appx
+*.appxsym
+*.appxupload
+
 
 
 
